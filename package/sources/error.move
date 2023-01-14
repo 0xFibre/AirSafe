@@ -40,4 +40,8 @@ module vallet::error {
     public fun safe_transaction_mismatch(): u64 {
         ERROR_PREFIX + 9
     }
+
+    public fun invalid_members(): u64 {
+        ERROR_PREFIX + 10
+    }
 }

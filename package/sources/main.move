@@ -9,12 +9,13 @@ module vallet::main {
     use vallet::transaction::{Self, Transaction};
     use vallet::registry::{Registry};
     use vallet::owner;
+    use vallet::error;
     use vallet::coin;
 
     public entry fun create_safe(registry: &mut Registry, threshold: u64, owners: vector<address>, ctx: &mut TxContext) {
         let safe = safe::new(threshold, owners, ctx);
 
-        vector::push_back(&mut owners, tx_context::sender(ctx));
+        assert!(vector::borrow(&owners, 0) == &tx_context::sender(ctx), error::invalid_members());
         owner::add_owners(registry, &mut safe, owners);
 
         transfer::share_object(safe);
