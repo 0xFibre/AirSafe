@@ -15,41 +15,45 @@
         </v-btn>
       </div>
 
-      <v-list lines="two">
-        <v-list-item
-          class="my-0 py-2"
-          :prepend-avatar="blockie(safe.id)"
-          v-for="safe in safes"
-          :key="safe.id"
-        >
-          <v-list-item-title>{{ safe.id }}</v-list-item-title>
+      <Empty v-if="safes.length < 1" msg="You do not own any Safe" />
 
-          <v-list-item-action>
-            <v-btn flat variant="text" icon="mdi-qrcode" size="x-small" />
-            <v-btn flat variant="text" icon="mdi-content-copy" size="x-small" />
-            <v-btn
-              flat
-              target="_blank"
-              :href="`${env.suiExplorerUrl}/object/${safe.id}?network=${env.suiNetwork}`"
-              variant="text"
-              icon="mdi-open-in-new"
-              size="x-small"
-            />
-          </v-list-item-action>
+      <template v-else>
+        <v-list v-for="safe in safes" :key="safe.id" lines="two">
+          <v-list-item class="my-0 py-2" :prepend-avatar="blockie(safe.id)">
+            <v-list-item-title>{{ safe.id }}</v-list-item-title>
 
-          <template v-slot:append>
-            <v-btn
-              flat
-              variant="text"
-              density="comfortable"
-              append-icon="mdi-arrow-right"
-              :to="`/${safe.id}/dashboard`"
-            >
-              open
-            </v-btn>
-          </template>
-        </v-list-item>
-      </v-list>
+            <v-list-item-action>
+              <v-btn flat variant="text" icon="mdi-qrcode" size="x-small" />
+              <v-btn
+                flat
+                variant="text"
+                icon="mdi-content-copy"
+                size="x-small"
+              />
+              <v-btn
+                flat
+                target="_blank"
+                :href="`${env.suiExplorerUrl}/object/${safe.id}?network=${env.suiNetwork}`"
+                variant="text"
+                icon="mdi-open-in-new"
+                size="x-small"
+              />
+            </v-list-item-action>
+
+            <template v-slot:append>
+              <v-btn
+                flat
+                variant="text"
+                density="comfortable"
+                append-icon="mdi-arrow-right"
+                :to="`/${safe.id}/dashboard`"
+              >
+                open
+              </v-btn>
+            </template>
+          </v-list-item>
+        </v-list>
+      </template>
     </v-col>
   </v-row>
 </template>
@@ -66,6 +70,7 @@ import { useSafeStore } from "@/store";
 import { storeToRefs } from "pinia";
 import { onMounted } from "vue";
 import blockie from "ethereum-blockies-base64";
+import Empty from "@/components/Empty.vue";
 
 const safeStore = useSafeStore();
 const { safes } = storeToRefs(safeStore);

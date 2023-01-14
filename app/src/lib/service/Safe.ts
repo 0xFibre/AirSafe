@@ -37,17 +37,15 @@ export class SafeService {
     return await connection.executeMoveCall(moveCallPayload);
   }
 
+  async _getRegistryObject() {}
+
   async getAddressSafes(address: address): Promise<Safe[]> {
     const registry = await this._provider.getObject(this._registryObjectId);
 
     if (registry.status === "Exists") {
       const safes_table = getObjectFields(getObjectFields(registry)?.safes);
-      const id = safes_table?.id.id;
-
-      const safes = await this._provider.getDynamicFieldObject(id, address);
-      const ids = getObjectFields(getObjectFields(safes)?.value);
-
-      const safesBatch = await this._provider.getObjectBatch(ids?.contents);
+      const ids = await this._getAddressSafeIDs(safes_table?.id.id, address);
+      const safesBatch = await this._provider.getObjectBatch(ids);
 
       return Promise.all(
         safesBatch.map(async (safe) => {
@@ -60,6 +58,19 @@ export class SafeService {
     }
 
     throw new Error("Registry ID not found");
+  }
+
+  async _getAddressSafeIDs(id: string, address: string) {
+    try {
+      const safes = await this._provider.getDynamicFieldObject(id, address);
+      const ids = getObjectFields(getObjectFields(safes)?.value);
+      return ids?.contents;
+    } catch (e) {
+      const msg = `Error fetching dynamic fields: Error: RPC Error: Cannot find dynamic field [${address}] for object [${id}]. for id ${id}`;
+      const err = e as unknown as Error;
+      if (err.message === msg) return [];
+      throw e;
+    }
   }
 
   private _buildSafe(fields: Record<string, any>): Safe {
