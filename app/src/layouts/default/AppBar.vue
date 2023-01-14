@@ -45,7 +45,7 @@
     </v-list>
   </v-navigation-drawer>
 
-  <v-app-bar flat density="comfortable">
+  <v-app-bar flat density="comfortable" v-if="!$route.meta.hideAppBar">
     <v-app-bar-nav-icon
       @click="drawer = !drawer"
       class="d-md-block d-lg-none"
@@ -61,7 +61,7 @@
       <span>Main Wallet</span>
     </v-btn>
 
-    <v-btn flat rounded variant="flat" color="primary">
+    <v-btn flat rounded variant="flat" color="primary" to="/connect">
       <span>Connect wallet</span>
     </v-btn>
   </v-app-bar>
