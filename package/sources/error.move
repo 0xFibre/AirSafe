@@ -36,4 +36,8 @@ module vallet::error {
     public fun already_rejected_transaction(): u64 {
         ERROR_PREFIX + 9
     }
+
+    public fun vallet_transaction_mismatch(): u64 {
+        ERROR_PREFIX + 9
+    }
 }

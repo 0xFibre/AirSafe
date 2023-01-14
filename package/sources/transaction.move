@@ -64,6 +64,7 @@ module vallet::transaction {
     public(friend) fun approve_transaction(vallet: &mut Vallet, transaction: &mut Transaction, ctx: &mut TxContext) {
         let sender = tx_context::sender(ctx);
 
+        assert!(object::borrow_id(vallet) == &transaction.vallet_id, error::vallet_transaction_mismatch());
         assert!(owner::is_owner(vallet, sender), error::not_vallet_owner());
         assert!(!vec_set::contains(&transaction.approvers, &sender), error::already_approved_transaction());
         assert!(!vec_set::contains(&transaction.rejecters, &sender), error::already_rejected_transaction());
@@ -78,6 +79,7 @@ module vallet::transaction {
     public(friend) fun reject_transaction(vallet: &mut Vallet, transaction: &mut Transaction, ctx: &mut TxContext) {
         let sender = tx_context::sender(ctx);
 
+        assert!(object::borrow_id(vallet) == &transaction.vallet_id, error::vallet_transaction_mismatch());
         assert!(owner::is_owner(vallet, sender), error::not_vallet_owner());
         assert!(!vec_set::contains(&transaction.approvers, &sender), error::already_approved_transaction());
         assert!(!vec_set::contains(&transaction.rejecters, &sender), error::already_rejected_transaction());
@@ -91,6 +93,7 @@ module vallet::transaction {
     }
 
     public(friend) fun execute_transfer_transaction<T>(vallet: &mut Vallet, transaction: &mut Transaction, ctx: &mut TxContext) {
+        assert!(object::borrow_id(vallet) == &transaction.vallet_id, error::vallet_transaction_mismatch());
         assert!(transaction.type == TRANSFER_TRANSACTION_TYPE, error::invalid_transaction_type());
         
         let bcs = bcs::new(transaction.data);
