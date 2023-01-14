@@ -9,7 +9,6 @@
 
         <v-list-item-subtitle style="opacity: unset">
           <v-btn flat variant="text" icon="mdi-qrcode" size="x-small" />
-          <v-btn flat variant="text" icon="mdi-content-copy" size="x-small" />
           <v-btn flat variant="text" icon="mdi-open-in-new" size="x-small" />
         </v-list-item-subtitle>
 
@@ -73,7 +72,7 @@ const sideBarItems = [
   {
     title: "Dashboard",
     icon: "mdi-view-dashboard",
-    path: "",
+    path: "/",
   },
   {
     title: "Transactions",
