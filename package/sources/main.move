@@ -7,14 +7,15 @@ module vallet::main {
     
     use vallet::vallet::{Self, Vallet};
     use vallet::transaction::{Self, Transaction};
+    use vallet::registry::{Registry};
     use vallet::owner;
     use vallet::coin;
 
-    public entry fun create_vallet(name: vector<u8>, threshold: u64, owners: vector<address>, ctx: &mut TxContext) {
+    public entry fun create_vallet(registry: &mut Registry, name: vector<u8>, threshold: u64, owners: vector<address>, ctx: &mut TxContext) {
         let vallet = vallet::new(name, threshold, owners, ctx);
 
         vector::push_back(&mut owners, tx_context::sender(ctx));
-        owner::add_owners(&mut vallet, owners);
+        owner::add_owners(registry, &mut vallet, owners);
 
         transfer::share_object(vallet);
     }
