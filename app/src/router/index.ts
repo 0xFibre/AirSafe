@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import CreateVallet from "@/views/vallet/Create.vue";
+import Assets from "@/views/assets/Assets.vue";
 
 const routes = [
   {
@@ -13,6 +14,12 @@ const routes = [
         meta: {
           hideSideBar: true,
         },
+      },
+
+      {
+        path: "/assets",
+        name: "Assets",
+        component: Assets,
       },
     ],
   },
