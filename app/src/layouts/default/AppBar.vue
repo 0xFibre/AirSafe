@@ -57,13 +57,25 @@
 
     <v-spacer />
 
-    <v-btn flat rounded prepend-icon="mdi-wallet">
+    <!-- <v-btn flat rounded prepend-icon="mdi-wallet">
       <span>Main Wallet</span>
+    </v-btn> -->
+
+    <v-btn
+      flat
+      rounded
+      variant="flat"
+      color="primary"
+      @click="ethos.showSignInModal"
+    >
+      <span>Connect wallet</span>
     </v-btn>
   </v-app-bar>
 </template>
 
 <script lang="ts" setup>
+import { ethos } from "ethos-connect";
+
 import { Ref, ref } from "vue";
 
 const drawer: Ref<boolean | null> = ref(null);
@@ -72,7 +84,7 @@ const sideBarItems = [
   {
     title: "Dashboard",
     icon: "mdi-view-dashboard",
-    path: "/",
+    path: "/dashboard",
   },
   {
     title: "Transactions",
