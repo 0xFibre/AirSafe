@@ -16,7 +16,6 @@ module vallet::vallet {
     struct Vallet has key, store {
         id: UID,
         threshold: u64,
-        coins: Bag,
         owners: VecSet<address>,
         transactions_count: u64,
         transactions: vector<ID>
@@ -74,5 +73,9 @@ module vallet::vallet {
 
     public(friend) fun threshold(self: &Vallet): u64 {
         self.threshold
+    }
+
+    public(friend) fun borrow_uid_mut(self: &mut Vallet): &mut UID {
+        &mut self.id
     }
 }
