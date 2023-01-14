@@ -1,5 +1,4 @@
 module vallet::vallet {
-    use std::string::{Self, String};
     use std::vector;
 
     use sui::object::{Self, UID, ID};
@@ -16,7 +15,6 @@ module vallet::vallet {
 
     struct Vallet has key, store {
         id: UID,
-        name: String,
         threshold: u64,
         coins: Bag,
         owners: VecSet<address>,
@@ -24,13 +22,12 @@ module vallet::vallet {
         transactions: vector<ID>
     }
 
-    public(friend) fun new(name: vector<u8>, threshold: u64, owners: vector<address>, ctx: &mut TxContext): Vallet {
+    public(friend) fun new(threshold: u64, owners: vector<address>, ctx: &mut TxContext): Vallet {
         let owners_count = vector::length(&owners) + 1;
         assert!(threshold <= owners_count, error::invalid_threshold());
 
         Vallet {
             id: object::new(ctx),
-            name: string::utf8(name),
             threshold,
             coins: bag::new(ctx),
             owners: vec_set::empty(),
