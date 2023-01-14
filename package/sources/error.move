@@ -25,7 +25,7 @@ module vallet::error {
         ERROR_PREFIX + 7
     }
 
-    public fun not_vallet_owner(): u64 {
+    public fun not_safe_owner(): u64 {
         ERROR_PREFIX + 8
     }
 
@@ -37,7 +37,7 @@ module vallet::error {
         ERROR_PREFIX + 9
     }
 
-    public fun vallet_transaction_mismatch(): u64 {
+    public fun safe_transaction_mismatch(): u64 {
         ERROR_PREFIX + 9
     }
 }

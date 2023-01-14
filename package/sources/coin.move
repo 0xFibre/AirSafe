@@ -9,13 +9,13 @@ module vallet::coin {
     use sui::tx_context::{TxContext};
     use sui::transfer;
 
-    use vallet::vallet::{Self, Vallet};
+    use vallet::safe::{Self, Safe};
     use vallet::error;
 
     friend vallet::main;
     friend vallet::transaction;
 
-    public(friend) fun deposit<T>(vallet: &mut Vallet, coins: vector<Coin<T>>, amount: u64, ctx: &mut TxContext) {
+    public(friend) fun deposit<T>(safe: &mut Safe, coins: vector<Coin<T>>, amount: u64, ctx: &mut TxContext) {
         let coin = vector::pop_back(&mut coins);
         
         pay::join_vec(&mut coin, coins);
@@ -28,33 +28,33 @@ module vallet::coin {
             pay::keep(coin, ctx);
         };
 
-        internal_deposit(vallet, split_coin);
+        internal_deposit(safe, split_coin);
     }
 
-    public(friend) fun withdraw<T>(vallet: &mut Vallet, amount: u64, recipient: address, ctx: &mut TxContext) {
-        let withdrawal_coin = internal_withdrawal<T>(vallet, amount, ctx);
+    public(friend) fun withdraw<T>(safe: &mut Safe, amount: u64, recipient: address, ctx: &mut TxContext) {
+        let withdrawal_coin = internal_withdrawal<T>(safe, amount, ctx);
         transfer::transfer(withdrawal_coin, recipient);
     }
 
-    fun internal_deposit<T>(vallet: &mut Vallet, new_coin: Coin<T>) {
+    fun internal_deposit<T>(safe: &mut Safe, new_coin: Coin<T>) {
         let coin_type = ascii::into_bytes(type_name::into_string(type_name::get<T>()));
-        let vallet_id = vallet::borrow_uid_mut(vallet);
+        let safe_id = safe::borrow_uid_mut(safe);
 
-        if(ofield::exists_with_type<vector<u8>, Coin<T>>(vallet_id, coin_type)) {
-            let coin = ofield::borrow_mut<vector<u8>, Coin<T>>(vallet_id, coin_type);
+        if(ofield::exists_with_type<vector<u8>, Coin<T>>(safe_id, coin_type)) {
+            let coin = ofield::borrow_mut<vector<u8>, Coin<T>>(safe_id, coin_type);
             coin::join(coin, new_coin);
         } else {
-            ofield::add<vector<u8>, Coin<T>>(vallet_id, coin_type, new_coin);
+            ofield::add<vector<u8>, Coin<T>>(safe_id, coin_type, new_coin);
         }
     }
 
-    fun internal_withdrawal<T>(vallet: &mut Vallet, amount: u64, ctx: &mut TxContext): Coin<T> {
+    fun internal_withdrawal<T>(safe: &mut Safe, amount: u64, ctx: &mut TxContext): Coin<T> {
         let coin_type = ascii::into_bytes(type_name::into_string(type_name::get<T>()));
-        let vallet_id = vallet::borrow_uid_mut(vallet);
+        let safe_id = safe::borrow_uid_mut(safe);
 
-        assert!(ofield::exists_with_type<vector<u8>, Coin<T>>(vallet_id, coin_type), error::coin_not_found());
+        assert!(ofield::exists_with_type<vector<u8>, Coin<T>>(safe_id, coin_type), error::coin_not_found());
  
-        let coin = ofield::borrow_mut<vector<u8>, Coin<T>>(vallet_id, coin_type);
+        let coin = ofield::borrow_mut<vector<u8>, Coin<T>>(safe_id, coin_type);
         coin::split(coin, amount, ctx)
     }
 }

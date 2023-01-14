@@ -6,7 +6,7 @@ module vallet::transaction {
     use sui::vec_set::{Self, VecSet};
     use sui::bcs::{Self, BCS};
 
-    use vallet::vallet::{Self, Vallet};
+    use vallet::safe::{Self, Safe};
     use vallet::owner;
     use vallet::coin;
     use vallet::error;
@@ -16,7 +16,7 @@ module vallet::transaction {
     struct Transaction has key, store {
         id: UID,
         index: u64,
-        vallet_id: ID,
+        safe_id: ID,
         creator: address,
         data: vector<u8>,
         type: u8,
@@ -38,17 +38,17 @@ module vallet::transaction {
 
     const TRANSFER_TRANSACTION_TYPE: u8 = 1;
 
-    public(friend) fun create_transaction(vallet: &mut Vallet, type: u8, data: vector<u8>, ctx: &mut TxContext): Transaction {
+    public(friend) fun create_transaction(safe: &mut Safe, type: u8, data: vector<u8>, ctx: &mut TxContext): Transaction {
        let sender = tx_context::sender(ctx);
 
-        assert!(owner::is_owner(vallet, sender), error::not_vallet_owner());
+        assert!(owner::is_owner(safe, sender), error::not_safe_owner());
         validate_transaction_data(type, data);
 
         let transaction = Transaction {
             id: object::new(ctx),
-            vallet_id: object::id(vallet),
+            safe_id: object::id(safe),
             status: ACTIVE_TRANSACTION_STATUS,
-            index: vallet::transactions_count(vallet),
+            index: safe::transactions_count(safe),
             creator: sender,
             approvers: vec_set::empty(),
             rejecters: vec_set::empty(),
@@ -56,53 +56,53 @@ module vallet::transaction {
             data,
         };
 
-        let transactions = vallet::borrow_transactions_mut(vallet);
+        let transactions = safe::borrow_transactions_mut(safe);
 
         vector::push_back(transactions, object::id(&transaction));
-        vallet::increment_transactions_count(vallet);
+        safe::increment_transactions_count(safe);
 
         transaction
     }
 
-    public(friend) fun approve_transaction(vallet: &mut Vallet, transaction: &mut Transaction, ctx: &mut TxContext) {
+    public(friend) fun approve_transaction(safe: &mut Safe, transaction: &mut Transaction, ctx: &mut TxContext) {
         let sender = tx_context::sender(ctx);
 
-        assert!(object::borrow_id(vallet) == &transaction.vallet_id, error::vallet_transaction_mismatch());
-        assert!(owner::is_owner(vallet, sender), error::not_vallet_owner());
+        assert!(object::borrow_id(safe) == &transaction.safe_id, error::safe_transaction_mismatch());
+        assert!(owner::is_owner(safe, sender), error::not_safe_owner());
         assert!(!vec_set::contains(&transaction.approvers, &sender), error::already_approved_transaction());
         assert!(!vec_set::contains(&transaction.rejecters, &sender), error::already_rejected_transaction());
 
         vec_set::insert(&mut transaction.approvers, sender);
 
-        if(vec_set::size(&transaction.approvers) >= vallet::threshold(vallet)) {
+        if(vec_set::size(&transaction.approvers) >= safe::threshold(safe)) {
             transaction.status = READY_TRANSACTION_STATUS;
         }
     }
 
-    public(friend) fun reject_transaction(vallet: &mut Vallet, transaction: &mut Transaction, ctx: &mut TxContext) {
+    public(friend) fun reject_transaction(safe: &mut Safe, transaction: &mut Transaction, ctx: &mut TxContext) {
         let sender = tx_context::sender(ctx);
 
-        assert!(object::borrow_id(vallet) == &transaction.vallet_id, error::vallet_transaction_mismatch());
-        assert!(owner::is_owner(vallet, sender), error::not_vallet_owner());
+        assert!(object::borrow_id(safe) == &transaction.safe_id, error::safe_transaction_mismatch());
+        assert!(owner::is_owner(safe, sender), error::not_safe_owner());
         assert!(!vec_set::contains(&transaction.approvers, &sender), error::already_approved_transaction());
         assert!(!vec_set::contains(&transaction.rejecters, &sender), error::already_rejected_transaction());
 
         vec_set::insert(&mut transaction.rejecters, sender);
 
-        let limit = vallet::owners_count(vallet) - vallet::threshold(vallet);
+        let limit = safe::owners_count(safe) - safe::threshold(safe);
         if(vec_set::size(&transaction.rejecters) > limit) {
             transaction.status = REJECTED_TRANSACTION_STATUS;
         }
     }
 
-    public(friend) fun execute_transfer_transaction<T>(vallet: &mut Vallet, transaction: &mut Transaction, ctx: &mut TxContext) {
-        assert!(object::borrow_id(vallet) == &transaction.vallet_id, error::vallet_transaction_mismatch());
+    public(friend) fun execute_transfer_transaction<T>(safe: &mut Safe, transaction: &mut Transaction, ctx: &mut TxContext) {
+        assert!(object::borrow_id(safe) == &transaction.safe_id, error::safe_transaction_mismatch());
         assert!(transaction.type == TRANSFER_TRANSACTION_TYPE, error::invalid_transaction_type());
         
         let bcs = bcs::new(transaction.data);
         let data = deserialize_transfer_data(bcs);
 
-        coin::withdraw<T>(vallet, data.amount, data.recipient, ctx);
+        coin::withdraw<T>(safe, data.amount, data.recipient, ctx);
     }
 
     fun validate_transaction_data(type: u8, data: vector<u8>) {

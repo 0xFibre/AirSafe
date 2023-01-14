@@ -7,7 +7,7 @@ module vallet::registry {
 
     struct Registry has key {
         id: UID,
-        vallets: Table<address, VecSet<ID>>
+        safes: Table<address, VecSet<ID>>
     }
 
     friend vallet::owner;
@@ -15,31 +15,31 @@ module vallet::registry {
     fun init(ctx: &mut TxContext) {
         let registry = Registry {
             id: object::new(ctx),
-            vallets: table::new(ctx)
+            safes: table::new(ctx)
         };
 
         transfer::share_object(registry);
     }
 
-    public(friend) fun borrow_vallets(self: &Registry): &Table<address, VecSet<ID>> {
-        &self.vallets
+    public(friend) fun borrow_safes(self: &Registry): &Table<address, VecSet<ID>> {
+        &self.safes
     }
 
-    public(friend) fun borrow_vallets_mut(self: &mut Registry): &mut Table<address, VecSet<ID>> {
-        &mut self.vallets
+    public(friend) fun borrow_safes_mut(self: &mut Registry): &mut Table<address, VecSet<ID>> {
+        &mut self.safes
     }
 
-    public(friend) fun register_vallet(self: &mut Registry, vallet_id: ID, owner: address) {
-        if(table::contains(&self.vallets, owner)) {
-            let vallets = table::borrow_mut(&mut self.vallets, owner);
-            if(!vec_set::contains(vallets, &vallet_id)) {
-                vec_set::insert(vallets, vallet_id);
+    public(friend) fun register_safe(self: &mut Registry, safe_id: ID, owner: address) {
+        if(table::contains(&self.safes, owner)) {
+            let safes = table::borrow_mut(&mut self.safes, owner);
+            if(!vec_set::contains(safes, &safe_id)) {
+                vec_set::insert(safes, safe_id);
             }
         } else {
-            let vallets = vec_set::empty<ID>();
-            vec_set::insert(&mut vallets, vallet_id);
+            let safes = vec_set::empty<ID>();
+            vec_set::insert(&mut safes, safe_id);
 
-            table::add(&mut self.vallets, owner, vallets);
+            table::add(&mut self.safes, owner, safes);
         }
     }
 }
