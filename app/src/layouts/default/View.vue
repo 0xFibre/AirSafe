@@ -1,5 +1,3 @@
-import { EthosConnectProvider } from 'ethos-connect-vue';
-
 <template>
   <v-main>
     <v-container>

@@ -5,30 +5,24 @@ import Owners from "@/views/owners/Owners.vue";
 
 const routes = [
   {
-    path: "/",
-    component: () => import("@/layouts/default/Default.vue"),
-    children: [
-      {
-        path: "/vallet/create",
-        name: "CreateVallet",
-        component: CreateVallet,
-        meta: {
-          hideSideBar: true,
-        },
-      },
+    path: "/vallet/create",
+    name: "CreateVallet",
+    component: CreateVallet,
+    meta: {
+      hideSideBar: true,
+    },
+  },
 
-      {
-        path: "/assets",
-        name: "Assets",
-        component: Assets,
-      },
+  {
+    path: "/assets",
+    name: "Assets",
+    component: Assets,
+  },
 
-      {
-        path: "/owners",
-        name: "Owners",
-        component: Owners,
-      },
-    ],
+  {
+    path: "/owners",
+    name: "Owners",
+    component: Owners,
   },
 ];
 

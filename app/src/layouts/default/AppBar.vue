@@ -57,25 +57,17 @@
 
     <v-spacer />
 
-    <!-- <v-btn flat rounded prepend-icon="mdi-wallet">
+    <v-btn flat rounded prepend-icon="mdi-wallet">
       <span>Main Wallet</span>
-    </v-btn> -->
+    </v-btn>
 
-    <v-btn
-      flat
-      rounded
-      variant="flat"
-      color="primary"
-      @click="ethos.showSignInModal"
-    >
+    <v-btn flat rounded variant="flat" color="primary">
       <span>Connect wallet</span>
     </v-btn>
   </v-app-bar>
 </template>
 
 <script lang="ts" setup>
-import { ethos } from "ethos-connect";
-
 import { Ref, ref } from "vue";
 
 const drawer: Ref<boolean | null> = ref(null);

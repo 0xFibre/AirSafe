@@ -1,5 +1,3 @@
-import CoinsTable from '@/components/table/CoinsTable.vue';
-
 <template>
   <h5 class="text-h5 font-weight-bold fonted">Assets</h5>
 
