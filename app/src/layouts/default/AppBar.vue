@@ -3,7 +3,7 @@
     <template v-slot:prepend>
       <v-list-item lines="two">
         <v-list-item-title>
-          <span> 0xe0bd3...a201c </span>
+          <span> {{ utils.truncate0x(address) }} </span>
           <v-btn flat variant="text" icon="mdi-content-copy" size="x-small" />
         </v-list-item-title>
 
@@ -57,20 +57,57 @@
 
     <v-spacer />
 
-    <v-btn flat rounded prepend-icon="mdi-wallet">
-      <span>Main Wallet</span>
-    </v-btn>
+    <div v-if="isConnected">
+      <v-btn
+        flat
+        variant="text"
+        prepend-icon="mdi-view-sequential"
+        to="/vallets"
+      >
+        Vallets
+      </v-btn>
 
-    <v-btn flat rounded variant="flat" color="primary" to="/connect">
-      <span>Connect wallet</span>
+      <v-btn
+        id="menu-activator"
+        flat
+        variant="text"
+        prepend-icon="mdi-account-outline"
+        class="me-3"
+      >
+        {{ utils.truncate0x(address) }}
+      </v-btn>
+
+      <v-menu activator="#menu-activator" location="bottom">
+        <v-list nav density="comfortable">
+          <v-list-item
+            v-for="(item, index) in menuItems"
+            :key="index"
+            :value="index"
+          >
+            <template v-slot:prepend>
+              <v-icon :icon="item.icon" />
+            </template>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </div>
+
+    <v-btn v-else flat rounded variant="flat" color="primary" to="/connect">
+      Connect wallet
     </v-btn>
   </v-app-bar>
 </template>
 
 <script lang="ts" setup>
+import { utils } from "@/utils";
+import { useConnectionStore } from "@/store";
+import { storeToRefs } from "pinia";
 import { Ref, ref } from "vue";
 
 const drawer: Ref<boolean | null> = ref(null);
+const connectionStore = useConnectionStore();
+const { address, isConnected } = storeToRefs(connectionStore);
 
 const sideBarItems = [
   {
@@ -100,6 +137,13 @@ const sideBarItems = [
     title: "Settings",
     icon: "mdi-cog",
     path: "/settings",
+  },
+];
+
+const menuItems = [
+  {
+    title: "Settings",
+    icon: "mdi-cog",
   },
 ];
 </script>
