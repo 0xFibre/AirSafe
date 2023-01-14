@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
-import CreateVallet from "@/views/safe/Create.vue";
+import CreateSafe from "@/views/safe/Create.vue";
 import Safes from "@/views/safe/Safes.vue";
 import Assets from "@/views/assets/Assets.vue";
 import Owners from "@/views/owners/Owners.vue";
 import Connect from "@/views/Connect.vue";
-import { useConnectionStore } from "@/store";
+import { useConnectionStore, useSafeStore } from "@/store";
 
 const routes = [
   {
@@ -19,8 +19,8 @@ const routes = [
   },
   {
     path: "/safe/create",
-    name: "CreateVallet",
-    component: CreateVallet,
+    name: "CreateSafe",
+    component: CreateSafe,
     meta: {
       access: "auth",
       hideSideBar: true,
@@ -41,7 +41,7 @@ const routes = [
     name: "Assets",
     component: Assets,
     meta: {
-      access: "auth",
+      access: "safe",
     },
   },
 
@@ -50,7 +50,7 @@ const routes = [
     name: "Owners",
     component: Owners,
     meta: {
-      access: "auth",
+      access: "safe",
     },
   },
 ];
@@ -62,15 +62,16 @@ export const router = createRouter({
 
 router.beforeEach(async (to, _from, next) => {
   const { isConnected } = useConnectionStore();
+  const { activeSafe } = useSafeStore();
   const { access } = <{ access?: string }>to.meta;
 
-  if (access === "auth" && !isConnected) {
-    return next({ name: "Connect" });
+  if (access === "safe") {
+    if (!isConnected) return next({ name: "Connect" });
+    if (!activeSafe) return next({ name: "CreateSafe" });
   }
 
-  if (access === "guest" && isConnected) {
-    return next({ name: "Owners" });
-  }
+  if (access === "auth" && !isConnected) return next({ name: "Connect" });
+  if (access === "guest" && isConnected) return next({ name: "Owners" });
 
   return next();
 });
