@@ -46,7 +46,7 @@
                 variant="text"
                 density="comfortable"
                 append-icon="mdi-arrow-right"
-                :to="`/${safe.id}/dashboard`"
+                @click="setActiveSafe(safe.id)"
               >
                 open
               </v-btn>
@@ -71,11 +71,18 @@ import { storeToRefs } from "pinia";
 import { onMounted } from "vue";
 import blockie from "ethereum-blockies-base64";
 import Empty from "@/components/Empty.vue";
+import { useRouter } from "vue-router";
 
 const safeStore = useSafeStore();
+const router = useRouter();
 const { safes } = storeToRefs(safeStore);
 
 onMounted(async () => {
   await safeStore.fetchSafes();
 });
+
+function setActiveSafe(id: string) {
+  safeStore.setActiveSafe(id);
+  router.push({ name: "Owners" });
+}
 </script>
