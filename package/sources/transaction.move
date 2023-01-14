@@ -39,6 +39,8 @@ module vallet::transaction {
     const TRANSFER_TRANSACTION_TYPE: u8 = 1;
 
     public(friend) fun create_transaction(vallet: &mut Vallet, type: u8, data: vector<u8>, ctx: &mut TxContext): Transaction {
+       let sender = tx_context::sender(ctx);
+       
         assert!(owner::is_owner(vallet, sender), error::not_vallet_owner());
         validate_transaction_data(type, data);
 
@@ -47,7 +49,7 @@ module vallet::transaction {
             vallet_id: object::id(vallet),
             status: ACTIVE_TRANSACTION_STATUS,
             index: vallet::transactions_count(vallet),
-            creator: tx_context::sender(ctx),
+            creator: sender,
             approvers: vec_set::empty(),
             rejecters: vec_set::empty(),
             type,
