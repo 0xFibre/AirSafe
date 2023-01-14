@@ -40,7 +40,7 @@ module vallet::transaction {
 
     public(friend) fun create_transaction(vallet: &mut Vallet, type: u8, data: vector<u8>, ctx: &mut TxContext): Transaction {
        let sender = tx_context::sender(ctx);
-       
+
         assert!(owner::is_owner(vallet, sender), error::not_vallet_owner());
         validate_transaction_data(type, data);
 
@@ -117,9 +117,9 @@ module vallet::transaction {
 
     fun deserialize_transfer_data(bcs: BCS): TransferData {
         let data = TransferData {
-            recipient: bcs::peel_address(&mut bcs),
             coin_type: bcs::peel_vec_u8(&mut bcs),
             amount: bcs::peel_u64(&mut bcs),
+            recipient: bcs::peel_address(&mut bcs),
         };
 
         assert!(vector::is_empty(&bcs::into_remainder_bytes(bcs)), error::invalid_transaction_data());
