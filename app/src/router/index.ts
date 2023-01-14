@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import CreateVallet from "@/views/vallet/Create.vue";
 import Assets from "@/views/assets/Assets.vue";
+import Owners from "@/views/owners/Owners.vue";
 
 const routes = [
   {
@@ -20,6 +21,12 @@ const routes = [
         path: "/assets",
         name: "Assets",
         component: Assets,
+      },
+
+      {
+        path: "/owners",
+        name: "Owners",
+        component: Owners,
       },
     ],
   },
