@@ -15,6 +15,7 @@ module vallet::safe {
     struct Safe has key, store {
         id: UID,
         threshold: u64,
+        creator: address,
         owners: VecSet<address>,
         transactions_count: u64,
         transactions: vector<ID>
@@ -27,6 +28,7 @@ module vallet::safe {
         Safe {
             id: object::new(ctx),
             threshold,
+            creator: tx_context::sender(ctx),
             owners: vec_set::empty(),
             transactions_count: 0,
             transactions: vector::empty()
