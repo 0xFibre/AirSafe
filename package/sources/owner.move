@@ -25,6 +25,7 @@ module vallet::owner {
 
         while (i < len) {
             add(registry, safe, vector::pop_back(&mut owners));
+            i = i + 1;
         };
 
         vector::destroy_empty(owners)

@@ -25,7 +25,7 @@
         <p class="text-body-1 mb-3 font-weight-bold fonted">Safe Owners</p>
 
         <v-text-field
-          v-for="(member, i) of input.members"
+          v-for="(member, i) of input.owners"
           :key="i"
           class="mb-3"
           density="comfortable"
@@ -33,7 +33,7 @@
           variant="outlined"
           placeholder="Owner address"
           :model-value="member"
-          @input="(e:any) => { input.members[i] = e.target.value; $emit('input', `members:${i}`, input.members[i]) }"
+          @input="(e:any) => { input.owners[i] = e.target.value; $emit('input', `owners:${i}`, input.owners[i]) }"
           hide-details
         />
 
@@ -46,10 +46,10 @@
             density="comfortable"
             append-icon="mdi-plus"
             @click="(e:any) => { 
-              let len = input.members.length; 
+              let len = input.owners.length; 
 
               // @ts-expect-error
-              input.members[len] = ''; $emit('input', `members:${len}`, '') 
+              input.owners[len] = ''; $emit('input', `owners:${len}`, '') 
             }"
           >
             Add owner
@@ -70,7 +70,7 @@
           variant="outlined"
           :items="
             Array.from(
-              { length: input.members.filter((m) => !!m).length },
+              { length: input.owners.filter((m) => !!m).length },
               (_, i) => i + 1
             )
           "
@@ -90,10 +90,10 @@ import { reactive } from "vue";
 interface Input {
   name: string;
   threshold: string;
-  members: string[];
+  owners: string[];
 }
 
-const input: Input = reactive({ name: "", members: [""], threshold: "" });
+const input: Input = reactive({ name: "", owners: [""], threshold: "" });
 
 defineProps<{ window: number }>();
 defineEmits(["input"]);

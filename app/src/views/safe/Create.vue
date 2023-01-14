@@ -48,6 +48,7 @@ import CreatePreview from "./create/Preview.vue";
 import CreateApprove from "./create/Approve.vue";
 import { useVuelidate } from "@vuelidate/core";
 import { required, minValue, maxValue } from "@vuelidate/validators";
+import { useSafeStore } from "@/store";
 
 interface State {
   window: {
@@ -56,10 +57,12 @@ interface State {
   };
   input: {
     name: string;
-    members: string[];
+    owners: string[];
     threshold: string;
   };
 }
+
+const safeStore = useSafeStore();
 
 const state: State = reactive({
   window: {
@@ -68,7 +71,7 @@ const state: State = reactive({
   },
   input: {
     name: "",
-    members: [""],
+    owners: [""],
     threshold: "",
   },
 });
@@ -77,9 +80,9 @@ const rules = {
   threshold: {
     required,
     minValue: minValue(1),
-    maxValue: maxValue(state.input.members.length),
+    maxValue: maxValue(state.input.owners.length),
   },
-  members: {
+  owners: {
     required,
     $each: {
       required,
@@ -93,13 +96,15 @@ async function createSafe() {
   if (await $v.value.$validate()) {
     const payload = {
       threshold: state.input.threshold,
-      members: state.input.members.filter((member) => !!member),
+      owners: state.input.owners.filter((member) => !!member),
     };
+
+    await safeStore.createSafe(payload.threshold, payload.owners);
   }
 }
 
 function updateInput(key: string, value: string) {
-  if (key.startsWith("members:")) {
+  if (key.startsWith("owners:")) {
     const [k, i] = key.split(":");
 
     // @ts-expect-error

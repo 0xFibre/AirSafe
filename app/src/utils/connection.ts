@@ -8,7 +8,7 @@ interface MoveCallPayload {
   module: string;
   typeArguments: string[];
   arguments: any[];
-  gasBudget: number;
+  gasBudget?: number;
 }
 
 export class Connection {
