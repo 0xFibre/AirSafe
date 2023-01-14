@@ -9,6 +9,10 @@
   font-family: Circular, sans-serif !important;
 }
 
+main {
+  background-color: #f6f6f6 !important;
+}
+
 .no-select {
   -webkit-touch-callout: none;
   -webkit-user-select: none;

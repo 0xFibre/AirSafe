@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer v-model="drawer">
+  <v-navigation-drawer v-model="drawer" v-if="!$route.meta.hideSideBar">
     <template v-slot:prepend>
       <v-list-item lines="two">
         <v-list-item-title>
