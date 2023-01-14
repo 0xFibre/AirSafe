@@ -31,7 +31,7 @@ module vallet::vallet {
         Vallet {
             id: object::new(ctx),
             name: string::utf8(name),
-            threshold: 0,
+            threshold,
             coins: bag::new(ctx),
             owners: vec_set::empty(),
             transactions_count: 0,
