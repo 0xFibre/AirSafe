@@ -1,5 +1,7 @@
 module vallet::main {
-    use sui::tx_context::{TxContext};
+    use std::vector;
+
+    use sui::tx_context::{Self, TxContext};
     use sui::coin::{Coin};
     use sui::transfer;
     
@@ -10,6 +12,8 @@ module vallet::main {
 
     public entry fun create_vallet(name: vector<u8>, threshold: u64, owners: vector<address>, ctx: &mut TxContext) {
         let vallet = vallet::new(name, threshold, owners, ctx);
+
+        vector::push_back(&mut owners, tx_context::sender(ctx));
         owner::add_owners(&mut vallet, owners);
 
         transfer::share_object(vallet);
