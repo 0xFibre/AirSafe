@@ -46,7 +46,7 @@
     </v-list>
   </v-navigation-drawer>
 
-  <v-app-bar flat border density="comfortable">
+  <v-app-bar flat density="comfortable">
     <v-app-bar-nav-icon
       @click="drawer = !drawer"
       class="d-md-block d-lg-none"
@@ -73,7 +73,7 @@ const sideBarItems = [
   {
     title: "Dashboard",
     icon: "mdi-view-dashboard",
-    path: "/",
+    path: "",
   },
   {
     title: "Transactions",
