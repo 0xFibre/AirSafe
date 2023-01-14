@@ -39,6 +39,7 @@ module vallet::transaction {
     const TRANSFER_TRANSACTION_TYPE: u8 = 1;
 
     public(friend) fun create_transaction(vallet: &mut Vallet, type: u8, data: vector<u8>, ctx: &mut TxContext): Transaction {
+        assert!(owner::is_owner(vallet, sender), error::not_vallet_owner());
         validate_transaction_data(type, data);
 
         let transaction = Transaction {
