@@ -52,19 +52,14 @@
     />
 
     <v-app-bar-title>
-      <h4>Vallet</h4>
+      <h4>Vallet Safe</h4>
     </v-app-bar-title>
 
     <v-spacer />
 
     <div v-if="isConnected">
-      <v-btn
-        flat
-        variant="text"
-        prepend-icon="mdi-view-sequential"
-        to="/vallets"
-      >
-        Vallets
+      <v-btn flat variant="text" prepend-icon="mdi-view-sequential" to="/safes">
+        Safes
       </v-btn>
 
       <v-btn

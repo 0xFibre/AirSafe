@@ -2,16 +2,16 @@
   <v-row>
     <v-col cols="12" md="8" class="mx-auto">
       <div class="d-flex mb-3">
-        <h6 class="text-h6 fonted font-weight-bold">Vallets</h6>
+        <h6 class="text-h6 fonted font-weight-bold">Safes</h6>
         <v-spacer />
         <v-btn
           flat
           variant="text"
           density="comfortable"
           prepend-icon="mdi-plus"
-          to="/vallet/create"
+          to="/safe/create"
         >
-          Create vallet
+          Create safe
         </v-btn>
       </div>
 

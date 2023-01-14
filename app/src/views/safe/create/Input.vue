@@ -1,0 +1,100 @@
+<template>
+  <v-window-item :value="window">
+    <v-card-text>
+      <h6 class="text-h6 font-weight-bold fonted">Safe Details</h6>
+      <p>Enter your Safe details</p>
+    </v-card-text>
+
+    <v-divider />
+
+    <v-card-text>
+      <div class="mb-8">
+        <p class="text-body-1 mb-3 font-weight-bold fonted">Safe Name</p>
+
+        <v-text-field
+          density="comfortable"
+          variant="outlined"
+          placeholder="Safe name"
+          v-model="input.name"
+          @input="(e:any) => $emit('input', 'name', input.name)"
+          hide-details
+        />
+      </div>
+
+      <div class="mb-8">
+        <p class="text-body-1 mb-3 font-weight-bold fonted">Safe Owners</p>
+
+        <v-text-field
+          v-for="(member, i) of input.members"
+          :key="i"
+          class="mb-3"
+          density="comfortable"
+          prepend-icon="mdi-account-outline"
+          variant="outlined"
+          placeholder="Owner address"
+          :model-value="member"
+          @input="(e:any) => { input.members[i] = e.target.value; $emit('input', `members:${i}`, input.members[i]) }"
+          hide-details
+        />
+
+        <div class="d-flex">
+          <v-spacer />
+
+          <v-btn
+            flat
+            variant="text"
+            density="comfortable"
+            append-icon="mdi-plus"
+            @click="(e:any) => { 
+              let len = input.members.length; 
+
+              // @ts-expect-error
+              input.members[len] = ''; $emit('input', `members:${len}`, '') 
+            }"
+          >
+            Add owner
+          </v-btn>
+        </div>
+      </div>
+
+      <div class="mb-5">
+        <div class="mb-3">
+          <p class="text-body-1 font-weight-bold fonted">Threshold</p>
+          <p class="text-body-2 fonted">
+            The minimum number of owners needed to approve a transaction
+          </p>
+        </div>
+
+        <v-select
+          density="comfortable"
+          variant="outlined"
+          :items="
+            Array.from(
+              { length: input.members.filter((m) => !!m).length },
+              (_, i) => i + 1
+            )
+          "
+          placeholder="Select Threshold"
+          v-model="input.threshold"
+          @update:model-value="(e: any) => $emit('input', 'threshold', input.threshold)"
+          hide-details
+        />
+      </div>
+    </v-card-text>
+  </v-window-item>
+</template>
+
+<script lang="ts" setup>
+import { reactive } from "vue";
+
+interface Input {
+  name: string;
+  threshold: string;
+  members: string[];
+}
+
+const input: Input = reactive({ name: "", members: [""], threshold: "" });
+
+defineProps<{ window: number }>();
+defineEmits(["input"]);
+</script>

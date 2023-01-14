@@ -2,7 +2,7 @@
   <v-window-item :value="window">
     <v-card-text>
       <h6 class="text-h6 font-weight-bold fonted">Review</h6>
-      <p>Review your Vallet details. Go back if you need to make adjustments</p>
+      <p>Review your Safe details. Go back if you need to make adjustments</p>
     </v-card-text>
 
     <v-divider />
@@ -14,7 +14,7 @@
             <span>Name</span>
           </v-col>
           <v-col cols="8">
-            <span>Test Vallet</span>
+            <span>Test Safe</span>
           </v-col>
         </v-row>
       </div>

@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
-import CreateVallet from "@/views/vallet/Create.vue";
-import Vallets from "@/views/vallet/Vallets.vue";
+import CreateVallet from "@/views/safe/Create.vue";
+import Safes from "@/views/safe/Safes.vue";
 import Assets from "@/views/assets/Assets.vue";
 import Owners from "@/views/owners/Owners.vue";
 import Connect from "@/views/Connect.vue";
@@ -18,7 +18,7 @@ const routes = [
     },
   },
   {
-    path: "/vallet/create",
+    path: "/safe/create",
     name: "CreateVallet",
     component: CreateVallet,
     meta: {
@@ -27,9 +27,9 @@ const routes = [
     },
   },
   {
-    path: "/vallets",
-    name: "Vallets",
-    component: Vallets,
+    path: "/safes",
+    name: "Safes",
+    component: Safes,
     meta: {
       access: "auth",
       hideSideBar: true,

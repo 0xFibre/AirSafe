@@ -11,6 +11,8 @@
   "dependencies": {
     "@mdi/font": "7.0.96",
     "@mysten/wallet-adapter-wallet-standard": "^0.3.8",
+    "@vuelidate/core": "^2.0.0",
+    "@vuelidate/validators": "^2.0.0",
     "@vueuse/core": "^9.10.0",
     "core-js": "^3.8.3",
     "pinia": "^2.0.23",
