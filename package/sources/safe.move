@@ -2,7 +2,7 @@ module vallet::safe {
     use std::vector;
 
     use sui::object::{Self, UID, ID};
-    use sui::tx_context::{TxContext};
+    use sui::tx_context::{Self, TxContext};
     use sui::vec_set::{Self, VecSet};
 
     use vallet::error;
@@ -23,6 +23,8 @@ module vallet::safe {
 
     public(friend) fun new(threshold: u64, owners: vector<address>, ctx: &mut TxContext): Safe {
         let owners_count = vector::length(&owners) + 1;
+
+        assert!(threshold > 0, error::invalid_threshold());
         assert!(threshold <= owners_count, error::invalid_threshold());
 
         Safe {
