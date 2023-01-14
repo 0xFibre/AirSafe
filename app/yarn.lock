@@ -197,6 +197,11 @@
   resolved "https://registry.yarnpkg.com/@types/semver/-/semver-7.3.13.tgz#da4bfd73f49bd541d28920ab0e2bf0ee80f71c91"
   integrity sha512-21cFJr9z3g5dW8B0CVI9g2O9beqaThGQ6ZFBqHfwhzLDKUxaqTIy3vnfah/UPkfOiF2pLq+tGz+W8RyCskuslw==
 
+"@types/web-bluetooth@^0.0.16":
+  version "0.0.16"
+  resolved "https://registry.yarnpkg.com/@types/web-bluetooth/-/web-bluetooth-0.0.16.tgz#1d12873a8e49567371f2a75fe3e7f7edca6662d8"
+  integrity sha512-oh8q2Zc32S6gd/j50GowEjKLoOVOwHP/bWVjKJInBwQqdOYMdPrf1oVlelTlyfFK3CKxL1uahMDAr+vy8T7yMQ==
+
 "@types/webfontloader@^1.6.35":
   version "1.6.35"
   resolved "https://registry.yarnpkg.com/@types/webfontloader/-/webfontloader-1.6.35.tgz#c9cedff2995c61ee9b2064714e7f7d7763ac50bd"
@@ -452,6 +457,28 @@
   dependencies:
     find-cache-dir "^3.3.2"
     upath "^2.0.1"
+
+"@vueuse/core@^9.10.0":
+  version "9.10.0"
+  resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-9.10.0.tgz#2ef6e55ca773c5b2db1e3f13b8292af96dd32214"
+  integrity sha512-CxMewME07qeuzuT/AOIQGv0EhhDoojniqU6pC3F8m5VC76L47UT18DcX88kWlP3I7d3qMJ4u/PD8iSRsy3bmNA==
+  dependencies:
+    "@types/web-bluetooth" "^0.0.16"
+    "@vueuse/metadata" "9.10.0"
+    "@vueuse/shared" "9.10.0"
+    vue-demi "*"
+
+"@vueuse/metadata@9.10.0":
+  version "9.10.0"
+  resolved "https://registry.yarnpkg.com/@vueuse/metadata/-/metadata-9.10.0.tgz#1a5eb94ca755bd8e666505f47da7d88969cffdc7"
+  integrity sha512-G5VZhgTCapzU9rv0Iq2HBrVOSGzOKb+OE668NxhXNcTjUjwYxULkEhAw70FtRLMZc+hxcFAzDZlKYA0xcwNMuw==
+
+"@vueuse/shared@9.10.0":
+  version "9.10.0"
+  resolved "https://registry.yarnpkg.com/@vueuse/shared/-/shared-9.10.0.tgz#49874a0f9955d28689b3133de660367c63dbc030"
+  integrity sha512-vakHJ2ZRklAzqmcVBL38RS7BxdBA4+5poG9NsSyqJxrt9kz0zX3P5CXMy0Hm6LFbZXUgvKdqAS3pUH1zX/5qTQ==
+  dependencies:
+    vue-demi "*"
 
 "@wallet-standard/app@^1.0.1":
   version "1.0.1"

@@ -26,12 +26,12 @@
 
 <script lang="ts" setup>
 import { connection } from "@/utils";
-import { useRouter } from "vue-router";
+import { useConnectionStore } from "@/store";
 
-const router = useRouter();
+const connectionStore = useConnectionStore();
 const { wallets } = connection;
 
 async function connect(name: string) {
-  await connection.connect(name);
+  await connectionStore.establishConnection(name);
 }
 </script>

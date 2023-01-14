@@ -53,7 +53,7 @@ export class Connection {
     this._connected = false;
   }
 
-  async account() {
+  get account() {
     return this._account;
   }
 
