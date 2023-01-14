@@ -15,7 +15,7 @@ module vallet::main {
         transfer::share_object(vallet);
     }
 
-    public entry fun deposit_coin<T: key + store>(vallet: &mut Vallet, coins: vector<Coin<T>>, amount: u64, ctx: &mut TxContext) {
+    public entry fun deposit_coin<T>(vallet: &mut Vallet, coins: vector<Coin<T>>, amount: u64, ctx: &mut TxContext) {
         coin::deposit<T>(vallet, coins, amount, ctx);
     }
 
