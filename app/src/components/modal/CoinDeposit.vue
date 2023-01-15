@@ -10,19 +10,13 @@
           flat
           density="comfortable"
           icon="mdi-close"
-          @click="
-            () => {
-              $emit('toggle');
-              input.amount = '';
-              input.coin = undefined;
-            }
-          "
+          @click="toggleModal"
         />
       </v-card-text>
 
       <v-divider />
 
-      <v-card-text>
+      <v-card-text class="mb-3">
         <div class="mb-3">
           <p class="text-body-2 mb-3 fonted">Amount</p>
 
@@ -61,9 +55,9 @@
         </div>
 
         <v-btn
-          class="mt-5"
           flat
           block
+          class="mt-5"
           variant="flat"
           color="primary"
           @click="$emit('deposit', input)"
@@ -77,28 +71,34 @@
 
 <script lang="ts" setup>
 import { coin } from "@/lib/coin";
-import { BasicCoin, Coin } from "@/lib/types";
+import { BasicCoin } from "@/lib/types";
 import { watch, reactive } from "vue";
 
-const props = defineProps<{ show: boolean; coin?: BasicCoin; coins: Coin[] }>();
-defineEmits(["deposit", "toggle"]);
-
-interface Input {
+const event = defineEmits(["deposit", "toggle"]);
+const props = defineProps<{
+  show: boolean;
+  coin?: BasicCoin;
+  coins: BasicCoin[];
+}>();
+const input: {
   coin?: BasicCoin | string;
   amount: string;
-}
+} = reactive({ amount: "" });
 
-const input: Input = reactive({ amount: "" });
-
-watch(props, () => {
-  input.coin = props.coin;
-});
+watch(props, () => (input.coin = props.coin));
 
 async function loadCoinMetadata() {
   if (typeof input.coin === "string") {
     const metadata = await coin.getCoinMetadata(input.coin);
     input.coin = { coinType: input.coin, metadata };
   }
+}
+
+function toggleModal() {
+  event("toggle");
+
+  input.amount = "";
+  input.coin = undefined;
 }
 </script>
 

@@ -25,8 +25,8 @@
       <v-divider />
 
       <v-card-text class="mb-3">
-        <div class="mb-2">
-          <p class="text-body-2 mb-3 fonted">Transfer Amount</p>
+        <div class="mb-3">
+          <p class="text-body-2 mb-3 fonted">Amount</p>
           <v-text-field
             type="number"
             color="primary"
@@ -34,11 +34,12 @@
             variant="outlined"
             placeholder="Enter transfer amount"
             v-model="input.amount"
+            hide-details
           />
         </div>
 
-        <div class="mb-2">
-          <p class="text-body-2 mb-3 fonted">Recipient address</p>
+        <div class="mb-3">
+          <p class="text-body-2 mb-3 fonted">Recipient</p>
           <v-text-field
             type="text"
             color="primary"
@@ -46,12 +47,14 @@
             variant="outlined"
             placeholder="Enter recipient address"
             v-model="input.recipient"
+            hide-details
           />
         </div>
 
         <v-btn
           flat
           block
+          class="mt-5"
           variant="flat"
           color="primary"
           @click="$emit('transfer', input, coin)"
@@ -64,18 +67,15 @@
 </template>
 
 <script lang="ts" setup>
-import { Coin } from "@/lib/types";
+import { BasicCoin } from "@/lib/types";
 import { reactive } from "vue";
 
-interface Input {
+defineProps<{ show: boolean; coin?: BasicCoin }>();
+defineEmits(["transfer", "toggle"]);
+const input: {
   amount: string;
   recipient: string;
-}
-
-const input: Input = reactive({ amount: "", recipient: "" });
-
-defineProps<{ show: boolean; coin?: Coin }>();
-defineEmits(["transfer", "toggle"]);
+} = reactive({ amount: "", recipient: "" });
 </script>
 
 <style>
