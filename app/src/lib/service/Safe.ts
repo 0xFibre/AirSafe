@@ -48,16 +48,22 @@ export class SafeService {
       const safesBatch = await this._provider.getObjectBatch(ids);
 
       return Promise.all(
-        safesBatch.map(async (safe) => {
-          const safeObject = await this._provider.getObject(getObjectId(safe));
-
-          const fields = getObjectFields(safeObject);
-          return this._buildSafe(fields!);
-        })
+        safesBatch.map(async (safe) => await this.getSafe(getObjectId(safe)))
       );
     }
 
     throw new Error("Registry ID not found");
+  }
+
+  async getSafe(id: string): Promise<Safe> {
+    const safeObject = await this._provider.getObject(id);
+
+    if (safeObject.status === "Exists") {
+      const fields = getObjectFields(safeObject);
+      return this._buildSafe(fields!);
+    }
+
+    throw new Error("Safe not found");
   }
 
   async _getAddressSafeIDs(id: string, address: string) {

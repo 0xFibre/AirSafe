@@ -6,9 +6,12 @@ import { useConnectionStore } from "./connection";
 
 export const useSafeStore = defineStore("safe", {
   state: () =>
-    <{ safes: Safe[]; activeSafe: string | null }>{
+    <{ safes: Safe[]; safe?: Safe; activeSafeId: string | null }>{
       safes: [],
-      activeSafe: <string | null>(<unknown>useLocalStorage("activeSafe", null)),
+      activeSafeId: <string | null>(
+        (<unknown>useLocalStorage("activeSafeId", null))
+      ),
+      safe: undefined,
     },
 
   actions: {
@@ -19,14 +22,21 @@ export const useSafeStore = defineStore("safe", {
 
     async fetchSafes() {
       const { address } = useConnectionStore();
-      const safes = await safeService.getAddressSafes(address);
-      this.safes = safes;
+      this.safes = await safeService.getAddressSafes(address);
     },
 
-    async setActiveSafe(id: string) {
+    async fetchActiveSafe() {
+      if (this.activeSafeId) {
+        this.safe = await safeService.getSafe(this.activeSafeId);
+      }
+
+      throw new Error("No active safe");
+    },
+
+    async setActiveSafeId(id: string) {
       const safe = this.safes.find((safe) => safe.id === id);
       if (safe) {
-        this.activeSafe = id;
+        this.activeSafeId = id;
       }
     },
   },

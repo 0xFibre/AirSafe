@@ -82,7 +82,7 @@ onMounted(async () => {
 });
 
 function setActiveSafe(id: string) {
-  safeStore.setActiveSafe(id);
+  safeStore.setActiveSafeId(id);
   router.push({ name: "Owners" });
 }
 </script>

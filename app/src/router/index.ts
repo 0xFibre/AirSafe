@@ -62,12 +62,12 @@ export const router = createRouter({
 
 router.beforeEach(async (to, _from, next) => {
   const { isConnected } = useConnectionStore();
-  const { activeSafe } = useSafeStore();
+  const { activeSafeId } = useSafeStore();
   const { access } = <{ access?: string }>to.meta;
 
   if (access === "safe") {
     if (!isConnected) return next({ name: "Connect" });
-    if (!activeSafe) return next({ name: "CreateSafe" });
+    if (!activeSafeId) return next({ name: "CreateSafe" });
   }
 
   if (access === "auth" && !isConnected) return next({ name: "Connect" });
