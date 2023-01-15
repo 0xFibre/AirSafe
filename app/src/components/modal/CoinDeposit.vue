@@ -1,8 +1,24 @@
 <template>
   <v-dialog :model-value="show" persistent max-width="550px">
     <v-card>
-      <v-card-text>
-        <h6 class="text-h6 font-weight-bold fonted">Deposit Coin</h6>
+      <v-card-text class="d-flex">
+        <h6 class="text-h6 font-weight-bold fonted">
+          Deposit {{ coin?.metadata.symbol }}
+        </h6>
+
+        <v-spacer />
+
+        <v-btn
+          flat
+          density="compact"
+          icon="mdi-close"
+          @click="
+            () => {
+              $emit('toggle');
+              amount = '';
+            }
+          "
+        />
       </v-card-text>
 
       <v-divider />
@@ -11,11 +27,12 @@
         <div class="mb-2">
           <p class="text-body-2 mb-3 fonted">Deposit Amount</p>
           <v-text-field
+            type="number"
             color="primary"
             density="comfortable"
             variant="outlined"
             placeholder="Enter deposit amount"
-            v-model="input.amount"
+            v-model="amount"
           />
         </div>
 
@@ -24,7 +41,7 @@
           block
           variant="flat"
           color="primary"
-          @click="$emit('deposit', input)"
+          @click="$emit('deposit', amount, coin)"
         >
           Deposit
         </v-btn>
@@ -34,16 +51,13 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from "vue";
+import { Coin } from "@/lib/types";
+import { ref, Ref } from "vue";
 
-interface Input {
-  amount: string;
-  coinType: string;
-}
+const amount: Ref<string> = ref("");
 
-let input: Input = reactive({ amount: "", coinType: "" });
-defineProps<{ show: boolean }>();
-defineEmits(["deposit"]);
+defineProps<{ show: boolean; coin?: Coin }>();
+defineEmits(["deposit", "toggle"]);
 </script>
 
 <style>

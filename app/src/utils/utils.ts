@@ -13,4 +13,9 @@ export const utils = {
     const value = new BigNumber(balance.toString());
     return value.div(Math.pow(10, decimals));
   },
+
+  parseBalance(balance: string, decimals: number) {
+    const value = new BigNumber(balance);
+    return value.times(Math.pow(10, decimals));
+  },
 };

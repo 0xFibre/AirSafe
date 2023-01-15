@@ -16,8 +16,9 @@ export interface SafeData {
 
 export interface DepositCoinData {
   safeId: string;
-  coinType: string;
   amount: string;
+  sender: string;
+  coin: Coin;
 }
 
 export interface DynamicFieldInfo {

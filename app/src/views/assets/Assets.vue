@@ -11,7 +11,12 @@
 
   <template v-if="safe">
     <CoinsTable @deposit="toggleDepositModal" :safe="safe" />
-    <CoinDepositModal @deposit="depositCoin" :show="state.depositCoin.show" />
+    <CoinDepositModal
+      @deposit="coinDeposit"
+      @toggle="toggleDepositModal"
+      :show="state.coinDeposit.showModal"
+      :coin="state.coinDeposit.coin"
+    />
   </template>
 </template>
 
@@ -27,21 +32,21 @@ import CoinDepositModal from "@/components/modal/CoinDeposit.vue";
 import { useSafeStore } from "@/store";
 import { storeToRefs } from "pinia";
 import { onMounted, reactive } from "vue";
-import { Safe } from "@/lib/entity";
+import { Coin } from "@/lib/types";
 
 const safeStore = useSafeStore();
 const { safe } = storeToRefs(safeStore);
 
 interface State {
-  depositCoin: {
-    show: boolean;
-    coin?: string;
+  coinDeposit: {
+    coin?: Coin;
+    showModal: boolean;
   };
 }
 
 const state: State = reactive({
-  depositCoin: {
-    show: false,
+  coinDeposit: {
+    showModal: false,
     coin: undefined,
   },
 });
@@ -50,13 +55,12 @@ onMounted(async () => {
   await safeStore.fetchActiveSafe();
 });
 
-function toggleDepositModal(coin?: { type: string }) {
-  state.depositCoin.show = !state.depositCoin.show;
-  state.depositCoin.coin = coin?.type;
+function toggleDepositModal(coin?: Coin) {
+  state.coinDeposit.showModal = !state.coinDeposit.showModal;
+  state.coinDeposit.coin = coin;
 }
 
-async function depositCoin(data: { amount: string }) {
-  let payload = { amount: data.amount, coinType: "0x2::sui::SUI" };
-  await safeStore.depositCoin(payload.amount, payload.coinType);
+async function coinDeposit(amount: string, coin: Coin) {
+  await safeStore.depositCoin(amount, coin);
 }
 </script>

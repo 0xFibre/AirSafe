@@ -1,5 +1,6 @@
 import { Safe } from "@/lib/entity";
 import { safeService } from "@/lib/service";
+import { Coin } from "@/lib/types";
 import { useLocalStorage } from "@vueuse/core";
 import { defineStore } from "pinia";
 import { useConnectionStore } from "./connection";
@@ -40,10 +41,13 @@ export const useSafeStore = defineStore("safe", {
       }
     },
 
-    async depositCoin(amount: string, coinType: string) {
+    async depositCoin(amount: string, coin: Coin) {
+      const { address } = useConnectionStore();
+
       const result = await safeService.depositCoin({
         amount,
-        coinType,
+        coin,
+        sender: address,
         safeId: this.activeSafeId!,
       });
 

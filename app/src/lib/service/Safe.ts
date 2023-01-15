@@ -1,5 +1,6 @@
-import { connection } from "@/utils";
+import { connection, utils } from "@/utils";
 import { getObjectFields, getObjectId, ObjectId } from "@mysten/sui.js";
+import { coin } from "../coin";
 import { Safe } from "../entity";
 import { Provider } from "../provider";
 import { CreateSafeData, DepositCoinData, SafeData } from "../types";
@@ -38,16 +39,31 @@ export class SafeService {
   }
 
   async depositCoin(data: DepositCoinData) {
+    const {
+      sender,
+      coin: { coinType, metadata },
+    } = data;
+
+    const amount = utils
+      .parseBalance(data.amount, metadata.decimals)
+      .toString();
+
+    const coins = await this._provider.getCoinBalancesOwnedByAddress(
+      sender,
+      coinType
+    );
+    const inputCoins = coin.getInputCoins(coins, BigInt(amount));
+
+    if (inputCoins.length < 1) {
+      throw new Error("Insufficient balance");
+    }
+
     const moveCallPayload = {
       packageObjectId: this._packageObjectId,
       module: this.module,
       function: "deposit_coin",
-      typeArguments: [data.coinType],
-      arguments: [
-        data.safeId,
-        ["0x8f8e50a35df9f79e35d50ba36bed83d862c782f3"],
-        data.amount,
-      ],
+      typeArguments: [data.coin.coinType],
+      arguments: [data.safeId, inputCoins, amount],
     };
 
     return await connection.executeMoveCall(moveCallPayload);
