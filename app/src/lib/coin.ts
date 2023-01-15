@@ -1,7 +1,7 @@
 import { env } from "@/config";
 import { Coin, GetObjectDataResponse, getObjectFields } from "@mysten/sui.js";
 import { Provider } from "./provider";
-import { CoinMetadata } from "./types";
+import { BasicCoin, CoinMetadata } from "./types";
 
 const provider = new Provider(env.suiRpcUrl);
 
@@ -40,4 +40,25 @@ async function getCoinMetadata(type: string): Promise<CoinMetadata> {
   };
 }
 
-export const coin = { getInputCoins, getCoinMetadata };
+async function getAddressBasicCoins(address: string): Promise<BasicCoin[]> {
+  const coinObjects = await provider.getCoinBalancesOwnedByAddress(address);
+
+  const coins: Map<string, BasicCoin> = new Map();
+
+  for (const object of coinObjects) {
+    const coinType = <string>Coin.getCoinTypeArg(object);
+
+    if (!coins.has(coinType)) {
+      const metadata = await getCoinMetadata(coinType);
+
+      coins.set(coinType, {
+        coinType,
+        metadata,
+      });
+    }
+  }
+
+  return Array.from(coins.entries()).map((coin) => coin[1]);
+}
+
+export const coin = { getInputCoins, getCoinMetadata, getAddressBasicCoins };

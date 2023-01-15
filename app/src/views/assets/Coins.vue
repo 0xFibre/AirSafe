@@ -21,7 +21,7 @@
       <CoinsTable
         @deposit="toggleCoinDepositModal"
         @transfer="toggleCoinTransferModal"
-        :coins="state.coins"
+        :coins="state.safeCoins"
       />
     </v-card>
 
@@ -30,7 +30,7 @@
       @toggle="toggleCoinDepositModal"
       :show="state.coinDeposit.showModal"
       :coin="state.coinDeposit.coin"
-      :coins="state.coins"
+      :coins="state.userCoins"
     />
 
     <CoinTransferModal
@@ -52,24 +52,26 @@
 import CoinsTable from "@/components/table/CoinsTable.vue";
 import CoinDepositModal from "@/components/modal/CoinDeposit.vue";
 import CoinTransferModal from "@/components/modal/CoinTransfer.vue";
-import { useSafeStore } from "@/store";
+import { useConnectionStore, useSafeStore } from "@/store";
 import { storeToRefs } from "pinia";
 import { onMounted, reactive } from "vue";
 import { BasicCoin, Coin } from "@/lib/types";
+import { coin } from "@/lib/coin";
 
 const safeStore = useSafeStore();
 const { safe } = storeToRefs(safeStore);
 
 interface State {
   coinDeposit: {
-    coin?: Coin;
+    coin?: BasicCoin;
     showModal: boolean;
   };
   coinTransfer: {
     coin?: Coin;
     showModal: boolean;
   };
-  coins: Coin[];
+  safeCoins: Coin[];
+  userCoins: BasicCoin[];
 }
 
 const state: State = reactive({
@@ -81,15 +83,20 @@ const state: State = reactive({
     showModal: false,
     coin: undefined,
   },
-  coins: [],
+  safeCoins: [],
+  userCoins: [],
 });
+
+const connectionStore = useConnectionStore();
+const { address } = storeToRefs(connectionStore);
 
 onMounted(async () => {
   await safeStore.fetchActiveSafe();
-  state.coins = safe?.value ? await safe.value.getCoinBalances() : [];
+  state.safeCoins = safe?.value ? await safe.value.getCoinBalances() : [];
+  state.userCoins = await coin.getAddressBasicCoins(address.value);
 });
 
-function toggleCoinDepositModal(coin?: Coin) {
+function toggleCoinDepositModal(coin?: BasicCoin) {
   state.coinDeposit.showModal = !state.coinDeposit.showModal;
   state.coinDeposit.coin = coin;
 }
