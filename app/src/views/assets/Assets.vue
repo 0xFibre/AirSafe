@@ -1,8 +1,8 @@
 <template>
-  <h5 class="text-h5 font-weight-bold fonted">Assets</h5>
+  <h6 class="text-h6 mb-3 font-weight-bold fonted">Assets</h6>
 
   <div class="mb-3">
-    <v-tabs color="primary">
+    <v-tabs density="compact" color="primary">
       <v-tab>Coins</v-tab>
     </v-tabs>
 
@@ -10,10 +10,10 @@
   </div>
 
   <template v-if="safe">
-    <CoinsTable @deposit="toggleDepositModal" :safe="safe" />
+    <CoinsTable @deposit="toggleCoinDepositModal" :safe="safe" />
     <CoinDepositModal
       @deposit="coinDeposit"
-      @toggle="toggleDepositModal"
+      @toggle="toggleCoinDepositModal"
       :show="state.coinDeposit.showModal"
       :coin="state.coinDeposit.coin"
     />
@@ -55,7 +55,7 @@ onMounted(async () => {
   await safeStore.fetchActiveSafe();
 });
 
-function toggleDepositModal(coin?: Coin) {
+function toggleCoinDepositModal(coin?: Coin) {
   state.coinDeposit.showModal = !state.coinDeposit.showModal;
   state.coinDeposit.coin = coin;
 }
