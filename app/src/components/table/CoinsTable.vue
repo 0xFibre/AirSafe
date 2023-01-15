@@ -24,7 +24,10 @@
 
           {{ coin.metadata.name }}
         </td>
-        <td>{{ coin.balance }} {{ coin.metadata.symbol }}</td>
+        <td>
+          {{ utils.formatBalance(coin.balance, coin.metadata.decimals) }}
+          {{ coin.metadata.symbol }}
+        </td>
         <td class="text-right">
           <v-btn
             flat
@@ -56,14 +59,16 @@
 </template>
 
 <script lang="ts" setup>
+import Empty from "@/components/Empty.vue";
+import { onMounted, reactive } from "vue";
 import { Safe } from "@/lib/entity";
 import { Coin } from "@/lib/types";
-import { onMounted, reactive } from "vue";
-import Empty from "../Empty.vue";
+import { utils } from "@/utils";
 
 interface State {
   coins: Coin[];
 }
+
 const state: State = reactive({ coins: [] });
 const props = defineProps<{ safe: Safe }>();
 defineEmits(["deposit"]);

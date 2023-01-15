@@ -1,5 +1,6 @@
 import { env } from "@/config";
 import { Coin as CoinAPI, getMoveObjectType } from "@mysten/sui.js";
+import { BN } from "bn.js";
 import { Provider } from "../provider";
 import { Coin, SafeData } from "../types";
 
@@ -43,9 +44,9 @@ export class Safe implements SafeData {
 
       return {
         id,
-        coinType,
         metadata,
-        balance,
+        coinType: coinType!,
+        balance: balance || 0n,
       };
     }
 

@@ -31,7 +31,7 @@ export interface DynamicFieldInfo {
 
 export interface Coin {
   id: string;
-  balance?: bigint;
-  coinType: string | null;
+  balance: bigint;
+  coinType: string;
   metadata: CoinMetadata;
 }
