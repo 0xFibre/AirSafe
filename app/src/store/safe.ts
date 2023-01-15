@@ -1,6 +1,8 @@
 import { Safe } from "@/lib/entity";
+import { serializer } from "@/lib/serializer";
 import { safeService } from "@/lib/service";
 import { Coin } from "@/lib/types";
+import { utils } from "@/utils";
 import { useLocalStorage } from "@vueuse/core";
 import { defineStore } from "pinia";
 import { useConnectionStore } from "./connection";
@@ -51,6 +53,29 @@ export const useSafeStore = defineStore("safe", {
         safeId: this.activeSafeId!,
       });
 
+      console.log(result);
+    },
+
+    async createCoinTransfer(
+      input: { amount: string; recipient: string },
+      coin: Coin
+    ) {
+      const amount = utils.parseBalance(input.amount, coin.metadata.decimals);
+
+      const transferData = serializer.serialize("TransferData", {
+        coin_type: Buffer.from(coin.coinType),
+        amount: amount.toString(),
+        recipient: input.recipient,
+      });
+
+      const data = {
+        type: 1,
+        data: transferData,
+        safeId: this.activeSafeId!,
+      };
+
+      // console.log(serializer.deserialize("TransferData", transferData));
+      const result = await safeService.createTransaction(data);
       console.log(result);
     },
   },

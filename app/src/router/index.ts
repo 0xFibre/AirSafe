@@ -67,7 +67,7 @@ router.beforeEach(async (to, _from, next) => {
 
   if (access === "safe") {
     if (!isConnected) return next({ name: "Connect" });
-    if (!activeSafeId) return next({ name: "CreateSafe" });
+    if (!activeSafeId) return next({ name: "Safes" });
   }
 
   if (access === "auth" && !isConnected) return next({ name: "Connect" });

@@ -1,9 +1,14 @@
 import { connection, utils } from "@/utils";
-import { getObjectFields, getObjectId, ObjectId } from "@mysten/sui.js";
+import { getObjectFields, getObjectId, ObjectId, bcs } from "@mysten/sui.js";
 import { coin } from "../coin";
 import { Safe } from "../entity";
 import { Provider } from "../provider";
-import { CreateSafeData, DepositCoinData, SafeData } from "../types";
+import {
+  CreateSafeData,
+  CreateSafeTransactionData,
+  DepositCoinData,
+  SafeData,
+} from "../types";
 
 interface ConstructorData {
   packageObjectId: ObjectId;
@@ -38,6 +43,22 @@ export class SafeService {
     return await connection.executeMoveCall(moveCallPayload);
   }
 
+  // async depositCoin(data: DepositCoinData) {
+  //   const moveCallPayload = {
+  //     packageObjectId: this._packageObjectId,
+  //     module: this.module,
+  //     function: "deposit_coin",
+  //     typeArguments: ["0x2::sui::SUI"],
+  //     arguments: [
+  //       data.safeId,
+  //       ["0x409d701d5041b6a1a892cadddd4be3e130c18a99"],
+  //       "100000",
+  //     ],
+  //   };
+
+  //   return await connection.executeMoveCall(moveCallPayload);
+  // }
+
   async depositCoin(data: DepositCoinData) {
     const {
       sender,
@@ -64,6 +85,18 @@ export class SafeService {
       function: "deposit_coin",
       typeArguments: [data.coin.coinType],
       arguments: [data.safeId, inputCoins, amount],
+    };
+
+    return await connection.executeMoveCall(moveCallPayload);
+  }
+
+  async createTransaction(data: CreateSafeTransactionData) {
+    const moveCallPayload = {
+      packageObjectId: this._packageObjectId,
+      module: this.module,
+      function: "create_transaction",
+      typeArguments: [],
+      arguments: [data.safeId, data.type, data.data],
     };
 
     return await connection.executeMoveCall(moveCallPayload);

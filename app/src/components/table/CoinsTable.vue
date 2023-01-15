@@ -2,7 +2,7 @@
   <v-table hover fixed-header>
     <thead>
       <tr>
-        <th>Name</th>
+        <th>Coin</th>
         <th>Balance</th>
         <th></th>
       </tr>
@@ -10,19 +10,21 @@
     <tbody>
       <tr v-for="coin in state.coins" :key="coin.id">
         <td>
-          <v-avatar size="30" class="me-3">
-            <v-img
-              :src="
-                coin.metadata.iconUrl
-                  ? coin.metadata.iconUrl
-                  : coin.coinType === '0x2::sui::SUI'
-                  ? '/assets/sui.svg'
-                  : ''
-              "
-            />
-          </v-avatar>
+          <div class="d-flex align-center">
+            <v-avatar size="20" class="me-2">
+              <v-img
+                :src="
+                  coin.metadata.iconUrl
+                    ? coin.metadata.iconUrl
+                    : coin.coinType === '0x2::sui::SUI'
+                    ? '/assets/sui.svg'
+                    : ''
+                "
+              />
+            </v-avatar>
 
-          {{ coin.metadata.name }}
+            <div>{{ coin.metadata.name }}</div>
+          </div>
         </td>
         <td>
           {{ utils.formatBalance(coin.balance, coin.metadata.decimals) }}
@@ -35,7 +37,6 @@
             variant="tonal"
             class="me-1"
             density="comfortable"
-            prepend-icon="mdi-arrow-bottom-left"
             @click="$emit('deposit', coin)"
           >
             Deposit
@@ -47,9 +48,9 @@
             variant="tonal"
             class="ms-1"
             density="comfortable"
-            append-icon="mdi-arrow-top-right"
+            @click="$emit('transfer', coin)"
           >
-            Send
+            Transfer
           </v-btn>
         </td>
       </tr>
@@ -72,7 +73,7 @@ interface State {
 
 const state: State = reactive({ coins: [] });
 const props = defineProps<{ safe: Safe }>();
-defineEmits(["deposit"]);
+defineEmits(["deposit", "transfer"]);
 
 onMounted(async () => {
   state.coins = await props.safe.getCoinBalances();

@@ -26,9 +26,9 @@ module vallet::transaction {
     }
 
     struct TransferData has drop {
+        coin_type: vector<u8>,
         amount: u64,
         recipient: address,
-        coin_type: vector<u8>
     }
 
     const ACTIVE_TRANSACTION_STATUS: u8 = 1;
@@ -109,7 +109,7 @@ module vallet::transaction {
         let bcs = bcs::new(data);
 
         if(type == TRANSFER_TRANSACTION_TYPE) {
-            deserialize_transfer_data(bcs)
+            deserialize_transfer_data(bcs);
         } else {
             abort error::invalid_transaction_type()
         };

@@ -36,3 +36,9 @@ export interface Coin {
   coinType: string;
   metadata: CoinMetadata;
 }
+
+export interface CreateSafeTransactionData {
+  safeId: string;
+  data: string;
+  type: number;
+}
