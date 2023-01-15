@@ -2,7 +2,7 @@ import { connection } from "@/utils";
 import { getObjectFields, getObjectId, ObjectId } from "@mysten/sui.js";
 import { Safe } from "../entity";
 import { Provider } from "../provider";
-import { CreateSafeData, address, SafeData } from "../types";
+import { CreateSafeData, DepositCoinData, SafeData } from "../types";
 
 interface ConstructorData {
   packageObjectId: ObjectId;
@@ -37,9 +37,23 @@ export class SafeService {
     return await connection.executeMoveCall(moveCallPayload);
   }
 
-  async _getRegistryObject() {}
+  async depositCoin(data: DepositCoinData) {
+    const moveCallPayload = {
+      packageObjectId: this._packageObjectId,
+      module: this.module,
+      function: "deposit_coin",
+      typeArguments: [data.coinType],
+      arguments: [
+        data.safeId,
+        ["0x8f8e50a35df9f79e35d50ba36bed83d862c782f3"],
+        data.amount,
+      ],
+    };
 
-  async getAddressSafes(address: address): Promise<Safe[]> {
+    return await connection.executeMoveCall(moveCallPayload);
+  }
+
+  async getAddressSafes(address: string): Promise<Safe[]> {
     const registry = await this._provider.getObject(this._registryObjectId);
 
     if (registry.status === "Exists") {

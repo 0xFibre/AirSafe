@@ -28,9 +28,9 @@ export const useSafeStore = defineStore("safe", {
     async fetchActiveSafe() {
       if (this.activeSafeId) {
         this.safe = await safeService.getSafe(this.activeSafeId);
+      } else {
+        throw new Error("No active safe");
       }
-
-      throw new Error("No active safe");
     },
 
     async setActiveSafeId(id: string) {
@@ -38,6 +38,16 @@ export const useSafeStore = defineStore("safe", {
       if (safe) {
         this.activeSafeId = id;
       }
+    },
+
+    async depositCoin(amount: string, coinType: string) {
+      const result = await safeService.depositCoin({
+        amount,
+        coinType,
+        safeId: this.activeSafeId!,
+      });
+
+      console.log(result);
     },
   },
 });
