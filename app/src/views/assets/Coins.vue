@@ -11,6 +11,7 @@
         variant="tonal"
         color="primary"
         class="me-1"
+        @click="toggleCoinDepositModal()"
       >
         Deposit
       </v-btn>
@@ -20,7 +21,7 @@
       <CoinsTable
         @deposit="toggleCoinDepositModal"
         @transfer="toggleCoinTransferModal"
-        :safe="safe"
+        :coins="state.coins"
       />
     </v-card>
 
@@ -29,6 +30,7 @@
       @toggle="toggleCoinDepositModal"
       :show="state.coinDeposit.showModal"
       :coin="state.coinDeposit.coin"
+      :coins="state.coins"
     />
 
     <CoinTransferModal
@@ -53,7 +55,7 @@ import CoinTransferModal from "@/components/modal/CoinTransfer.vue";
 import { useSafeStore } from "@/store";
 import { storeToRefs } from "pinia";
 import { onMounted, reactive } from "vue";
-import { Coin } from "@/lib/types";
+import { BasicCoin, Coin } from "@/lib/types";
 
 const safeStore = useSafeStore();
 const { safe } = storeToRefs(safeStore);
@@ -67,6 +69,7 @@ interface State {
     coin?: Coin;
     showModal: boolean;
   };
+  coins: Coin[];
 }
 
 const state: State = reactive({
@@ -78,10 +81,12 @@ const state: State = reactive({
     showModal: false,
     coin: undefined,
   },
+  coins: [],
 });
 
 onMounted(async () => {
   await safeStore.fetchActiveSafe();
+  state.coins = safe?.value ? await safe.value.getCoinBalances() : [];
 });
 
 function toggleCoinDepositModal(coin?: Coin) {
@@ -94,8 +99,8 @@ function toggleCoinTransferModal(coin?: Coin) {
   state.coinTransfer.coin = coin;
 }
 
-async function coinDeposit(amount: string, coin: Coin) {
-  await safeStore.depositCoin(amount, coin);
+async function coinDeposit(input: { amount: string; coin: BasicCoin }) {
+  await safeStore.depositCoin(input);
 }
 
 async function createCoinTransfer(

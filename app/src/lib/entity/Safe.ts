@@ -1,6 +1,5 @@
 import { env } from "@/config";
 import { Coin as CoinAPI, getMoveObjectType } from "@mysten/sui.js";
-import { BN } from "bn.js";
 import { Provider } from "../provider";
 import { Coin, SafeData } from "../types";
 
@@ -42,9 +41,18 @@ export class Safe implements SafeData {
       const metadata = await provider.getCoinMetadata(coinType!);
       const balance = CoinAPI.getBalance(object);
 
+      const iconUrl = metadata.iconUrl
+        ? metadata.iconUrl
+        : !metadata.iconUrl && CoinAPI.isSUI(object)
+        ? "/assets/coins/sui.svg"
+        : "/assets/coins/unknown.svg";
+
       return {
         id,
-        metadata,
+        metadata: {
+          ...metadata,
+          iconUrl,
+        },
         coinType: coinType!,
         balance: balance || 0n,
       };

@@ -8,19 +8,11 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="coin in state.coins" :key="coin.id">
+      <tr v-for="coin in coins" :key="coin.id">
         <td>
           <div class="d-flex align-center">
             <v-avatar size="20" class="me-2">
-              <v-img
-                :src="
-                  coin.metadata.iconUrl
-                    ? coin.metadata.iconUrl
-                    : coin.coinType === '0x2::sui::SUI'
-                    ? '/assets/sui.svg'
-                    : ''
-                "
-              />
+              <v-img :src="coin.metadata.iconUrl" />
             </v-avatar>
 
             <div>{{ coin.metadata.name }}</div>
@@ -57,27 +49,16 @@
     </tbody>
   </v-table>
 
-  <Empty v-if="state.coins.length < 1" msg="You do not have any coins yet" />
+  <Empty v-if="coins.length < 1" msg="You do not have any coins yet" />
 </template>
 
 <script lang="ts" setup>
 import Empty from "@/components/Empty.vue";
-import { onMounted, reactive } from "vue";
-import { Safe } from "@/lib/entity";
 import { Coin } from "@/lib/types";
 import { utils } from "@/utils";
 
-interface State {
-  coins: Coin[];
-}
-
-const state: State = reactive({ coins: [] });
-const props = defineProps<{ safe: Safe }>();
+defineProps<{ coins: Coin[] }>();
 defineEmits(["deposit", "transfer"]);
-
-onMounted(async () => {
-  state.coins = await props.safe.getCoinBalances();
-});
 </script>
 
 <style>

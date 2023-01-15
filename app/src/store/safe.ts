@@ -1,7 +1,7 @@
 import { Safe } from "@/lib/entity";
 import { serializer } from "@/lib/serializer";
 import { safeService } from "@/lib/service";
-import { Coin } from "@/lib/types";
+import { BasicCoin } from "@/lib/types";
 import { utils } from "@/utils";
 import { useLocalStorage } from "@vueuse/core";
 import { defineStore } from "pinia";
@@ -43,12 +43,12 @@ export const useSafeStore = defineStore("safe", {
       }
     },
 
-    async depositCoin(amount: string, coin: Coin) {
+    async depositCoin(input: { amount: string; coin: BasicCoin }) {
       const { address } = useConnectionStore();
 
       const result = await safeService.depositCoin({
-        amount,
-        coin,
+        amount: input.amount,
+        coin: input.coin,
         sender: address,
         safeId: this.activeSafeId!,
       });
@@ -58,7 +58,7 @@ export const useSafeStore = defineStore("safe", {
 
     async createCoinTransfer(
       input: { amount: string; recipient: string },
-      coin: Coin
+      coin: BasicCoin
     ) {
       const amount = utils.parseBalance(input.amount, coin.metadata.decimals);
 

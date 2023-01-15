@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import CreateSafe from "@/views/safe/Create.vue";
 import Safes from "@/views/safe/Safes.vue";
-import Assets from "@/views/assets/Assets.vue";
+import Coins from "@/views/assets/Coins.vue";
 import Owners from "@/views/owners/Owners.vue";
 import Connect from "@/views/Connect.vue";
 import { useConnectionStore, useSafeStore } from "@/store";
@@ -37,9 +37,9 @@ const routes = [
   },
 
   {
-    path: "/assets",
-    name: "Assets",
-    component: Assets,
+    path: "/assets/coins",
+    name: "Coins",
+    component: Coins,
     meta: {
       access: "safe",
     },

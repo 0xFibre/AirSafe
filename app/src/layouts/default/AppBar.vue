@@ -23,22 +23,44 @@
     <v-divider />
 
     <v-list density="comfortable" nav>
-      <template v-for="(item, i) in sideBarItems" :key="i">
-        <v-divider class="my-3" v-if="item.divider" />
-        <v-list-item
-          v-else
-          rounded="shaped"
-          :to="item.path"
-          color="primary"
-          density="comfortable"
-        >
-          <template v-slot:prepend>
-            <v-avatar>
-              <v-icon :icon="item.icon" />
-            </v-avatar>
+      <template v-for="(item, i) in sideBarItems">
+        <v-divider class="my-3" v-if="item.divider" :key="i" />
+
+        <template v-else>
+          <template v-if="item.children">
+            <v-list-group :value="item.title" :key="i">
+              <template v-slot:activator="{ props }">
+                <v-list-item
+                  color="primary"
+                  v-bind="props"
+                  :prepend-icon="item.icon"
+                  :title="item.title"
+                />
+              </template>
+
+              <template v-for="(child, i) in item.children" :key="i">
+                <v-list-item
+                  color="primary"
+                  :title="child.title"
+                  :prepend-icon="child.icon"
+                  :value="child.title"
+                  :to="child.path"
+                />
+              </template>
+            </v-list-group>
           </template>
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
-        </v-list-item>
+
+          <template v-else>
+            <v-list-item
+              :key="i"
+              color="primary"
+              :to="item.path"
+              density="comfortable"
+              :title="item.title"
+              :prepend-icon="item.icon"
+            />
+          </template>
+        </template>
       </template>
     </v-list>
   </v-navigation-drawer>
@@ -108,7 +130,7 @@ const { activeSafeId } = storeToRefs(safeStore);
 const sideBarItems = [
   {
     title: "Dashboard",
-    icon: "mdi-view-dashboard",
+    icon: "mdi-view-dashboard-outline",
     path: "/dashboard",
   },
   {
@@ -119,11 +141,22 @@ const sideBarItems = [
   {
     title: "Assets",
     icon: "mdi-atom",
-    path: "/assets",
+    children: [
+      {
+        title: "Coins",
+        icon: "mdi-checkbox-multiple-blank-circle-outline",
+        path: "/assets/coins",
+      },
+      {
+        title: "NFTs",
+        icon: "mdi-layers-outline",
+        path: "/assets/nfts",
+      },
+    ],
   },
   {
     title: "Owners",
-    icon: "mdi-account-multiple",
+    icon: "mdi-account-multiple-outline",
     path: "/owners",
   },
   {
@@ -131,7 +164,7 @@ const sideBarItems = [
   },
   {
     title: "Settings",
-    icon: "mdi-cog",
+    icon: "mdi-cog-outline",
     path: "/settings",
   },
 ];

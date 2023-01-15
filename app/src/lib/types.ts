@@ -1,4 +1,4 @@
-import { CoinMetadata } from "@mysten/sui.js";
+import { CoinMetadata as Metadata } from "@mysten/sui.js";
 
 export interface CreateSafeData {
   threshold: string;
@@ -18,7 +18,7 @@ export interface DepositCoinData {
   safeId: string;
   amount: string;
   sender: string;
-  coin: Coin;
+  coin: BasicCoin;
 }
 
 export interface DynamicFieldInfo {
@@ -30,11 +30,18 @@ export interface DynamicFieldInfo {
   version: number;
 }
 
-export interface Coin {
-  id: string;
-  balance: bigint;
+export interface CoinMetadata extends Metadata {
+  iconUrl: string;
+}
+
+export interface BasicCoin {
   coinType: string;
   metadata: CoinMetadata;
+}
+
+export interface Coin extends BasicCoin {
+  id: string;
+  balance: bigint;
 }
 
 export interface CreateSafeTransactionData {

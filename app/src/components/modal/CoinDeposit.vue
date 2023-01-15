@@ -2,20 +2,19 @@
   <v-dialog :model-value="show" persistent max-width="550px">
     <v-card>
       <v-card-text class="d-flex">
-        <h6 class="text-h6 font-weight-bold fonted">
-          Deposit {{ coin?.metadata.symbol }}
-        </h6>
+        <h6 class="text-h6 font-weight-bold fonted">Deposit Coin</h6>
 
         <v-spacer />
 
         <v-btn
           flat
-          density="compact"
+          density="comfortable"
           icon="mdi-close"
           @click="
             () => {
               $emit('toggle');
-              amount = '';
+              input.amount = '';
+              input.coin = undefined;
             }
           "
         />
@@ -23,25 +22,51 @@
 
       <v-divider />
 
-      <v-card-text class="mb-3">
-        <div class="mb-2">
-          <p class="text-body-2 mb-3 fonted">Deposit Amount</p>
+      <v-card-text>
+        <div class="mb-3">
+          <p class="text-body-2 mb-3 fonted">Amount</p>
+
           <v-text-field
             type="number"
             color="primary"
             density="comfortable"
             variant="outlined"
             placeholder="Enter deposit amount"
-            v-model="amount"
+            v-model="input.amount"
+            hide-details
           />
         </div>
 
+        <div class="mb-3">
+          <p class="text-body-2 mb-3 fonted">Coin</p>
+
+          <v-combobox
+            :items="coins"
+            item-title="metadata.name"
+            item-value="coinType"
+            color="primary"
+            density="comfortable"
+            variant="outlined"
+            placeholder="Select or paste coin type"
+            v-model="input.coin"
+            @update:model-value="loadCoinMetadata"
+            hide-details
+          >
+            <template v-slot:prepend-inner>
+              <v-avatar size="25">
+                <v-img :src="(<BasicCoin>input.coin)?.metadata?.iconUrl" />
+              </v-avatar>
+            </template>
+          </v-combobox>
+        </div>
+
         <v-btn
+          class="mt-5"
           flat
           block
           variant="flat"
           color="primary"
-          @click="$emit('deposit', amount, coin)"
+          @click="$emit('deposit', input)"
         >
           Deposit
         </v-btn>
@@ -51,13 +76,30 @@
 </template>
 
 <script lang="ts" setup>
-import { Coin } from "@/lib/types";
-import { ref, Ref } from "vue";
+import { coin } from "@/lib/coin";
+import { BasicCoin, Coin } from "@/lib/types";
+import { watch, reactive } from "vue";
 
-const amount: Ref<string> = ref("");
-
-defineProps<{ show: boolean; coin?: Coin }>();
+const props = defineProps<{ show: boolean; coin?: BasicCoin; coins: Coin[] }>();
 defineEmits(["deposit", "toggle"]);
+
+interface Input {
+  coin?: BasicCoin | string;
+  amount: string;
+}
+
+const input: Input = reactive({ amount: "" });
+
+watch(props, () => {
+  input.coin = props.coin;
+});
+
+async function loadCoinMetadata() {
+  if (typeof input.coin === "string") {
+    const metadata = await coin.getCoinMetadata(input.coin);
+    input.coin = { coinType: input.coin, metadata };
+  }
+}
 </script>
 
 <style>
