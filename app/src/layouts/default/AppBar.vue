@@ -69,7 +69,7 @@
     </v-list>
   </v-navigation-drawer>
 
-  <v-app-bar flat density="comfortable" v-if="!$route.meta.hideAppBar">
+  <v-app-bar flat v-if="!$route.meta.hideAppBar">
     <v-app-bar-nav-icon
       @click="drawer = !drawer"
       class="d-md-block d-lg-none"
