@@ -8,8 +8,8 @@
         />
 
         <v-window :model-value="state.window.value">
-          <CreateInput :window="1" @input="updateInput" />
-          <CreatePreview :window="2" />
+          <CreateInput :window="1" @input="updateInput" :address="address" />
+          <CreatePreview :window="2" :input="state.input" />
           <CreateApprove :window="3" />
         </v-window>
 
@@ -48,7 +48,8 @@ import CreatePreview from "./create/Preview.vue";
 import CreateApprove from "./create/Approve.vue";
 import { useVuelidate } from "@vuelidate/core";
 import { required, minValue, maxValue } from "@vuelidate/validators";
-import { useSafeStore } from "@/store";
+import { useSafeStore, useConnectionStore } from "@/store";
+import { storeToRefs } from "pinia";
 
 interface State {
   window: {
@@ -63,6 +64,9 @@ interface State {
 }
 
 const safeStore = useSafeStore();
+const connectionStore = useConnectionStore();
+
+const { address } = storeToRefs(connectionStore);
 
 const state: State = reactive({
   window: {
@@ -71,7 +75,7 @@ const state: State = reactive({
   },
   input: {
     name: "",
-    owners: [""],
+    owners: [address.value],
     threshold: "",
   },
 });

@@ -61,7 +61,7 @@
         <div class="mb-3">
           <p class="text-body-1 font-weight-bold fonted">Threshold</p>
           <p class="text-body-2 fonted">
-            The minimum number of owners needed to approve a transaction
+            The minimum number of owners needed to approve transactions
           </p>
         </div>
 
@@ -76,7 +76,7 @@
           "
           placeholder="Select Threshold"
           v-model="input.threshold"
-          @update:model-value="(e: any) => $emit('input', 'threshold', input.threshold)"
+          @update:model-value="$emit('input', 'threshold', input.threshold)"
           hide-details
         />
       </div>
@@ -93,8 +93,12 @@ interface Input {
   owners: string[];
 }
 
-const input: Input = reactive({ name: "", owners: [""], threshold: "" });
+const props = defineProps<{ window: number; address: string }>();
+const input: Input = reactive({
+  name: "",
+  owners: [props.address],
+  threshold: "",
+});
 
-defineProps<{ window: number }>();
 defineEmits(["input"]);
 </script>

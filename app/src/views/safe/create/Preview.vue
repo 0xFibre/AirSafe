@@ -14,7 +14,7 @@
             <span>Name</span>
           </v-col>
           <v-col cols="8">
-            <span>Test Safe</span>
+            <span>{{ input.name }}</span>
           </v-col>
         </v-row>
       </div>
@@ -24,10 +24,27 @@
           <v-col cols="4">
             <span>Owners</span>
           </v-col>
+
           <v-col cols="8">
-            <p>0x86eb72826D22Cb3Bf051686E2dA433da202712Eb</p>
-            <p>0x86eb72826D22Cb3Bf051686E2dA433da202712Eb</p>
-            <p>0x86eb72826D22Cb3Bf051686E2dA433da202712Eb</p>
+            <template v-for="owner in input.owners">
+              <div class="d-flex justify-space-between align-center my-0 py-0">
+                <div class="d-flex align-center">
+                  <v-avatar size="15" class="me-3">
+                    <v-img :src="makeBlockie(owner)" />
+                  </v-avatar>
+                  <p>{{ utils.truncate0x(owner) }}</p>
+                </div>
+
+                <div>
+                  <v-btn
+                    flat
+                    variant="text"
+                    icon="mdi-open-in-new"
+                    size="x-small"
+                  />
+                </div>
+              </div>
+            </template>
           </v-col>
         </v-row>
       </div>
@@ -37,8 +54,9 @@
           <v-col cols="4">
             <span>Threshold</span>
           </v-col>
+
           <v-col cols="8">
-            <span>3</span>
+            <span>{{ input.threshold }}</span>
           </v-col>
         </v-row>
       </div>
@@ -47,5 +65,15 @@
 </template>
 
 <script lang="ts" setup>
-defineProps<{ window: number }>();
+import { utils } from "@/utils";
+import makeBlockie from "ethereum-blockies-base64";
+
+defineProps<{
+  window: number;
+  input: {
+    name?: string;
+    threshold: string;
+    owners: string[];
+  };
+}>();
 </script>
