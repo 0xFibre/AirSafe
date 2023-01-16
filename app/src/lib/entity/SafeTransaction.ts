@@ -15,9 +15,8 @@ export const safeTransactionStatusValue = {
   [SafeTransactionType.None]: "",
   [SafeTransactionStatus.ACTIVE]: "Active",
   [SafeTransactionStatus.APPROVED]: "Approved",
-  [SafeTransactionStatus.EXECUTED]: "Executed",
-  [SafeTransactionStatus.READY]: "Ready",
   [SafeTransactionStatus.REJECTED]: "Rejected",
+  [SafeTransactionStatus.EXECUTED]: "Executed",
 };
 
 export class SafeTransaction implements SafeTransactionData {
