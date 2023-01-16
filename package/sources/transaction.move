@@ -61,6 +61,8 @@ module vallet::transaction {
         vector::push_back(transactions, object::id(&transaction));
         safe::increment_transactions_count(safe);
 
+        approve_transaction(safe, &mut transaction, ctx);
+
         transaction
     }
 
