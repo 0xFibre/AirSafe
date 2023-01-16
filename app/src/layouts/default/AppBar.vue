@@ -1,69 +1,74 @@
 <template>
   <v-navigation-drawer
     elevation="0"
+    border="0"
     v-model="drawer"
     v-if="!$route.meta.hideSideBar"
   >
-    <template v-slot:prepend>
-      <v-list-item lines="two">
-        <template v-slot:prepend>
-          <v-avatar rounded v-if="activeSafeId">
-            <v-img :src="blockie(activeSafeId)" />
-          </v-avatar>
-        </template>
+    <div class="text-center my-3">
+      <h6 class="text-h6 fonted font-weight-bold">Vallet Safe</h6>
+    </div>
 
-        <v-list-item-title v-if="activeSafeId">
-          {{ utils.truncate0x(activeSafeId) }}
-          <v-btn flat variant="text" icon="mdi-content-copy" size="x-small" />
-        </v-list-item-title>
+    <v-divider class="mb-3 mt-5" />
 
-        <v-list-item-subtitle style="opacity: unset">
-          <v-btn flat variant="text" icon="mdi-qrcode" size="x-small" />
-          <v-btn flat variant="text" icon="mdi-open-in-new" size="x-small" />
-        </v-list-item-subtitle>
-      </v-list-item>
-    </template>
+    <v-list-item lines="two">
+      <template v-slot:prepend>
+        <v-avatar rounded size="50" v-if="activeSafeId">
+          <v-img :src="blockie(activeSafeId)" />
+        </v-avatar>
+      </template>
 
-    <v-divider />
+      <v-list-item-title v-if="activeSafeId">
+        {{ utils.truncate0x(activeSafeId) }}
+      </v-list-item-title>
+
+      <v-list-item-subtitle style="opacity: unset">
+        <v-btn flat variant="text" icon="mdi-qrcode" size="x-small" />
+        <v-btn flat variant="text" icon="mdi-content-copy" size="x-small" />
+        <v-btn flat variant="text" icon="mdi-open-in-new" size="x-small" />
+      </v-list-item-subtitle>
+    </v-list-item>
+
+    <div class="py-2 px-3">
+      <v-btn flat block variant="flat" color="primary" prepend-icon="mdi-plus">
+        New transaction
+      </v-btn>
+    </div>
 
     <v-list density="comfortable" nav>
       <template v-for="(item, i) in sideBarItems">
-        <v-divider class="my-3" v-if="item.divider" :key="i" />
+        <template v-if="item.children">
+          <v-list-group :value="item.title" :key="i">
+            <template v-slot:activator="{ props }">
+              <v-list-item
+                color="primary"
+                v-bind="props"
+                :prepend-icon="item.icon"
+                :title="item.title"
+              />
+            </template>
+
+            <template v-for="(child, i) in item.children" :key="i">
+              <v-list-item
+                color="primary"
+                :title="child.title"
+                :prepend-icon="child.icon"
+                :value="child.title"
+                :to="child.path"
+              />
+            </template>
+          </v-list-group>
+        </template>
 
         <template v-else>
-          <template v-if="item.children">
-            <v-list-group :value="item.title" :key="i">
-              <template v-slot:activator="{ props }">
-                <v-list-item
-                  color="primary"
-                  v-bind="props"
-                  :prepend-icon="item.icon"
-                  :title="item.title"
-                />
-              </template>
-
-              <template v-for="(child, i) in item.children" :key="i">
-                <v-list-item
-                  color="primary"
-                  :title="child.title"
-                  :prepend-icon="child.icon"
-                  :value="child.title"
-                  :to="child.path"
-                />
-              </template>
-            </v-list-group>
-          </template>
-
-          <template v-else>
-            <v-list-item
-              :key="i"
-              color="primary"
-              :to="item.path"
-              density="comfortable"
-              :title="item.title"
-              :prepend-icon="item.icon"
-            />
-          </template>
+          <v-list-item
+            :key="i"
+            color="primary"
+            :to="item.path"
+            density="comfortable"
+            :title="item.title"
+            :prepend-icon="item.icon"
+          />
         </template>
       </template>
     </v-list>
@@ -138,11 +143,6 @@ const sideBarItems = [
     path: "/dashboard",
   },
   {
-    title: "Transactions",
-    icon: "mdi-arrow-top-left-bottom-right",
-    path: "/transactions",
-  },
-  {
     title: "Assets",
     icon: "mdi-atom",
     children: [
@@ -159,13 +159,18 @@ const sideBarItems = [
     ],
   },
   {
+    title: "Transactions",
+    icon: "mdi-arrow-top-left-bottom-right",
+    path: "/transactions",
+  },
+  {
     title: "Owners",
     icon: "mdi-account-multiple-outline",
     path: "/owners",
   },
-  {
-    divider: true,
-  },
+  // {
+  //   divider: true,
+  // },
   {
     title: "Settings",
     icon: "mdi-cog-outline",
