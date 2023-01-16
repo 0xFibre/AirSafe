@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-3">
+  <div class="my-5">
     <h6 class="text-h6 font-weight-bold fonted">Transactions</h6>
   </div>
 
@@ -47,7 +47,21 @@
           </td>
           <td>
             <div class="mb-2 mb-sm-0">
-              <v-chip label density="comfortable" color="primary">
+              <v-chip
+                label
+                density="comfortable"
+                :color="
+                  transaction.status == 1
+                    ? 'primary'
+                    : transaction.status == 2
+                    ? 'success'
+                    : transaction.status == 3
+                    ? 'error'
+                    : transaction.status == 4
+                    ? 'success'
+                    : ''
+                "
+              >
                 {{ transaction.statusValue }}
               </v-chip>
             </div>
