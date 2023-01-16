@@ -25,5 +25,10 @@ export const useTransactionStore = defineStore("transaction", {
         safe?.transactions!
       );
     },
+
+    async fetchTransaction(id: string) {
+      const { safe } = useSafeStore();
+      this.transaction = await safeService.getSafeTransaction(id);
+    },
   },
 });

@@ -141,6 +141,17 @@ export class SafeService {
     );
   }
 
+  async getSafeTransaction(id: string): Promise<SafeTransaction> {
+    const transactionObject = await this._provider.getObject(id);
+
+    if (transactionObject.status === "Exists") {
+      const fields = getObjectFields(transactionObject);
+      return await this._buildSafeTransaction(fields!);
+    }
+
+    throw new Error("Transaction not found");
+  }
+
   async _getAddressSafeIDs(id: string, address: string) {
     try {
       const safes = await this._provider.getDynamicFieldObject(id, address);

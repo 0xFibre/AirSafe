@@ -88,7 +88,7 @@ onMounted(async () => {
 });
 </script>
 
-<style>
+<style scoped>
 .fonted {
   font-family: Circular, sans-serif !important;
 }

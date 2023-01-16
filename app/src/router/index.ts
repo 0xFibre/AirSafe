@@ -4,6 +4,7 @@ import Safes from "@/views/safe/Safes.vue";
 import Coins from "@/views/assets/Coins.vue";
 import Owners from "@/views/owners/Owners.vue";
 import Transactions from "@/views/transaction/Transactions.vue";
+import Transaction from "@/views/transaction/Transaction.vue";
 import Connect from "@/views/Connect.vue";
 import { useConnectionStore, useSafeStore } from "@/store";
 
@@ -59,6 +60,14 @@ const routes = [
     path: "/transactions",
     name: "Transactions",
     component: Transactions,
+    meta: {
+      access: "safe",
+    },
+  },
+  {
+    path: "/transaction/:id",
+    name: "Transaction",
+    component: Transaction,
     meta: {
       access: "safe",
     },
