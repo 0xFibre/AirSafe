@@ -61,7 +61,7 @@ defineProps<{ coins: Coin[] }>();
 defineEmits(["deposit", "transfer"]);
 </script>
 
-<style>
+<style scoped>
 tr,
 td {
   border: none !important;
