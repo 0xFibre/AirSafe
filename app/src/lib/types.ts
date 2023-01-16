@@ -35,6 +35,22 @@ export interface DepositCoinData {
   coin: BasicCoin;
 }
 
+export interface ExecuteTransferTransactionData {
+  safeId: string;
+  transactionId: string;
+  coin: BasicCoin;
+}
+
+export interface ApproveTransactionData {
+  safeId: string;
+  transactionId: string;
+}
+
+export interface RejectTransactionData {
+  safeId: string;
+  transactionId: string;
+}
+
 export interface DynamicFieldInfo {
   digest: string;
   name: string;
@@ -72,9 +88,8 @@ export enum SafeTransactionType {
 export enum SafeTransactionStatus {
   None,
   ACTIVE,
-  REJECTED,
   APPROVED,
-  READY,
+  REJECTED,
   EXECUTED,
 }
 

@@ -78,5 +78,33 @@ export const useSafeStore = defineStore("safe", {
       const result = await safeService.createTransaction(data);
       console.log(result);
     },
+
+    async approveTransaction(transactionId: string) {
+      const result = await safeService.approveTransaction({
+        transactionId,
+        safeId: this.activeSafeId!,
+      });
+
+      console.log(result);
+    },
+
+    async rejectTransaction(transactionId: string) {
+      const result = await safeService.rejectTransaction({
+        transactionId,
+        safeId: this.activeSafeId!,
+      });
+
+      console.log(result);
+    },
+
+    async executeTransferTransaction(transactionId: string, coin: BasicCoin) {
+      const result = await safeService.executeTransferTransaction({
+        transactionId,
+        safeId: this.activeSafeId!,
+        coin,
+      });
+
+      console.log(result);
+    },
   },
 });

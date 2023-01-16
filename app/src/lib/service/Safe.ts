@@ -5,9 +5,11 @@ import { Safe, SafeTransaction } from "../entity";
 import { Provider } from "../provider";
 import { serializer } from "../serializer";
 import {
+  ApproveTransactionData,
   CreateSafeData,
   CreateSafeTransactionData,
   DepositCoinData,
+  ExecuteTransferTransactionData,
   SafeData,
   SafeTransactionData,
   SafeTransactionType,
@@ -100,6 +102,42 @@ export class SafeService {
       function: "create_transaction",
       typeArguments: [],
       arguments: [data.safeId, data.type, data.data],
+    };
+
+    return await connection.executeMoveCall(moveCallPayload);
+  }
+
+  async approveTransaction(data: ApproveTransactionData) {
+    const moveCallPayload = {
+      packageObjectId: this._packageObjectId,
+      module: this.module,
+      function: "approve_transaction",
+      typeArguments: [],
+      arguments: [data.safeId, data.transactionId],
+    };
+
+    return await connection.executeMoveCall(moveCallPayload);
+  }
+
+  async rejectTransaction(data: ApproveTransactionData) {
+    const moveCallPayload = {
+      packageObjectId: this._packageObjectId,
+      module: this.module,
+      function: "reject_transaction",
+      typeArguments: [],
+      arguments: [data.safeId, data.transactionId],
+    };
+
+    return await connection.executeMoveCall(moveCallPayload);
+  }
+
+  async executeTransferTransaction(data: ExecuteTransferTransactionData) {
+    const moveCallPayload = {
+      packageObjectId: this._packageObjectId,
+      module: this.module,
+      function: "execute_transfer_transaction",
+      typeArguments: [data.coin.coinType],
+      arguments: [data.safeId, data.transactionId],
     };
 
     return await connection.executeMoveCall(moveCallPayload);
