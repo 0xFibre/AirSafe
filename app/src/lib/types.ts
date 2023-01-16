@@ -14,6 +14,20 @@ export interface SafeData {
   transactions: string[];
 }
 
+export interface SafeTransactionData {
+  id: string;
+  index: number;
+  safeId: string;
+  type: SafeTransactionType;
+  status: SafeTransactionStatus;
+  creator: string;
+  data: number[];
+  input: any;
+  coin?: BasicCoin;
+  approvers: string[];
+  rejecters: string[];
+}
+
 export interface DepositCoinData {
   safeId: string;
   amount: string;
@@ -48,4 +62,24 @@ export interface CreateSafeTransactionData {
   safeId: string;
   data: string;
   type: number;
+}
+
+export enum SafeTransactionType {
+  None,
+  TRANSFER,
+}
+
+export enum SafeTransactionStatus {
+  None,
+  ACTIVE,
+  REJECTED,
+  APPROVED,
+  READY,
+  EXECUTED,
+}
+
+export interface TransferCoinData {
+  coinType: string;
+  amount: bigint;
+  recipient: string;
 }

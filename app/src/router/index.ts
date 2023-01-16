@@ -3,6 +3,7 @@ import CreateSafe from "@/views/safe/Create.vue";
 import Safes from "@/views/safe/Safes.vue";
 import Coins from "@/views/assets/Coins.vue";
 import Owners from "@/views/owners/Owners.vue";
+import Transactions from "@/views/transaction/Transactions.vue";
 import Connect from "@/views/Connect.vue";
 import { useConnectionStore, useSafeStore } from "@/store";
 
@@ -49,6 +50,15 @@ const routes = [
     path: "/owners",
     name: "Owners",
     component: Owners,
+    meta: {
+      access: "safe",
+    },
+  },
+
+  {
+    path: "/transactions",
+    name: "Transactions",
+    component: Transactions,
     meta: {
       access: "safe",
     },

@@ -1,13 +1,16 @@
 import { connection, utils } from "@/utils";
 import { getObjectFields, getObjectId, ObjectId, bcs } from "@mysten/sui.js";
 import { coin } from "../coin";
-import { Safe } from "../entity";
+import { Safe, SafeTransaction } from "../entity";
 import { Provider } from "../provider";
+import { serializer } from "../serializer";
 import {
   CreateSafeData,
   CreateSafeTransactionData,
   DepositCoinData,
   SafeData,
+  SafeTransactionData,
+  SafeTransactionType,
 } from "../types";
 
 interface ConstructorData {
@@ -110,16 +113,14 @@ export class SafeService {
       const ids = await this._getAddressSafeIDs(safes_table?.id.id, address);
       const safesBatch = await this._provider.getObjectBatch(ids);
 
-      return Promise.all(
-        safesBatch.map(async (safe) => await this.getSafe(getObjectId(safe)))
-      );
+      return safesBatch.map((safe) => this._buildSafe(getObjectFields(safe)!));
     }
 
     throw new Error("Registry ID not found");
   }
 
-  async getSafe(id: string): Promise<Safe> {
-    const safeObject = await this._provider.getObject(id);
+  async getSafe(safeId: string): Promise<Safe> {
+    const safeObject = await this._provider.getObject(safeId);
 
     if (safeObject.status === "Exists") {
       const fields = getObjectFields(safeObject);
@@ -127,6 +128,17 @@ export class SafeService {
     }
 
     throw new Error("Safe not found");
+  }
+
+  async getSafeTransactions(ids: string[]): Promise<SafeTransaction[]> {
+    const objectBatch = await this._provider.getObjectBatch(ids);
+
+    return Promise.all(
+      objectBatch.map(
+        async (transaction) =>
+          await this._buildSafeTransaction(getObjectFields(transaction)!)
+      )
+    );
   }
 
   async _getAddressSafeIDs(id: string, address: string) {
@@ -155,5 +167,61 @@ export class SafeService {
     };
 
     return new Safe(data);
+  }
+
+  private async _buildSafeTransaction(
+    fields: Record<string, any>
+  ): Promise<SafeTransaction> {
+    const approvers = getObjectFields(fields.approvers);
+    const rejecters = getObjectFields(fields.rejecters);
+
+    const input = this._deserializeSafeTransactionData(
+      fields.type,
+      fields.data
+    );
+
+    const data: SafeTransactionData = {
+      id: fields.id.id,
+      status: fields.status,
+      creator: fields.creator,
+      index: fields.index,
+      safeId: fields.safe_id,
+      type: fields.type,
+      data: fields.data,
+      input,
+      coin: input.coinType
+        ? {
+            coinType: input.coinType,
+            metadata: await coin.getCoinMetadata(input.coinType),
+          }
+        : undefined,
+      approvers: approvers?.contents,
+      rejecters: rejecters?.contents,
+    };
+
+    return new SafeTransaction(data);
+  }
+
+  private _deserializeSafeTransactionData(
+    type: SafeTransactionType,
+    data: number[]
+  ) {
+    const safeTransactionTypeData = {
+      [SafeTransactionType.None]: "",
+      [SafeTransactionType.TRANSFER]: "TransferData",
+    };
+
+    const typeData = safeTransactionTypeData[type];
+    const result = serializer.deserialize(typeData, Uint8Array.from(data));
+
+    if (type === SafeTransactionType.TRANSFER) {
+      return {
+        coinType: Buffer.from(result.coin_type).toString(),
+        amount: result.amount,
+        recipient: result.recipient,
+      };
+    }
+
+    throw new Error("");
   }
 }
