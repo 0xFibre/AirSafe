@@ -32,8 +32,8 @@ module vallet::transaction {
     }
 
     const ACTIVE_TRANSACTION_STATUS: u8 = 1;
-    const REJECTED_TRANSACTION_STATUS: u8 = 2;
-    const READY_TRANSACTION_STATUS: u8 = 3;
+    const APPROVED_TRANSACTION_STATUS: u8 = 2;
+    const REJECTED_TRANSACTION_STATUS: u8 = 3;
     const EXECUTED_TRANSACTION_STATUS: u8 = 4;
 
     const TRANSFER_TRANSACTION_TYPE: u8 = 1;
@@ -69,14 +69,16 @@ module vallet::transaction {
 
         assert!(object::borrow_id(safe) == &transaction.safe_id, error::safe_transaction_mismatch());
         assert!(owner::is_owner(safe, sender), error::not_safe_owner());
+
+        assert!(transaction.status == ACTIVE_TRANSACTION_STATUS, error::transaction_not_active());
+
         assert!(!vec_set::contains(&transaction.approvers, &sender), error::already_approved_transaction());
         assert!(!vec_set::contains(&transaction.rejecters, &sender), error::already_rejected_transaction());
-        assert!(transaction.status == ACTIVE_TRANSACTION_STATUS, error::transaction_not_active());
 
         vec_set::insert(&mut transaction.approvers, sender);
 
         if(vec_set::size(&transaction.approvers) >= safe::threshold(safe)) {
-            transaction.status = READY_TRANSACTION_STATUS;
+            transaction.status = APPROVED_TRANSACTION_STATUS;
         }
     }
 
@@ -85,9 +87,11 @@ module vallet::transaction {
 
         assert!(object::borrow_id(safe) == &transaction.safe_id, error::safe_transaction_mismatch());
         assert!(owner::is_owner(safe, sender), error::not_safe_owner());
+
+        assert!(transaction.status == ACTIVE_TRANSACTION_STATUS, error::transaction_not_active());
+        
         assert!(!vec_set::contains(&transaction.approvers, &sender), error::already_approved_transaction());
         assert!(!vec_set::contains(&transaction.rejecters, &sender), error::already_rejected_transaction());
-        assert!(transaction.status == ACTIVE_TRANSACTION_STATUS, error::transaction_not_active());
 
         vec_set::insert(&mut transaction.rejecters, sender);
 
@@ -99,12 +103,15 @@ module vallet::transaction {
 
     public(friend) fun execute_transfer_transaction<T>(safe: &mut Safe, transaction: &mut Transaction, ctx: &mut TxContext) {
         assert!(object::borrow_id(safe) == &transaction.safe_id, error::safe_transaction_mismatch());
+        assert!(transaction.status == APPROVED_TRANSACTION_STATUS, error::transaction_not_approved());
         assert!(transaction.type == TRANSFER_TRANSACTION_TYPE, error::invalid_transaction_type());
         
         let bcs = bcs::new(transaction.data);
         let data = deserialize_transfer_data(bcs);
 
         coin::withdraw<T>(safe, data.amount, data.recipient, ctx);
+
+        transaction.status = EXECUTED_TRANSACTION_STATUS;
     }
 
     fun validate_transaction_data(type: u8, data: vector<u8>) {

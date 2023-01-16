@@ -44,4 +44,12 @@ module vallet::error {
     public fun invalid_members(): u64 {
         ERROR_PREFIX + 10
     }
+
+    public fun transaction_not_active(): u64 {
+        ERROR_PREFIX + 11
+    }
+
+    public fun transaction_not_approved(): u64 {
+        ERROR_PREFIX + 12
+    }
 }
