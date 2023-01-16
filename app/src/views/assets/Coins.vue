@@ -1,7 +1,7 @@
 <template>
   <template v-if="safe">
-    <div class="d-flex mt-5">
-      <h6 class="text-h6 mb-3 font-weight-bold fonted">Coins</h6>
+    <div class="d-flex my-5">
+      <h6 class="text-h6 font-weight-bold fonted">Coins</h6>
 
       <v-spacer />
 
