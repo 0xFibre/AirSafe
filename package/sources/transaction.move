@@ -71,6 +71,7 @@ module vallet::transaction {
         assert!(owner::is_owner(safe, sender), error::not_safe_owner());
         assert!(!vec_set::contains(&transaction.approvers, &sender), error::already_approved_transaction());
         assert!(!vec_set::contains(&transaction.rejecters, &sender), error::already_rejected_transaction());
+        assert!(transaction.status == ACTIVE_TRANSACTION_STATUS, error::transaction_not_active());
 
         vec_set::insert(&mut transaction.approvers, sender);
 
@@ -86,6 +87,7 @@ module vallet::transaction {
         assert!(owner::is_owner(safe, sender), error::not_safe_owner());
         assert!(!vec_set::contains(&transaction.approvers, &sender), error::already_approved_transaction());
         assert!(!vec_set::contains(&transaction.rejecters, &sender), error::already_rejected_transaction());
+        assert!(transaction.status == ACTIVE_TRANSACTION_STATUS, error::transaction_not_active());
 
         vec_set::insert(&mut transaction.rejecters, sender);
 
