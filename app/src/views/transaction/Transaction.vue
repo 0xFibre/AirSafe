@@ -235,7 +235,7 @@ async function rejectSafeTransaction() {
 
 async function executeSafeTransaction() {
   if (transaction?.value?.type == 1) {
-    await safeStore.executeTransferTransaction(
+    await safeStore.executeCoinWithdrawal(
       <string>route.params.id,
       transaction.value.coin!
     );
