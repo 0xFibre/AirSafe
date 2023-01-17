@@ -22,7 +22,7 @@ module vallet::safe {
     }
 
     public(friend) fun new(threshold: u64, owners: vector<address>, ctx: &mut TxContext): Safe {
-        let owners_count = vector::length(&owners) + 1;
+        let owners_count = vector::length(&owners);
 
         assert!(threshold > 0, error::invalid_threshold());
         assert!(threshold <= owners_count, error::invalid_threshold());
@@ -67,6 +67,13 @@ module vallet::safe {
 
     public(friend) fun threshold(self: &Safe): u64 {
         self.threshold
+    }
+
+    public(friend) fun set_threshold(self: &mut Safe, threshold: u64) {
+        assert!(threshold > 0, error::invalid_threshold());
+        assert!(threshold <= vec_set::size(&self.owners), error::invalid_threshold());
+
+        self.threshold = threshold
     }
 
     public(friend) fun borrow_uid_mut(self: &mut Safe): &mut UID {

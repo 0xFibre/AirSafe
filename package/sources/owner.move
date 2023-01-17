@@ -31,17 +31,18 @@ module vallet::owner {
         vector::destroy_empty(owners)
     }
 
-    public(friend) fun remove(safe: &mut Safe, owner: address) {
+    public(friend) fun remove(registry: &mut Registry, safe: &mut Safe, owner: address) {
         assert!(is_owner(safe, owner), error::owner_not_exists());
 
         vec_set::remove(safe::borrow_owners_mut(safe), &owner);
+        registry::unregister_safe(registry, object::id(safe), owner);
     }
 
-    public(friend) fun remove_owners(safe: &mut Safe, owners: vector<address>) {
+    public(friend) fun remove_owners(registry: &mut Registry, safe: &mut Safe, owners: vector<address>) {
         let (i, len) = (0, vector::length(&owners));
 
         while (i < len) {
-            remove(safe, vector::pop_back(&mut owners));
+            remove(registry, safe, vector::pop_back(&mut owners));
             i = i + 1;
         };
 

@@ -41,4 +41,8 @@ module vallet::main {
     public entry fun execute_coin_withdrawal<T>(safe: &mut Safe, transaction: &mut Transaction, ctx: &mut TxContext) {
         transaction::execute_coin_withdrawal<T>(safe, transaction, ctx);
     }
+
+    public entry fun execute_policy_change(registry: &mut Registry, safe: &mut Safe, transaction: &mut Transaction, ctx: &mut TxContext) {
+        transaction::execute_policy_change(registry, safe, transaction, ctx);
+    }
 }

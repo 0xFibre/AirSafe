@@ -7,6 +7,7 @@ module vallet::transaction {
     use sui::bcs::{Self, BCS};
 
     use vallet::safe::{Self, Safe};
+    use vallet::registry::{Registry};
     use vallet::owner;
     use vallet::coin;
     use vallet::error;
@@ -31,12 +32,29 @@ module vallet::transaction {
         recipient: address,
     }
 
+    struct AddOwnerData has drop {
+        owner: address,
+        threshold: u64
+    }
+
+    struct RemoveOwnerData has drop {
+        owner: address,
+        threshold: u64
+    }
+
+    struct ChangeThresholdData has drop {
+        threshold: u64,
+    }
+
     const ACTIVE_TRANSACTION_STATUS: u8 = 1;
     const APPROVED_TRANSACTION_STATUS: u8 = 2;
     const REJECTED_TRANSACTION_STATUS: u8 = 3;
     const EXECUTED_TRANSACTION_STATUS: u8 = 4;
 
-    const TRANSFER_TRANSACTION_TYPE: u8 = 1;
+    const COIN_WITHDRAWAL_TRANSACTION_TYPE: u8 = 1;
+    const ADD_OWNER_TRANSACTION_TYPE: u8 = 2;
+    const REMOVE_OWNER_TRANSACTION_TYPE: u8 = 3;
+    const CHANGE_THRESHOLD_TRANSACTION_TYPE: u8 = 4;
 
     public(friend) fun create_transaction(safe: &mut Safe, type: u8, data: vector<u8>, ctx: &mut TxContext): Transaction {
        let sender = tx_context::sender(ctx);
@@ -112,7 +130,7 @@ module vallet::transaction {
     public(friend) fun execute_coin_withdrawal<T>(safe: &mut Safe, transaction: &mut Transaction, ctx: &mut TxContext) {
         assert!(object::borrow_id(safe) == &transaction.safe_id, error::safe_transaction_mismatch());
         assert!(transaction.status == APPROVED_TRANSACTION_STATUS, error::transaction_not_approved());
-        assert!(transaction.type == TRANSFER_TRANSACTION_TYPE, error::invalid_transaction_type());
+        assert!(transaction.type == COIN_WITHDRAWAL_TRANSACTION_TYPE, error::invalid_transaction_type());
         
         let bcs = bcs::new(transaction.data);
         let data = deserialize_coin_withdrawal_data(bcs);
@@ -122,11 +140,41 @@ module vallet::transaction {
         transaction.status = EXECUTED_TRANSACTION_STATUS;
     }
 
+    public(friend) fun execute_policy_change(registry: &mut Registry, safe: &mut Safe, transaction: &mut Transaction, _ctx: &mut TxContext) {
+        assert!(object::borrow_id(safe) == &transaction.safe_id, error::safe_transaction_mismatch());
+        assert!(transaction.status == APPROVED_TRANSACTION_STATUS, error::transaction_not_approved());
+        
+        let bcs = bcs::new(transaction.data);
+
+        if(transaction.type == ADD_OWNER_TRANSACTION_TYPE) {
+            let data = deserialize_add_owner_data(bcs);
+            owner::add(registry, safe, data.owner);
+            safe::set_threshold(safe, data.threshold);
+        } else if(transaction.type == REMOVE_OWNER_TRANSACTION_TYPE) {
+            let data = deserialize_remove_owner_data(bcs);
+            owner::remove(registry, safe, data.owner);
+            safe::set_threshold(safe, data.threshold);
+        } else if(transaction.type == CHANGE_THRESHOLD_TRANSACTION_TYPE) {
+            let data = deserialize_set_threshold_data(bcs);
+            safe::set_threshold(safe, data.threshold);
+        } else {
+            abort error::invalid_transaction_type()
+        };
+        
+        transaction.status = EXECUTED_TRANSACTION_STATUS;
+    }
+
     fun validate_transaction_data(type: u8, data: vector<u8>) {
         let bcs = bcs::new(data);
 
-        if(type == TRANSFER_TRANSACTION_TYPE) {
+        if(type == COIN_WITHDRAWAL_TRANSACTION_TYPE) {
             deserialize_coin_withdrawal_data(bcs);
+        } else if(type == ADD_OWNER_TRANSACTION_TYPE) {
+            deserialize_add_owner_data(bcs);
+        } else if(type == REMOVE_OWNER_TRANSACTION_TYPE) {
+            deserialize_remove_owner_data(bcs);
+        } else if(type == CHANGE_THRESHOLD_TRANSACTION_TYPE) {
+            deserialize_set_threshold_data(bcs);
         } else {
             abort error::invalid_transaction_type()
         };
@@ -137,6 +185,38 @@ module vallet::transaction {
             coin_type: bcs::peel_vec_u8(&mut bcs),
             amount: bcs::peel_u64(&mut bcs),
             recipient: bcs::peel_address(&mut bcs),
+        };
+
+        assert!(vector::is_empty(&bcs::into_remainder_bytes(bcs)), error::invalid_transaction_data());
+
+        data
+    }
+
+    fun deserialize_add_owner_data(bcs: BCS): AddOwnerData {
+        let data = AddOwnerData {
+            owner: bcs::peel_address(&mut bcs),
+            threshold: bcs::peel_u64(&mut bcs)
+        };
+
+        assert!(vector::is_empty(&bcs::into_remainder_bytes(bcs)), error::invalid_transaction_data());
+
+        data
+    }
+
+    fun deserialize_remove_owner_data(bcs: BCS): RemoveOwnerData {
+        let data = RemoveOwnerData {
+            owner: bcs::peel_address(&mut bcs),
+            threshold: bcs::peel_u64(&mut bcs)
+        };
+
+        assert!(vector::is_empty(&bcs::into_remainder_bytes(bcs)), error::invalid_transaction_data());
+
+        data
+    }
+
+    fun deserialize_set_threshold_data(bcs: BCS): ChangeThresholdData {
+        let data = ChangeThresholdData {
+            threshold: bcs::peel_u64(&mut bcs),
         };
 
         assert!(vector::is_empty(&bcs::into_remainder_bytes(bcs)), error::invalid_transaction_data());

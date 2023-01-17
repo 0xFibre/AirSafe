@@ -42,4 +42,13 @@ module vallet::registry {
             table::add(&mut self.safes, owner, safes);
         }
     }
+
+    public(friend) fun unregister_safe(self: &mut Registry, safe_id: ID, owner: address) {
+        if(table::contains(&self.safes, owner)) {
+            let safes = table::borrow_mut(&mut self.safes, owner);
+            if(vec_set::contains(safes, &safe_id)) {
+                vec_set::remove(safes, &safe_id);
+            }
+        }
+    }
 }
