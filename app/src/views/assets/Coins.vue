@@ -111,6 +111,7 @@ async function loadData() {
 
 async function depositCoin(input: { amount: string; coin: BasicCoin }) {
   await safeStore.depositCoin(input);
+  state.deposit.showModal = false;
   await loadData();
 }
 
@@ -120,6 +121,7 @@ async function sendCoin(input: {
   coin: BasicCoin;
 }) {
   await safeStore.createCoinWithdrawalTransaction(input);
+  state.send.showModal = false;
   await loadData();
 }
 </script>
