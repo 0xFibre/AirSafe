@@ -25,7 +25,7 @@
             color="primary"
             density="comfortable"
             variant="outlined"
-            placeholder="1000"
+            placeholder="0x..."
             v-model="input.owner"
             hide-details
           />
@@ -52,7 +52,7 @@
           color="primary"
           @click="$emit('add', input)"
         >
-          Add
+          Add owner
         </v-btn>
       </v-card-text>
     </v-card>

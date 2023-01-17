@@ -10,7 +10,7 @@
           flat
           density="comfortable"
           icon="mdi-close"
-          @click="toggleModal"
+          @click="$emit('toggle')"
         />
       </v-card-text>
 
@@ -25,9 +25,8 @@
             color="primary"
             density="comfortable"
             variant="outlined"
-            placeholder="1000"
-            v-model="input.owner"
-            readonly
+            :value="owner"
+            disabled
             hide-details
           />
         </div>
@@ -51,9 +50,9 @@
           class="mt-5"
           variant="flat"
           color="primary"
-          @click="$emit('remove', input)"
+          @click="$emit('remove', { ...input, owner })"
         >
-          Remove
+          Remove owner
         </v-btn>
       </v-card-text>
     </v-card>
@@ -67,23 +66,10 @@ import { watch, reactive } from "vue";
 const event = defineEmits(["remove", "toggle"]);
 const props = defineProps<{ show: boolean; owner: string; safe: Safe }>();
 
-const input: { threshold: string; owner: string } = reactive({
-  owner: "",
-  threshold: "",
-});
+const input: { threshold: string } = reactive({ threshold: "" });
 
 watch(
   () => props.safe,
   (safe) => (input.threshold = String(safe.threshold))
 );
-
-watch(
-  () => props.owner,
-  (owner) => (input.owner = owner)
-);
-
-function toggleModal() {
-  event("toggle", "remove");
-  input.owner = "";
-}
 </script>
