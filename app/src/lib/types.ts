@@ -82,7 +82,7 @@ export interface CreateSafeTransactionData {
 
 export enum SafeTransactionType {
   None,
-  TRANSFER,
+  COIN_WITHDRAWAL,
 }
 
 export enum SafeTransactionStatus {
@@ -98,3 +98,21 @@ export interface TransferCoinData {
   amount: bigint;
   recipient: string;
 }
+
+export const safeTransactionTypeData = {
+  [SafeTransactionType.None]: "",
+  [SafeTransactionType.COIN_WITHDRAWAL]: "CoinWithdrawalData",
+};
+
+export const safeTransactionTypeValue = {
+  [SafeTransactionType.None]: "",
+  [SafeTransactionType.COIN_WITHDRAWAL]: "Coin Withdrawal",
+};
+
+export const safeTransactionStatusValue = {
+  [SafeTransactionType.None]: "",
+  [SafeTransactionStatus.ACTIVE]: "Active",
+  [SafeTransactionStatus.APPROVED]: "Approved",
+  [SafeTransactionStatus.REJECTED]: "Rejected",
+  [SafeTransactionStatus.EXECUTED]: "Executed",
+};

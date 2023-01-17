@@ -1,5 +1,5 @@
 import { connection, utils } from "@/utils";
-import { getObjectFields, getObjectId, ObjectId, bcs } from "@mysten/sui.js";
+import { getObjectFields, ObjectId } from "@mysten/sui.js";
 import { coin } from "../coin";
 import { Safe, SafeTransaction } from "../entity";
 import { Provider } from "../provider";
@@ -13,6 +13,7 @@ import {
   SafeData,
   SafeTransactionData,
   SafeTransactionType,
+  safeTransactionTypeData,
 } from "../types";
 
 interface ConstructorData {
@@ -255,17 +256,12 @@ export class SafeService {
     type: SafeTransactionType,
     data: number[]
   ) {
-    const safeTransactionTypeData = {
-      [SafeTransactionType.None]: "",
-      [SafeTransactionType.TRANSFER]: "TransferData",
-    };
-
     const typeData = safeTransactionTypeData[type];
     const result = serializer.deserialize(typeData, Uint8Array.from(data));
 
-    if (type === SafeTransactionType.TRANSFER) {
+    if (type === SafeTransactionType.COIN_WITHDRAWAL) {
       return {
-        coinType: Buffer.from(result.coin_type).toString(),
+        coinType: new TextDecoder().decode(Uint8Array.from(result.coin_type)),
         amount: result.amount,
         recipient: result.recipient,
       };

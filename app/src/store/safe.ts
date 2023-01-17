@@ -1,7 +1,11 @@
 import { Safe } from "@/lib/entity";
 import { serializer } from "@/lib/serializer";
 import { safeService } from "@/lib/service";
-import { BasicCoin } from "@/lib/types";
+import {
+  BasicCoin,
+  SafeTransactionType,
+  safeTransactionTypeData,
+} from "@/lib/types";
 import { utils } from "@/utils";
 import { useLocalStorage } from "@vueuse/core";
 import { defineStore } from "pinia";
@@ -66,11 +70,14 @@ export const useSafeStore = defineStore("safe", {
         input.coin.metadata.decimals
       );
 
-      const transferData = serializer.serialize("WithdrawCoinData", {
-        coin_type: Buffer.from(input.coin.coinType),
-        amount: amount.toString(),
-        recipient: input.recipient,
-      });
+      const transferData = serializer.serialize(
+        safeTransactionTypeData[SafeTransactionType.COIN_WITHDRAWAL],
+        {
+          coin_type: Buffer.from(input.coin.coinType),
+          amount: amount.toString(),
+          recipient: input.recipient,
+        }
+      );
 
       const data = {
         type: 1,

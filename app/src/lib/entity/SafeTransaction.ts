@@ -3,21 +3,10 @@ import {
   BasicCoin,
   SafeTransactionData,
   SafeTransactionStatus,
+  safeTransactionStatusValue,
   SafeTransactionType,
+  safeTransactionTypeValue,
 } from "../types";
-
-export const safeTransactionTypeValue = {
-  [SafeTransactionType.None]: "",
-  [SafeTransactionType.TRANSFER]: "Coin Transfer",
-};
-
-export const safeTransactionStatusValue = {
-  [SafeTransactionType.None]: "",
-  [SafeTransactionStatus.ACTIVE]: "Active",
-  [SafeTransactionStatus.APPROVED]: "Approved",
-  [SafeTransactionStatus.REJECTED]: "Rejected",
-  [SafeTransactionStatus.EXECUTED]: "Executed",
-};
 
 export class SafeTransaction implements SafeTransactionData {
   public id: string;
