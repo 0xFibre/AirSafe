@@ -1,7 +1,7 @@
 <template>
   <v-window-item :value="window">
     <v-card-text>
-      <h6 class="text-h6 font-weight-bold fonted">Safe Details</h6>
+      <h6 class="text-h6 font-weight-bold">Safe Details</h6>
       <p>Enter your Safe details</p>
     </v-card-text>
 
@@ -9,7 +9,7 @@
 
     <v-card-text>
       <div class="mb-8">
-        <p class="text-body-1 mb-3 font-weight-bold fonted">Safe Name</p>
+        <p class="text-body-1 mb-3 font-weight-bold">Safe Name</p>
 
         <v-text-field
           density="compact"
@@ -23,7 +23,7 @@
       </div>
 
       <div class="mb-8">
-        <p class="text-body-1 mb-3 font-weight-bold fonted">Safe Owners</p>
+        <p class="text-body-1 mb-3 font-weight-bold">Safe Owners</p>
 
         <v-text-field
           v-for="(member, i) of input.owners"
@@ -61,8 +61,8 @@
 
       <div class="mb-5">
         <div class="mb-3">
-          <p class="text-body-1 font-weight-bold fonted">Threshold</p>
-          <p class="text-body-2 fonted">
+          <p class="text-body-1 font-weight-bold">Threshold</p>
+          <p class="text-body-2">
             The minimum number of owners needed to approve any transaction
           </p>
         </div>

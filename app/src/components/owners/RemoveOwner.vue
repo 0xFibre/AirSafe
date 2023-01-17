@@ -2,7 +2,7 @@
   <v-dialog :model-value="show" persistent max-width="550px">
     <v-card>
       <v-card-text class="d-flex">
-        <h6 class="text-h6 font-weight-bold fonted">Remove owner</h6>
+        <h6 class="text-h6 font-weight-bold">Remove owner</h6>
 
         <v-spacer />
 
@@ -18,7 +18,7 @@
 
       <v-card-text class="mb-3">
         <div class="mb-3">
-          <p class="text-body-2 mb-3 fonted">Owner address</p>
+          <p class="text-body-2 mb-3">Owner address</p>
 
           <v-text-field
             type="text"
@@ -32,7 +32,7 @@
         </div>
 
         <div class="mb-3">
-          <p class="text-body-2 mb-3 fonted">New threshold</p>
+          <p class="text-body-2 mb-3">New threshold</p>
 
           <v-row>
             <v-col class="my-0" cols="6">

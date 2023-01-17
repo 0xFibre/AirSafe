@@ -45,7 +45,6 @@ import OwnersList from "@/components/owners/OwnersList.vue";
 import AddOwnerModal from "@/components/owners/AddOwnerModal.vue";
 import RemoveOwner from "@/components/owners/RemoveOwner.vue";
 import Loading from "@/components/Loading.vue";
-import PageTextHeader from "@/components/header/PageTextHeader.vue";
 
 const safeStore = useSafeStore();
 const { safe } = storeToRefs(safeStore);

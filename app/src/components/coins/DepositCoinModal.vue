@@ -2,7 +2,7 @@
   <v-dialog :model-value="show" persistent max-width="550px">
     <v-card>
       <v-card-text class="d-flex">
-        <h6 class="text-h6 font-weight-bold fonted">Deposit Coin</h6>
+        <h6 class="text-h6 font-weight-bold">Deposit Coin</h6>
 
         <v-spacer />
 
@@ -18,7 +18,7 @@
 
       <v-card-text class="mb-3">
         <div class="mb-3">
-          <p class="text-body-2 mb-3 fonted">Amount to deposit</p>
+          <p class="text-body-2 mb-3">Amount to deposit</p>
 
           <v-text-field
             type="number"
@@ -32,7 +32,7 @@
         </div>
 
         <div class="mb-3">
-          <p class="text-body-2 mb-3 fonted">Coin to deposit</p>
+          <p class="text-body-2 mb-3">Coin to deposit</p>
 
           <v-combobox
             :items="coins"

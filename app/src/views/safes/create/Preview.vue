@@ -1,7 +1,7 @@
 <template>
   <v-window-item :value="window">
     <v-card-text>
-      <h6 class="text-h6 font-weight-bold fonted">Review</h6>
+      <h6 class="text-h6 font-weight-bold">Review</h6>
       <p>Review your Safe details. Go back if you need to make adjustments</p>
     </v-card-text>
 

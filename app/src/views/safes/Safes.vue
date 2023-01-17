@@ -3,7 +3,7 @@
   <v-row v-else>
     <v-col cols="12" md="8" class="mx-auto">
       <div class="d-flex mb-3">
-        <h6 class="text-h6 fonted font-weight-bold">Safes</h6>
+        <h6 class="text-h6 font-weight-bold">Safes</h6>
         <v-spacer />
         <v-btn
           flat

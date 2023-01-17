@@ -7,7 +7,7 @@
       <v-col cols="12" sm="6" md="7">
         <v-card flat class="mb-3">
           <v-card-text>
-            <h6 class="text-body-1 fonted font-weight-bold">
+            <h6 class="text-body-1 font-weight-bold">
               {{ transaction?.typeValue }}
             </h6>
           </v-card-text>
@@ -44,7 +44,7 @@
 
         <v-card flat>
           <v-card-text class="d-flex">
-            <h6 class="text-body-1 fonted font-weight-bold">Approvers</h6>
+            <h6 class="text-body-1 font-weight-bold">Approvers</h6>
             <v-spacer />
             <v-btn
               density="comfortable"
@@ -86,7 +86,7 @@
       <v-col cols="12" sm="6" md="5">
         <v-card flat class="mb-3">
           <v-card-text>
-            <h6 class="text-body-1 fonted font-weight-bold">Info</h6>
+            <h6 class="text-body-1 font-weight-bold">Info</h6>
           </v-card-text>
 
           <v-divider />
@@ -118,7 +118,7 @@
 
         <v-card flat>
           <v-card-text>
-            <h6 class="text-body-1 fonted font-weight-bold">Status</h6>
+            <h6 class="text-body-1 font-weight-bold">Status</h6>
           </v-card-text>
 
           <v-divider />

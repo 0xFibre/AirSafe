@@ -1,7 +1,7 @@
 <template>
   <v-window-item :value="window">
     <v-card-text>
-      <h6 class="text-h6 font-weight-bold fonted">Approve Transaction</h6>
+      <h6 class="text-h6 font-weight-bold">Approve Transaction</h6>
       <p>Approve the transaction to create your safe in your wallet</p>
     </v-card-text>
 

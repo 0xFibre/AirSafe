@@ -2,7 +2,7 @@
   <v-dialog :model-value="show" persistent max-width="550px">
     <v-card>
       <v-card-text class="d-flex">
-        <h6 class="text-h6 font-weight-bold fonted">
+        <h6 class="text-h6 font-weight-bold">
           Send {{ coin?.metadata?.symbol }}
         </h6>
 
@@ -26,7 +26,7 @@
 
       <v-card-text class="mb-3">
         <div class="mb-3">
-          <p class="text-body-2 mb-3 fonted">Amount to send</p>
+          <p class="text-body-2 mb-3">Amount to send</p>
           <v-text-field
             type="number"
             color="primary"
@@ -39,7 +39,7 @@
         </div>
 
         <div class="mb-3">
-          <p class="text-body-2 mb-3 fonted">Coin to send</p>
+          <p class="text-body-2 mb-3">Coin to send</p>
 
           <v-select
             :items="coins"
@@ -61,7 +61,7 @@
         </div>
 
         <div class="mb-3">
-          <p class="text-body-2 mb-3 fonted">Recipient address</p>
+          <p class="text-body-2 mb-3">Recipient address</p>
           <v-text-field
             type="text"
             color="primary"
