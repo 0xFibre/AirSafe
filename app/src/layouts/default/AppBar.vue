@@ -29,7 +29,7 @@
       </v-list-item-subtitle>
     </v-list-item>
 
-    <div class="py-2 px-3">
+    <div class="pa-3">
       <v-btn flat block variant="flat" color="primary" prepend-icon="mdi-plus">
         New transaction
       </v-btn>
