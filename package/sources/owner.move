@@ -2,7 +2,7 @@ module airsafe::owner {
     use std::vector;
 
     use sui::vec_set;
-    use sui::object;
+    use sui::object::{Self, UID, ID};
 
     use airsafe::safe::{Self, Safe};
     use airsafe::registry::{Self, Registry};
@@ -10,6 +10,11 @@ module airsafe::owner {
     
     friend airsafe::main;
     friend airsafe::transaction;
+
+    struct OwnerCap has key {
+        id: UID,
+        safe_id: ID
+    }
 
     public(friend) fun add(registry: &mut Registry, safe: &mut Safe, owner: address) {
         assert!(!is_owner(safe, owner), error::owner_already_exists());
