@@ -37,7 +37,6 @@
           <v-combobox
             :items="coins"
             item-title="metadata.name"
-            item-value="coinType"
             color="primary"
             density="comfortable"
             variant="outlined"
@@ -45,6 +44,7 @@
             v-model="input.coin"
             @update:model-value="loadCoinMetadata"
             hide-details
+            return-object
           >
             <template v-slot:prepend-inner>
               <v-avatar size="25">

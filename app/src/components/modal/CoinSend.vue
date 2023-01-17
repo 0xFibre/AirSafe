@@ -44,13 +44,13 @@
           <v-select
             :items="coins"
             item-title="metadata.name"
-            item-value="coinType"
             color="primary"
             density="comfortable"
             variant="outlined"
             placeholder="Select coin"
             v-model="input.coin"
             hide-details
+            return-object
           >
             <template v-slot:prepend-inner>
               <v-avatar size="25">
