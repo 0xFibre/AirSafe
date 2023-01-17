@@ -83,6 +83,9 @@ export interface CreateSafeTransactionData {
 export enum SafeTransactionType {
   None,
   COIN_WITHDRAWAL,
+  ADD_OWNER,
+  REMOVE_OWNER,
+  CHANGE_THRESHOLD,
 }
 
 export enum SafeTransactionStatus {
@@ -102,11 +105,17 @@ export interface TransferCoinData {
 export const safeTransactionTypeData = {
   [SafeTransactionType.None]: "",
   [SafeTransactionType.COIN_WITHDRAWAL]: "CoinWithdrawalData",
+  [SafeTransactionType.ADD_OWNER]: "AddOwnerData",
+  [SafeTransactionType.REMOVE_OWNER]: "RemoveOwnerData",
+  [SafeTransactionType.CHANGE_THRESHOLD]: "ChangeThresholdData",
 };
 
 export const safeTransactionTypeValue = {
   [SafeTransactionType.None]: "",
-  [SafeTransactionType.COIN_WITHDRAWAL]: "Coin Withdrawal",
+  [SafeTransactionType.COIN_WITHDRAWAL]: "Coin withdrawal",
+  [SafeTransactionType.ADD_OWNER]: "Add owner",
+  [SafeTransactionType.REMOVE_OWNER]: "Remove owner",
+  [SafeTransactionType.CHANGE_THRESHOLD]: "Change threshold",
 };
 
 export const safeTransactionStatusValue = {
