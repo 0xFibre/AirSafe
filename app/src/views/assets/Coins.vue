@@ -103,7 +103,7 @@ async function depositCoin(input: { amount: string; coin: BasicCoin }) {
 async function sendCoin(input: {
   amount: string;
   recipient: string;
-  coin: Coin;
+  coin: BasicCoin;
 }) {
   await safeStore.createCoinWithdrawalTransaction(input);
 }

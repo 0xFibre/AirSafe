@@ -12,7 +12,8 @@
         <p class="text-body-1 mb-3 font-weight-bold fonted">Safe Name</p>
 
         <v-text-field
-          density="comfortable"
+          density="compact"
+          color="primary"
           variant="outlined"
           placeholder="Safe name"
           v-model="input.name"
@@ -28,7 +29,8 @@
           v-for="(member, i) of input.owners"
           :key="i"
           class="mb-3"
-          density="comfortable"
+          density="compact"
+          color="primary"
           prepend-icon="mdi-account-outline"
           variant="outlined"
           placeholder="Owner address"
@@ -43,7 +45,7 @@
           <v-btn
             flat
             variant="text"
-            density="comfortable"
+            density="compact"
             append-icon="mdi-plus"
             @click="(e:any) => { 
               let len = input.owners.length; 
@@ -61,24 +63,30 @@
         <div class="mb-3">
           <p class="text-body-1 font-weight-bold fonted">Threshold</p>
           <p class="text-body-2 fonted">
-            The minimum number of owners needed to approve transactions
+            The minimum number of owners needed to approve any transaction
           </p>
         </div>
 
-        <v-select
-          density="comfortable"
-          variant="outlined"
-          :items="
-            Array.from(
-              { length: input.owners.filter((m) => !!m).length },
-              (_, i) => i + 1
-            )
-          "
-          placeholder="Select Threshold"
-          v-model="input.threshold"
-          @update:model-value="$emit('input', 'threshold', input.threshold)"
-          hide-details
-        />
+        <v-row>
+          <v-col class="my-0" cols="6">
+            <v-text-field
+              density="compact"
+              color="primary"
+              type="number"
+              variant="outlined"
+              placeholder="Threshold"
+              v-model="input.threshold"
+              :min="1"
+              :max="input.owners.length"
+              @input="$emit('input', 'threshold', input.threshold)"
+              hide-details
+            >
+              <template v-slot:append>
+                <div>out of {{ input.owners.length }} owners</div>
+              </template>
+            </v-text-field>
+          </v-col>
+        </v-row>
       </div>
     </v-card-text>
   </v-window-item>

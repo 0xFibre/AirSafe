@@ -23,7 +23,7 @@
           <v-text-field
             type="text"
             color="primary"
-            density="comfortable"
+            density="compact"
             variant="outlined"
             :value="owner"
             disabled
@@ -34,14 +34,25 @@
         <div class="mb-3">
           <p class="text-body-2 mb-3 fonted">New threshold</p>
 
-          <v-select
-            color="primary"
-            density="comfortable"
-            variant="outlined"
-            placeholder="Select or paste coin type"
-            v-model="input.threshold"
-            hide-details
-          />
+          <v-row>
+            <v-col class="my-0" cols="6">
+              <v-text-field
+                density="compact"
+                color="primary"
+                type="number"
+                variant="outlined"
+                placeholder="Threshold"
+                v-model="input.threshold"
+                :min="1"
+                @input="$emit('input', 'threshold', input.threshold)"
+                hide-details
+              >
+                <template v-slot:append>
+                  <div>out of 1 owners</div>
+                </template>
+              </v-text-field>
+            </v-col>
+          </v-row>
         </div>
 
         <v-btn

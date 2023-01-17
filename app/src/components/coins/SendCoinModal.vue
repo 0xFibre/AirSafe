@@ -30,7 +30,7 @@
           <v-text-field
             type="number"
             color="primary"
-            density="comfortable"
+            density="compact"
             variant="outlined"
             placeholder="10000"
             v-model="input.amount"
@@ -45,7 +45,7 @@
             :items="coins"
             item-title="metadata.name"
             color="primary"
-            density="comfortable"
+            density="compact"
             variant="outlined"
             placeholder="Select coin"
             v-model="input.coin"
@@ -65,7 +65,7 @@
           <v-text-field
             type="text"
             color="primary"
-            density="comfortable"
+            density="compact"
             variant="outlined"
             placeholder="0x..."
             v-model="input.recipient"
