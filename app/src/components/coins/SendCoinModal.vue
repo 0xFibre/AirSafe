@@ -104,5 +104,8 @@ const input: {
   coin?: BasicCoin;
 } = reactive({ amount: "", recipient: "", coin: undefined });
 
-watch(props, () => (input.coin = props.coin));
+watch(
+  () => props.coin,
+  (coin) => (input.coin = coin)
+);
 </script>

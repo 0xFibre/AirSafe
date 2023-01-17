@@ -85,7 +85,10 @@ const input: {
   amount: string;
 } = reactive({ amount: "" });
 
-watch(props, () => (input.coin = props.coin));
+watch(
+  () => props.coin,
+  (coin) => (input.coin = coin)
+);
 
 async function loadCoinMetadata() {
   if (typeof input.coin === "string") {
