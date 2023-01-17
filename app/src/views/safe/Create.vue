@@ -47,7 +47,7 @@ import CreateInput from "./create/Input.vue";
 import CreatePreview from "./create/Preview.vue";
 import CreateApprove from "./create/Approve.vue";
 import { useVuelidate } from "@vuelidate/core";
-import { required, minValue, maxValue } from "@vuelidate/validators";
+import { required, between } from "@vuelidate/validators";
 import { useSafeStore, useConnectionStore } from "@/store";
 import { storeToRefs } from "pinia";
 
@@ -83,8 +83,7 @@ const state: State = reactive({
 const rules = {
   threshold: {
     required,
-    minValue: minValue(1),
-    maxValue: maxValue(state.input.owners.length),
+    betweenValue: between(1, state.input.owners.length + 1),
   },
   owners: {
     required,
@@ -97,6 +96,7 @@ const rules = {
 const $v = useVuelidate(rules, state.input);
 
 async function createSafe() {
+  console.log(await $v.value.$validate(), state.input);
   if (await $v.value.$validate()) {
     const payload = {
       threshold: state.input.threshold,
