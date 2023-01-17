@@ -1,15 +1,15 @@
-module vallet::owner {
+module airsafe::owner {
     use std::vector;
 
     use sui::vec_set;
     use sui::object;
 
-    use vallet::safe::{Self, Safe};
-    use vallet::registry::{Self, Registry};
-    use vallet::error;
+    use airsafe::safe::{Self, Safe};
+    use airsafe::registry::{Self, Registry};
+    use airsafe::error;
     
-    friend vallet::main;
-    friend vallet::transaction;
+    friend airsafe::main;
+    friend airsafe::transaction;
 
     public(friend) fun add(registry: &mut Registry, safe: &mut Safe, owner: address) {
         assert!(!is_owner(safe, owner), error::owner_already_exists());

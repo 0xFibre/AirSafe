@@ -1,4 +1,4 @@
-module vallet::registry {
+module airsafe::registry {
     use sui::object::{Self, UID, ID};
     use sui::table::{Self, Table};
     use sui::tx_context::{TxContext};
@@ -10,7 +10,7 @@ module vallet::registry {
         safes: Table<address, VecSet<ID>>
     }
 
-    friend vallet::owner;
+    friend airsafe::owner;
 
     fun init(ctx: &mut TxContext) {
         let registry = Registry {

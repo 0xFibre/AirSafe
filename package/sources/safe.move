@@ -1,16 +1,16 @@
-module vallet::safe {
+module airsafe::safe {
     use std::vector;
 
     use sui::object::{Self, UID, ID};
     use sui::tx_context::{Self, TxContext};
     use sui::vec_set::{Self, VecSet};
 
-    use vallet::error;
+    use airsafe::error;
 
-    friend vallet::main;
-    friend vallet::coin;
-    friend vallet::owner;
-    friend vallet::transaction;
+    friend airsafe::main;
+    friend airsafe::coin;
+    friend airsafe::owner;
+    friend airsafe::transaction;
 
     struct Safe has key, store {
         id: UID,

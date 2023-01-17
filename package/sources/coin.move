@@ -1,4 +1,4 @@
-module vallet::coin {
+module airsafe::coin {
     use std::ascii;
     use std::type_name;
     use std::vector;
@@ -9,11 +9,11 @@ module vallet::coin {
     use sui::tx_context::{TxContext};
     use sui::transfer;
 
-    use vallet::safe::{Self, Safe};
-    use vallet::error;
+    use airsafe::safe::{Self, Safe};
+    use airsafe::error;
 
-    friend vallet::main;
-    friend vallet::transaction;
+    friend airsafe::main;
+    friend airsafe::transaction;
 
     public(friend) fun deposit<T>(safe: &mut Safe, payment: vector<Coin<T>>, amount: u64, ctx: &mut TxContext) {
         let coin = vector::pop_back(&mut payment);

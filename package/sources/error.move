@@ -1,4 +1,4 @@
-module vallet::error {
+module airsafe::error {
     const ERROR_PREFIX: u64 = 2002;
 
     public fun invalid_threshold(): u64 {

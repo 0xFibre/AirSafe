@@ -1,4 +1,4 @@
-module vallet::transaction {
+module airsafe::transaction {
     use std::vector;
 
     use sui::object::{Self, UID, ID};
@@ -6,13 +6,13 @@ module vallet::transaction {
     use sui::vec_set::{Self, VecSet};
     use sui::bcs::{Self, BCS};
 
-    use vallet::safe::{Self, Safe};
-    use vallet::registry::{Registry};
-    use vallet::owner;
-    use vallet::coin;
-    use vallet::error;
+    use airsafe::safe::{Self, Safe};
+    use airsafe::registry::{Registry};
+    use airsafe::owner;
+    use airsafe::coin;
+    use airsafe::error;
 
-    friend vallet::main;
+    friend airsafe::main;
 
     struct Transaction has key, store {
         id: UID,

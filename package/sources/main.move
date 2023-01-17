@@ -1,16 +1,16 @@
-module vallet::main {
+module airsafe::main {
     use std::vector;
 
     use sui::tx_context::{Self, TxContext};
     use sui::coin::{Coin};
     use sui::transfer;
     
-    use vallet::safe::{Self, Safe};
-    use vallet::transaction::{Self, Transaction};
-    use vallet::registry::{Registry};
-    use vallet::owner;
-    use vallet::error;
-    use vallet::coin;
+    use airsafe::safe::{Self, Safe};
+    use airsafe::transaction::{Self, Transaction};
+    use airsafe::registry::{Registry};
+    use airsafe::owner;
+    use airsafe::error;
+    use airsafe::coin;
 
     public entry fun create_safe(registry: &mut Registry, threshold: u64, owners: vector<address>, ctx: &mut TxContext) {
         let safe = safe::new(threshold, owners, ctx);
