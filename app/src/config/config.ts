@@ -1,5 +1,7 @@
-// export const config = {
-//   safe: {
-//     type: [],
-//   },
-// };
+interface Config {
+  appName: string;
+}
+
+export const config: Config = {
+  appName: "Air Safe",
+};

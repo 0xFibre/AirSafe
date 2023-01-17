@@ -6,7 +6,7 @@
     v-if="!$route.meta.hideSideBar"
   >
     <div class="text-center my-3">
-      <h6 class="text-h6 fonted font-weight-bold">Vallet Safe</h6>
+      <h6 class="text-h6 fonted font-weight-bold">{{ config.appName }}</h6>
     </div>
 
     <v-divider class="mb-3 mt-5" />
@@ -81,7 +81,7 @@
     />
 
     <v-app-bar-title>
-      <h4>Vallet Safe</h4>
+      <h4>{{ config.appName }}</h4>
     </v-app-bar-title>
 
     <v-spacer />
@@ -129,6 +129,7 @@ import makeBlockie from "ethereum-blockies-base64";
 import { useConnectionStore, useSafeStore } from "@/store";
 import { storeToRefs } from "pinia";
 import { Ref, ref } from "vue";
+import { config } from "@/config";
 
 const drawer: Ref<boolean | null> = ref(null);
 const connectionStore = useConnectionStore();
