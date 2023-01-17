@@ -57,17 +57,16 @@ module airsafe::transaction {
     const CHANGE_THRESHOLD_TRANSACTION_TYPE: u8 = 4;
 
     public(friend) fun create_transaction(safe: &mut Safe, type: u8, data: vector<u8>, ctx: &mut TxContext): Transaction {
-       let sender = tx_context::sender(ctx);
 
-        assert!(owner::is_owner(safe, sender), error::not_safe_owner());
         validate_transaction_data(type, data);
+        safe::increment_transactions_count(safe);
 
         let transaction = Transaction {
             id: object::new(ctx),
             safe_id: object::id(safe),
             status: ACTIVE_TRANSACTION_STATUS,
             index: safe::transactions_count(safe),
-            creator: sender,
+            creator: tx_context::sender(ctx),
             approvers: vec_set::empty(),
             rejecters: vec_set::empty(),
             type,
@@ -75,22 +74,15 @@ module airsafe::transaction {
         };
 
         let transactions = safe::borrow_transactions_mut(safe);
-
         vector::push_back(transactions, object::id(&transaction));
-        safe::increment_transactions_count(safe);
-
-        approve_transaction(safe, &mut transaction, ctx);
-
+        
         transaction
     }
 
     public(friend) fun approve_transaction(safe: &mut Safe, transaction: &mut Transaction, ctx: &mut TxContext) {
+        assert!(transaction.status == ACTIVE_TRANSACTION_STATUS, error::invalid_transaction_status());
+
         let sender = tx_context::sender(ctx);
-
-        assert!(object::borrow_id(safe) == &transaction.safe_id, error::safe_transaction_mismatch());
-        assert!(owner::is_owner(safe, sender), error::not_safe_owner());
-
-        assert!(transaction.status == ACTIVE_TRANSACTION_STATUS, error::transaction_not_active());
 
         if(vec_set::contains(&transaction.rejecters, &sender)) {
             vec_set::remove(&mut transaction.rejecters, &sender);
@@ -106,12 +98,9 @@ module airsafe::transaction {
     }
 
     public(friend) fun reject_transaction(safe: &mut Safe, transaction: &mut Transaction, ctx: &mut TxContext) {
+        assert!(transaction.status == ACTIVE_TRANSACTION_STATUS, error::invalid_transaction_status());
+        
         let sender = tx_context::sender(ctx);
-
-        assert!(object::borrow_id(safe) == &transaction.safe_id, error::safe_transaction_mismatch());
-        assert!(owner::is_owner(safe, sender), error::not_safe_owner());
-
-        assert!(transaction.status == ACTIVE_TRANSACTION_STATUS, error::transaction_not_active());
         
         if(vec_set::contains(&transaction.approvers, &sender)) {
             vec_set::remove(&mut transaction.approvers, &sender);
@@ -128,9 +117,7 @@ module airsafe::transaction {
     }
 
     public(friend) fun execute_coin_withdrawal<T>(safe: &mut Safe, transaction: &mut Transaction, ctx: &mut TxContext) {
-        assert!(object::borrow_id(safe) == &transaction.safe_id, error::safe_transaction_mismatch());
-        assert!(transaction.status == APPROVED_TRANSACTION_STATUS, error::transaction_not_approved());
-        assert!(transaction.type == COIN_WITHDRAWAL_TRANSACTION_TYPE, error::invalid_transaction_type());
+        assert!(transaction.status == APPROVED_TRANSACTION_STATUS, error::invalid_transaction_status());
         
         let bcs = bcs::new(transaction.data);
         let data = deserialize_coin_withdrawal_data(bcs);
@@ -141,11 +128,10 @@ module airsafe::transaction {
     }
 
     public(friend) fun execute_policy_change(registry: &mut Registry, safe: &mut Safe, transaction: &mut Transaction, _ctx: &mut TxContext) {
-        assert!(object::borrow_id(safe) == &transaction.safe_id, error::safe_transaction_mismatch());
-        assert!(transaction.status == APPROVED_TRANSACTION_STATUS, error::transaction_not_approved());
+        assert!(transaction.status == APPROVED_TRANSACTION_STATUS, error::invalid_transaction_status());
         
         let bcs = bcs::new(transaction.data);
-
+        
         if(transaction.type == ADD_OWNER_TRANSACTION_TYPE) {
             let data = deserialize_add_owner_data(bcs);
             owner::add(registry, safe, data.owner);
@@ -160,6 +146,9 @@ module airsafe::transaction {
         } else {
             abort error::invalid_transaction_type()
         };
+
+        let index = safe::transactions_count(safe);
+        safe::set_stale_transaction_index(safe, index);
         
         transaction.status = EXECUTED_TRANSACTION_STATUS;
     }
@@ -222,5 +211,9 @@ module airsafe::transaction {
         assert!(vector::is_empty(&bcs::into_remainder_bytes(bcs)), error::invalid_transaction_data());
 
         data
+    }
+
+    public(friend) fun safe_id(self: &Transaction): ID {
+        self.safe_id
     }
 }

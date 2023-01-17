@@ -29,14 +29,6 @@ module airsafe::error {
         ERROR_PREFIX + 8
     }
 
-    public fun already_approved_transaction(): u64 {
-        ERROR_PREFIX + 9
-    }
-
-    public fun already_rejected_transaction(): u64 {
-        ERROR_PREFIX + 9
-    }
-
     public fun safe_transaction_mismatch(): u64 {
         ERROR_PREFIX + 9
     }
@@ -45,12 +37,8 @@ module airsafe::error {
         ERROR_PREFIX + 10
     }
 
-    public fun transaction_not_active(): u64 {
+    public fun invalid_transaction_status(): u64 {
         ERROR_PREFIX + 11
-    }
-
-    public fun transaction_not_approved(): u64 {
-        ERROR_PREFIX + 12
     }
 
     public fun owners_empty(): u64 {

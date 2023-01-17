@@ -72,6 +72,9 @@ module airsafe::safe {
     }
 
     public(friend) fun set_threshold(self: &mut Safe, threshold: u64) {
+        assert!(threshold > 0, error::invalid_threshold());
+        assert!(threshold <= vec_set::size(&self.owners), error::invalid_threshold());
+
         self.threshold = threshold
     }
 
