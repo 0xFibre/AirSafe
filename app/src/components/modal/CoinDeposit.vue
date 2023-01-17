@@ -18,21 +18,21 @@
 
       <v-card-text class="mb-3">
         <div class="mb-3">
-          <p class="text-body-2 mb-3 fonted">Amount</p>
+          <p class="text-body-2 mb-3 fonted">Amount to deposit</p>
 
           <v-text-field
             type="number"
             color="primary"
             density="comfortable"
             variant="outlined"
-            placeholder="Enter deposit amount"
+            placeholder="1000"
             v-model="input.amount"
             hide-details
           />
         </div>
 
         <div class="mb-3">
-          <p class="text-body-2 mb-3 fonted">Coin</p>
+          <p class="text-body-2 mb-3 fonted">Coin to deposit</p>
 
           <v-combobox
             :items="coins"

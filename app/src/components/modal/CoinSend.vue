@@ -26,20 +26,20 @@
 
       <v-card-text class="mb-3">
         <div class="mb-3">
-          <p class="text-body-2 mb-3 fonted">Amount</p>
+          <p class="text-body-2 mb-3 fonted">Amount to send</p>
           <v-text-field
             type="number"
             color="primary"
             density="comfortable"
             variant="outlined"
-            placeholder="Enter amount to semd"
+            placeholder="10000"
             v-model="input.amount"
             hide-details
           />
         </div>
 
         <div class="mb-3">
-          <p class="text-body-2 mb-3 fonted">Coin</p>
+          <p class="text-body-2 mb-3 fonted">Coin to send</p>
 
           <v-select
             :items="coins"
@@ -61,13 +61,13 @@
         </div>
 
         <div class="mb-3">
-          <p class="text-body-2 mb-3 fonted">Recipient</p>
+          <p class="text-body-2 mb-3 fonted">Recipient address</p>
           <v-text-field
             type="text"
             color="primary"
             density="comfortable"
             variant="outlined"
-            placeholder="Enter recipient address"
+            placeholder="0x..."
             v-model="input.recipient"
             hide-details
           />
