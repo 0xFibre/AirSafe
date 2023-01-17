@@ -1,14 +1,14 @@
 <template>
   <v-row class="mt-10">
-    <v-col md="6" sm="8" class="mx-auto">
-      <h3 class="my-3">Connect your wallet</h3>
+    <v-col md="6" sm="8" cols="12" class="mx-auto">
+      <h6 class="my-3 font-weight-bold text-h6 fonted">Connect your wallet</h6>
+
       <v-list>
         <v-list-item
           v-for="(wallet, i) in wallets"
           :key="i"
           :value="wallet"
-          class="my-3 pa-3"
-          border
+          class="my-1"
           @click="connect(wallet.name)"
         >
           <template v-slot:prepend>
