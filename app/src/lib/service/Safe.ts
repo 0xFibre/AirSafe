@@ -10,6 +10,7 @@ import {
   CreateSafeTransactionData,
   DepositCoinData,
   ExecuteCoinWithdrawalData,
+  ExecutePolicyChangeData,
   SafeData,
   SafeTransactionData,
   SafeTransactionType,
@@ -139,6 +140,18 @@ export class SafeService {
       function: "execute_coin_withdrawal",
       typeArguments: [data.coin.coinType],
       arguments: [data.safeId, data.transactionId],
+    };
+
+    return await connection.executeMoveCall(moveCallPayload);
+  }
+
+  async executePolicyChange(data: ExecutePolicyChangeData) {
+    const moveCallPayload = {
+      packageObjectId: this._packageObjectId,
+      module: this.module,
+      function: "execute_policy_change",
+      typeArguments: [],
+      arguments: [this._registryObjectId, data.safeId, data.transactionId],
     };
 
     return await connection.executeMoveCall(moveCallPayload);

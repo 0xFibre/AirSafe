@@ -15,7 +15,7 @@
 
           <v-divider />
 
-          <v-card-text>
+          <v-card-text v-if="transaction.coin">
             <div class="my-3 d-flex">
               <span>Amount</span>
               <v-spacer />
@@ -208,6 +208,7 @@ import { onMounted, reactive } from "vue";
 import { utils } from "@/utils";
 import { useRoute } from "vue-router";
 import makeBlockie from "ethereum-blockies-base64";
+import { SafeTransactionType } from "@/lib/types";
 
 const route = useRoute();
 const safeStore = useSafeStore();
@@ -234,11 +235,17 @@ async function rejectSafeTransaction() {
 }
 
 async function executeSafeTransaction() {
-  if (transaction?.value?.type == 1) {
-    await safeStore.executeCoinWithdrawal(
-      <string>route.params.id,
-      transaction.value.coin!
-    );
+  switch (transaction?.value?.type) {
+    case SafeTransactionType.COIN_WITHDRAWAL:
+      await safeStore.executeCoinWithdrawal(
+        <string>route.params.id,
+        transaction.value.coin!
+      );
+      break;
+    case SafeTransactionType.ADD_OWNER:
+    case SafeTransactionType.REMOVE_OWNER:
+    case SafeTransactionType.CHANGE_THRESHOLD:
+      await safeStore.executePolicyChange(<string>route.params.id);
   }
 }
 

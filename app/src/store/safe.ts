@@ -169,5 +169,14 @@ export const useSafeStore = defineStore("safe", {
 
       console.log(result);
     },
+
+    async executePolicyChange(transactionId: string) {
+      const result = await safeService.executePolicyChange({
+        transactionId,
+        safeId: this.activeSafeId!,
+      });
+
+      console.log(result);
+    },
   },
 });

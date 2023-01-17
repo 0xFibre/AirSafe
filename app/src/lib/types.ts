@@ -41,6 +41,11 @@ export interface ExecuteCoinWithdrawalData {
   coin: BasicCoin;
 }
 
+export interface ExecutePolicyChangeData {
+  safeId: string;
+  transactionId: string;
+}
+
 export interface ApproveTransactionData {
   safeId: string;
   transactionId: string;
