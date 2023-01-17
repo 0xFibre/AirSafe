@@ -25,7 +25,7 @@
       />
     </v-card>
 
-    <CoinDepositModal
+    <DepositCoinModal
       @deposit="depositCoin"
       @toggle="toggleModal('deposit')"
       :show="state.deposit.showModal"
@@ -33,7 +33,7 @@
       :coins="state.userCoins"
     />
 
-    <CoinSendModal
+    <SendCoinModal
       @send="sendCoin"
       @toggle="toggleModal('send')"
       :show="state.send.showModal"
@@ -45,8 +45,8 @@
 
 <script lang="ts" setup>
 import CoinsTable from "@/components/table/CoinsTable.vue";
-import CoinDepositModal from "@/components/modal/CoinDeposit.vue";
-import CoinSendModal from "@/components/modal/CoinSend.vue";
+import DepositCoinModal from "@/components/coins/DepositCoinModal.vue";
+import SendCoinModal from "@/components/coins/SendCoinModal.vue";
 import { useConnectionStore, useSafeStore } from "@/store";
 import { storeToRefs } from "pinia";
 import { onMounted, reactive } from "vue";
