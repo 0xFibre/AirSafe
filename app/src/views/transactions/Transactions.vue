@@ -107,9 +107,3 @@ onMounted(async () => {
   await transactionStore.fetchTransactions();
 });
 </script>
-
-<style scoped>
-.fonted {
-  font-family: Circular, sans-serif !important;
-}
-</style>

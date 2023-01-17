@@ -37,12 +37,6 @@
   </v-row>
 </template>
 
-<style>
-.fonted {
-  font-family: Circular, sans-serif !important;
-}
-</style>
-
 <script lang="ts" setup>
 import { useSafeStore } from "@/store";
 import { storeToRefs } from "pinia";

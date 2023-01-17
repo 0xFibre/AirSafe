@@ -246,9 +246,3 @@ function toggleExpansion(s: string) {
   state.approvers.show = !state.approvers.show;
 }
 </script>
-
-<style scoped>
-.fonted {
-  font-family: Circular, sans-serif !important;
-}
-</style>

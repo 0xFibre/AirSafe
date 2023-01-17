@@ -58,12 +58,6 @@
   </v-row>
 </template>
 
-<style>
-.fonted {
-  font-family: Circular, sans-serif !important;
-}
-</style>
-
 <script lang="ts" setup>
 import { env } from "@/config";
 import { useSafeStore } from "@/store";

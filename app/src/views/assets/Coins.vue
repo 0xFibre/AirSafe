@@ -43,12 +43,6 @@
   </template>
 </template>
 
-<style>
-.fonted {
-  font-family: Circular, sans-serif !important;
-}
-</style>
-
 <script lang="ts" setup>
 import CoinsTable from "@/components/table/CoinsTable.vue";
 import CoinDepositModal from "@/components/modal/CoinDeposit.vue";
