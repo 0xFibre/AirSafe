@@ -3,37 +3,36 @@
     <v-col cols="12" md="8" class="mx-auto">
       <div class="d-flex mb-3">
         <h6 class="text-h6 fonted font-weight-bold">Owners</h6>
+
         <v-spacer />
-        <v-btn flat variant="text" density="comfortable">Add new owner</v-btn>
+
+        <v-btn
+          flat
+          variant="text"
+          density="comfortable"
+          @click="toggleModal('add')"
+        >
+          Add new owner
+        </v-btn>
       </div>
 
-      <v-list lines="two">
-        <v-list-item
-          class="my-0 py-2"
-          v-for="owner in safe?.owners || []"
-          :prepend-avatar="makeBlockie(owner)"
-          :key="owner"
-        >
-          <v-list-item-title>{{ owner }}</v-list-item-title>
+      <OwnersList
+        :owners="safe?.owners"
+        @remove="(owner) => toggleModal('remove', owner)"
+      />
 
-          <v-list-item-action>
-            <v-btn flat variant="text" icon="mdi-qrcode" size="x-small" />
-            <v-btn flat variant="text" icon="mdi-content-copy" size="x-small" />
-            <v-btn
-              flat
-              target="_blank"
-              :href="`${env.suiExplorerUrl}/address/${owner}?network=${env.suiNetwork}`"
-              variant="text"
-              icon="mdi-open-in-new"
-              size="x-small"
-            />
-          </v-list-item-action>
+      <AddOwnerModal
+        :safe="safe!"
+        :show="state.add.show"
+        @toggle="toggleModal('add')"
+      />
 
-          <template v-slot:append>
-            <v-btn flat variant="text" icon="mdi-delete-outline" size="small" />
-          </template>
-        </v-list-item>
-      </v-list>
+      <RemoveOwner
+        :safe="safe!"
+        :show="state.remove.show"
+        :owner="state.remove.owner"
+        @toggle="(owner) => toggleModal('remove', owner)"
+      />
     </v-col>
   </v-row>
 </template>
@@ -46,15 +45,38 @@
 
 <script lang="ts" setup>
 import { useSafeStore } from "@/store";
-import makeBlockie from "ethereum-blockies-base64";
 import { storeToRefs } from "pinia";
-import { onMounted } from "vue";
-import { env } from "@/config";
+import { onMounted, reactive } from "vue";
+import OwnersList from "@/components/owners/OwnersList.vue";
+import AddOwnerModal from "@/components/owners/AddOwnerModal.vue";
+import RemoveOwner from "@/components/owners/RemoveOwner.vue";
 
 const safeStore = useSafeStore();
 const { safe } = storeToRefs(safeStore);
 
+interface State {
+  add: { show: boolean };
+  remove: {
+    show: boolean;
+    owner: string;
+  };
+}
+const state: State = reactive({
+  add: {
+    show: false,
+  },
+  remove: {
+    show: false,
+    owner: "",
+  },
+});
+
 onMounted(async () => {
   await safeStore.fetchActiveSafe();
 });
+
+function toggleModal(action: "add" | "remove", owner?: string) {
+  state[action].show = !state[action].show;
+  (<{ owner?: string }>state[action]).owner = owner;
+}
 </script>

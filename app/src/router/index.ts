@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import CreateSafe from "@/views/safe/Create.vue";
+import CreateSafe from "@/views/safes/Create.vue";
 import Safes from "@/views/safes/Safes.vue";
 import Coins from "@/views/assets/Coins.vue";
 import Owners from "@/views/owners/Owners.vue";
