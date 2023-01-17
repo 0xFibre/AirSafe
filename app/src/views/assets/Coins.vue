@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts" setup>
-import CoinsTable from "@/components/table/CoinsTable.vue";
+import CoinsTable from "@/components/coins/CoinsTable.vue";
 import DepositCoinModal from "@/components/coins/DepositCoinModal.vue";
 import SendCoinModal from "@/components/coins/SendCoinModal.vue";
 import { useConnectionStore, useSafeStore } from "@/store";
