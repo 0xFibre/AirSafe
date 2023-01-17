@@ -1,14 +1,15 @@
 <template>
   <v-list lines="two">
-    <v-list-item
-      class="my-0 py-2"
-      v-for="owner in owners"
-      :prepend-avatar="makeBlockie(owner)"
-      :key="owner"
-    >
+    <v-list-item class="my-0 py-2" v-for="owner in owners" :key="owner">
       <v-list-item-title>{{ owner }}</v-list-item-title>
 
-      <v-list-item-action>
+      <template v-slot:prepend>
+        <v-avatar size="50">
+          <v-img :src="makeBlockie(owner)" />
+        </v-avatar>
+      </template>
+
+      <v-list-item-subtitle style="opacity: unset">
         <v-btn flat variant="text" icon="mdi-qrcode" size="x-small" />
         <v-btn flat variant="text" icon="mdi-content-copy" size="x-small" />
         <v-btn
@@ -19,7 +20,7 @@
           icon="mdi-open-in-new"
           size="x-small"
         />
-      </v-list-item-action>
+      </v-list-item-subtitle>
 
       <template v-slot:append>
         <v-btn
