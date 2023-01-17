@@ -3,5 +3,5 @@ interface Config {
 }
 
 export const config: Config = {
-  appName: "Air Safe",
+  appName: "AirSafe",
 };
