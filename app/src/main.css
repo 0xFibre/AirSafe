@@ -4,7 +4,8 @@
     url("/fonts/circular-bold.woff2") format("woff2");
 }
 
-* {
+.v-application,
+[class*="text-"] {
   text-transform: unset !important;
   font-family: Circular, sans-serif !important;
 }
