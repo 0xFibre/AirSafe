@@ -38,7 +38,7 @@ module vallet::main {
         transaction::reject_transaction(safe, transaction, ctx);
     }
 
-    public entry fun execute_transfer_transaction<T>(safe: &mut Safe, transaction: &mut Transaction, ctx: &mut TxContext) {
-        transaction::execute_transfer_transaction<T>(safe, transaction, ctx);
+    public entry fun execute_coin_withdrawal<T>(safe: &mut Safe, transaction: &mut Transaction, ctx: &mut TxContext) {
+        transaction::execute_coin_withdrawal<T>(safe, transaction, ctx);
     }
 }

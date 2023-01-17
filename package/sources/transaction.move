@@ -25,7 +25,7 @@ module vallet::transaction {
         rejecters: VecSet<address>,
     }
 
-    struct TransferData has drop {
+    struct CoinWithdrawalData has drop {
         coin_type: vector<u8>,
         amount: u64,
         recipient: address,
@@ -103,13 +103,13 @@ module vallet::transaction {
         }
     }
 
-    public(friend) fun execute_transfer_transaction<T>(safe: &mut Safe, transaction: &mut Transaction, ctx: &mut TxContext) {
+    public(friend) fun execute_coin_withdrawal<T>(safe: &mut Safe, transaction: &mut Transaction, ctx: &mut TxContext) {
         assert!(object::borrow_id(safe) == &transaction.safe_id, error::safe_transaction_mismatch());
         assert!(transaction.status == APPROVED_TRANSACTION_STATUS, error::transaction_not_approved());
         assert!(transaction.type == TRANSFER_TRANSACTION_TYPE, error::invalid_transaction_type());
         
         let bcs = bcs::new(transaction.data);
-        let data = deserialize_transfer_data(bcs);
+        let data = deserialize_coin_withdrawal_data(bcs);
 
         coin::withdraw<T>(safe, data.amount, data.recipient, ctx);
 
@@ -120,14 +120,14 @@ module vallet::transaction {
         let bcs = bcs::new(data);
 
         if(type == TRANSFER_TRANSACTION_TYPE) {
-            deserialize_transfer_data(bcs);
+            deserialize_coin_withdrawal_data(bcs);
         } else {
             abort error::invalid_transaction_type()
         };
     }
 
-    fun deserialize_transfer_data(bcs: BCS): TransferData {
-        let data = TransferData {
+    fun deserialize_coin_withdrawal_data(bcs: BCS): CoinWithdrawalData {
+        let data = CoinWithdrawalData {
             coin_type: bcs::peel_vec_u8(&mut bcs),
             amount: bcs::peel_u64(&mut bcs),
             recipient: bcs::peel_address(&mut bcs),
