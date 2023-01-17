@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 import CreateSafe from "@/views/safe/Create.vue";
-import Safes from "@/views/safe/Safes.vue";
+import Safes from "@/views/safes/Safes.vue";
 import Coins from "@/views/assets/Coins.vue";
 import Owners from "@/views/owners/Owners.vue";
-import Transactions from "@/views/transaction/Transactions.vue";
-import Transaction from "@/views/transaction/Transaction.vue";
+import Transactions from "@/views/transactions/Transactions.vue";
+import Transaction from "@/views/transactions/Transaction.vue";
 import Connect from "@/views/Connect.vue";
 import { useConnectionStore, useSafeStore } from "@/store";
 
