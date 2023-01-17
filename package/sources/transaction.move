@@ -74,10 +74,13 @@ module vallet::transaction {
 
         assert!(transaction.status == ACTIVE_TRANSACTION_STATUS, error::transaction_not_active());
 
-        assert!(!vec_set::contains(&transaction.approvers, &sender), error::already_approved_transaction());
-        assert!(!vec_set::contains(&transaction.rejecters, &sender), error::already_rejected_transaction());
+        if(vec_set::contains(&transaction.rejecters, &sender)) {
+            vec_set::remove(&mut transaction.rejecters, &sender);
+        };
 
-        vec_set::insert(&mut transaction.approvers, sender);
+        if(!vec_set::contains(&transaction.approvers, &sender)) {
+            vec_set::insert(&mut transaction.approvers, sender);
+        };
 
         if(vec_set::size(&transaction.approvers) >= safe::threshold(safe)) {
             transaction.status = APPROVED_TRANSACTION_STATUS;
@@ -92,10 +95,13 @@ module vallet::transaction {
 
         assert!(transaction.status == ACTIVE_TRANSACTION_STATUS, error::transaction_not_active());
         
-        assert!(!vec_set::contains(&transaction.approvers, &sender), error::already_approved_transaction());
-        assert!(!vec_set::contains(&transaction.rejecters, &sender), error::already_rejected_transaction());
+        if(vec_set::contains(&transaction.approvers, &sender)) {
+            vec_set::remove(&mut transaction.approvers, &sender);
+        };
 
-        vec_set::insert(&mut transaction.rejecters, sender);
+        if(!vec_set::contains(&transaction.rejecters, &sender)) {
+            vec_set::insert(&mut transaction.rejecters, sender);
+        };
 
         let limit = safe::owners_count(safe) - safe::threshold(safe);
         if(vec_set::size(&transaction.rejecters) > limit) {
