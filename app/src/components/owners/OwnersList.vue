@@ -28,6 +28,7 @@
           variant="text"
           icon="mdi-delete-outline"
           size="small"
+          :disabled="owners.length === 1"
           @click="$emit('remove', owner)"
         />
       </template>
