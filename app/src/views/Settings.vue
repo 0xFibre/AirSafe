@@ -1,5 +1,6 @@
 <template>
-  <v-row>
+  <Loading v-if="state.loading" />
+  <v-row v-else>
     <v-col cols="12" md="6">
       <v-card flat class="mb-5">
         <v-card-text>
@@ -61,6 +62,7 @@
 </template>
 
 <script lang="ts" setup>
+import Loading from "@/components/Loading.vue";
 import { useSafeStore } from "@/store";
 import { storeToRefs } from "pinia";
 import { onMounted, reactive } from "vue";
@@ -69,13 +71,28 @@ const safeStore = useSafeStore();
 const { safe } = storeToRefs(safeStore);
 
 interface State {
-  input: { threshold: string };
+  loading: boolean;
+  input: {
+    threshold: string;
+  };
 }
-const state: State = reactive({ input: { threshold: "" } });
+const state: State = reactive({
+  loading: false,
+  input: {
+    threshold: "",
+  },
+});
 
 onMounted(async () => {
-  await safeStore.fetchActiveSafe();
-  state.input.threshold = String(safe?.value?.threshold);
+  try {
+    state.loading = true;
+    await safeStore.fetchActiveSafe();
+    state.input.threshold = String(safe?.value?.threshold);
+  } catch (e) {
+    console.log(e);
+  } finally {
+    state.loading = false;
+  }
 });
 
 async function changeThreshold() {

@@ -3,8 +3,9 @@
     <h6 class="text-h6 font-weight-bold fonted">Transaction</h6>
   </div>
 
-  <template v-if="transaction">
-    <v-row justify="space-around">
+  <Loading v-if="state.loading" />
+  <template v-else>
+    <v-row v-if="transaction" justify="space-around">
       <v-col cols="12" sm="6" md="7">
         <v-card flat class="mb-3">
           <v-card-text>
@@ -209,6 +210,7 @@ import { utils } from "@/utils";
 import { useRoute } from "vue-router";
 import makeBlockie from "ethereum-blockies-base64";
 import { SafeTransactionType } from "@/lib/types";
+import Loading from "@/components/Loading.vue";
 
 const route = useRoute();
 const safeStore = useSafeStore();
@@ -217,13 +219,28 @@ const { safe } = storeToRefs(safeStore);
 const { transaction } = storeToRefs(transactionStore);
 
 interface State {
-  approvers: { show: boolean };
+  loading: boolean;
+  approvers: {
+    show: boolean;
+  };
 }
-const state: State = reactive({ approvers: { show: true } });
+const state: State = reactive({
+  loading: false,
+  approvers: {
+    show: true,
+  },
+});
 
 onMounted(async () => {
-  await safeStore.fetchActiveSafe();
-  await transactionStore.fetchTransaction(<string>route.params.id);
+  try {
+    state.loading = true;
+    await safeStore.fetchActiveSafe();
+    await transactionStore.fetchTransaction(<string>route.params.id);
+  } catch (e) {
+    console.log(e);
+  } finally {
+    state.loading = false;
+  }
 });
 
 async function approveSafeTransaction() {

@@ -1,5 +1,6 @@
 <template>
-  <v-row>
+  <Loading v-if="state.loading" />
+  <v-row v-else>
     <v-col cols="12" md="8" class="mx-auto">
       <div class="d-flex mb-3">
         <h6 class="text-h6 fonted font-weight-bold">Safes</h6>
@@ -62,17 +63,26 @@
 import { env } from "@/config";
 import { useSafeStore } from "@/store";
 import { storeToRefs } from "pinia";
-import { onMounted } from "vue";
+import { onMounted, reactive } from "vue";
 import blockie from "ethereum-blockies-base64";
 import Empty from "@/components/Empty.vue";
 import { useRouter } from "vue-router";
+import Loading from "@/components/Loading.vue";
 
 const safeStore = useSafeStore();
 const router = useRouter();
 const { safes } = storeToRefs(safeStore);
 
+const state: { loading: boolean } = reactive({ loading: false });
 onMounted(async () => {
-  await safeStore.fetchSafes();
+  try {
+    state.loading = true;
+    await safeStore.fetchSafes();
+  } catch (e) {
+    console.log(e);
+  } finally {
+    state.loading = false;
+  }
 });
 
 function setActiveSafe(id: string) {

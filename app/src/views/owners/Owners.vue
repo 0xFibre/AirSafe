@@ -1,5 +1,6 @@
 <template>
-  <v-row>
+  <Loading v-if="state.loading" />
+  <v-row v-else>
     <v-col cols="12" md="8" class="mx-auto">
       <div class="d-flex mb-3">
         <h6 class="text-h6 fonted font-weight-bold">Owners</h6>
@@ -46,18 +47,23 @@ import { onMounted, reactive } from "vue";
 import OwnersList from "@/components/owners/OwnersList.vue";
 import AddOwnerModal from "@/components/owners/AddOwnerModal.vue";
 import RemoveOwner from "@/components/owners/RemoveOwner.vue";
+import Loading from "@/components/Loading.vue";
 
 const safeStore = useSafeStore();
 const { safe } = storeToRefs(safeStore);
 
 interface State {
-  add: { show: boolean };
+  loading: boolean;
+  add: {
+    show: boolean;
+  };
   remove: {
     show: boolean;
     owner: string;
   };
 }
 const state: State = reactive({
+  loading: false,
   add: {
     show: false,
   },
@@ -68,7 +74,14 @@ const state: State = reactive({
 });
 
 onMounted(async () => {
-  await safeStore.fetchActiveSafe();
+  try {
+    state.loading = true;
+    await safeStore.fetchActiveSafe();
+  } catch (e) {
+    console.log(e);
+  } finally {
+    state.loading = false;
+  }
 });
 
 function toggleModal(action: "add" | "remove", owner?: string) {

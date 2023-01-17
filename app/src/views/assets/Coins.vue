@@ -1,5 +1,6 @@
 <template>
-  <template v-if="safe">
+  <Loading v-if="state.loading" />
+  <template v-else>
     <div class="d-flex my-5">
       <h6 class="text-h6 font-weight-bold fonted">Coins</h6>
 
@@ -52,11 +53,13 @@ import { storeToRefs } from "pinia";
 import { onMounted, reactive } from "vue";
 import { BasicCoin, Coin } from "@/lib/types";
 import { coin } from "@/lib/coin";
+import Loading from "@/components/Loading.vue";
 
 const safeStore = useSafeStore();
 const { safe } = storeToRefs(safeStore);
 
 interface State {
+  loading: boolean;
   deposit: {
     coin?: BasicCoin;
     showModal: boolean;
@@ -70,6 +73,7 @@ interface State {
 }
 
 const state: State = reactive({
+  loading: false,
   deposit: {
     showModal: false,
     coin: undefined,
@@ -86,9 +90,16 @@ const connectionStore = useConnectionStore();
 const { address } = storeToRefs(connectionStore);
 
 onMounted(async () => {
-  await safeStore.fetchActiveSafe();
-  state.safeCoins = safe?.value ? await safe.value.getCoinBalances() : [];
-  state.userCoins = await coin.getAddressBasicCoins(address.value);
+  try {
+    state.loading = true;
+    await safeStore.fetchActiveSafe();
+    state.safeCoins = safe?.value ? await safe.value.getCoinBalances() : [];
+    state.userCoins = await coin.getAddressBasicCoins(address.value);
+  } catch (e) {
+    console.log(e);
+  } finally {
+    state.loading = false;
+  }
 });
 
 function toggleModal(action: "deposit" | "send", coin?: BasicCoin) {
