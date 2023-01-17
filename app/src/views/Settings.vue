@@ -39,9 +39,12 @@
                 variant="outlined"
                 density="compact"
                 class="py-1"
+                v-model="state.input.threshold"
+                :min="1"
+                :max="safe?.owners.length"
               >
                 <template v-slot:append>
-                  <div>out of 1 owners</div>
+                  <div>out of {{ safe?.owners.length }} owners</div>
                 </template>
               </v-text-field>
             </v-col>
@@ -49,13 +52,36 @@
 
           <div class="d-flex">
             <v-spacer />
-            <v-btn flat color="primary">Change</v-btn>
+            <v-btn flat color="primary" @click="changeThreshold">Change</v-btn>
           </div>
         </v-card-text>
       </v-card>
     </v-col>
   </v-row>
 </template>
+
+<script lang="ts" setup>
+import { useSafeStore } from "@/store";
+import { storeToRefs } from "pinia";
+import { onMounted, reactive } from "vue";
+
+const safeStore = useSafeStore();
+const { safe } = storeToRefs(safeStore);
+
+interface State {
+  input: { threshold: string };
+}
+const state: State = reactive({ input: { threshold: "" } });
+
+onMounted(async () => {
+  await safeStore.fetchActiveSafe();
+  state.input.threshold = String(safe?.value?.threshold);
+});
+
+async function changeThreshold() {
+  await safeStore.changeThresholdTransaction(state.input.threshold);
+}
+</script>
 
 <style scoped>
 .fonted {

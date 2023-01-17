@@ -25,6 +25,7 @@
         :safe="safe!"
         :show="state.add.show"
         @toggle="toggleModal('add')"
+        @add="(input) => manageOwner('add', input)"
       />
 
       <RemoveOwner
@@ -32,6 +33,7 @@
         :show="state.remove.show"
         :owner="state.remove.owner"
         @toggle="(owner) => toggleModal('remove', owner)"
+        @remove="(input) => manageOwner('remove', input)"
       />
     </v-col>
   </v-row>
@@ -72,5 +74,12 @@ onMounted(async () => {
 function toggleModal(action: "add" | "remove", owner?: string) {
   state[action].show = !state[action].show;
   (<{ owner?: string }>state[action]).owner = owner;
+}
+
+async function manageOwner(
+  type: "add" | "remove",
+  input: { owner: string; threshold: string }
+) {
+  await safeStore.manageOwnerTransaction({ ...input, type });
 }
 </script>

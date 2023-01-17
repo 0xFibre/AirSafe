@@ -44,11 +44,12 @@
                 placeholder="Threshold"
                 v-model="input.threshold"
                 :min="1"
+                :max="safe.owners.length + 1"
                 @input="$emit('input', 'threshold', input.threshold)"
                 hide-details
               >
                 <template v-slot:append>
-                  <div>out of 1 owners</div>
+                  <div>out of {{ safe.owners.length + 1 }} owners</div>
                 </template>
               </v-text-field>
             </v-col>

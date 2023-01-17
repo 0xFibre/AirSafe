@@ -41,14 +41,14 @@
                 color="primary"
                 type="number"
                 variant="outlined"
-                placeholder="Threshold"
                 v-model="input.threshold"
                 :min="1"
+                :max="safe.owners.length - 1"
                 @input="$emit('input', 'threshold', input.threshold)"
                 hide-details
               >
                 <template v-slot:append>
-                  <div>out of 1 owners</div>
+                  <div>out of {{ safe.owners.length - 1 }} owners</div>
                 </template>
               </v-text-field>
             </v-col>
@@ -74,13 +74,17 @@
 import { Safe } from "@/lib/entity";
 import { watch, reactive } from "vue";
 
-const event = defineEmits(["remove", "toggle"]);
+defineEmits(["remove", "toggle"]);
 const props = defineProps<{ show: boolean; owner: string; safe: Safe }>();
 
 const input: { threshold: string } = reactive({ threshold: "" });
 
 watch(
   () => props.safe,
-  (safe) => (input.threshold = String(safe.threshold))
+  (safe) => {
+    input.threshold = String(
+      safe.threshold == safe.owners.length ? safe.threshold - 1 : safe.threshold
+    );
+  }
 );
 </script>
