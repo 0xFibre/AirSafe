@@ -95,7 +95,7 @@ async function loadCoinMetadata() {
 }
 
 function toggleModal() {
-  event("toggle");
+  event("toggle", "deposit");
 
   input.amount = "";
   input.coin = undefined;

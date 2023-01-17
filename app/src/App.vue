@@ -25,3 +25,9 @@ onMounted(async () => {
   // }
 });
 </script>
+
+<style>
+.fonted {
+  font-family: Circular, sans-serif !important;
+}
+</style>

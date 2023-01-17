@@ -11,7 +11,7 @@
         variant="tonal"
         color="primary"
         class="me-1"
-        @click="toggleCoinDepositModal()"
+        @click="toggleModal('deposit')"
       >
         Deposit
       </v-btn>
@@ -19,25 +19,26 @@
 
     <v-card flat>
       <CoinsTable
-        @deposit="toggleCoinDepositModal"
-        @transfer="toggleCoinTransferModal"
+        @deposit="toggleModal('deposit')"
+        @send="toggleModal('send')"
         :coins="state.safeCoins"
       />
     </v-card>
 
     <CoinDepositModal
-      @deposit="coinDeposit"
-      @toggle="toggleCoinDepositModal"
-      :show="state.coinDeposit.showModal"
-      :coin="state.coinDeposit.coin"
+      @deposit="depositCoin"
+      @toggle="toggleModal('deposit')"
+      :show="state.deposit.showModal"
+      :coin="state.deposit.coin"
       :coins="state.userCoins"
     />
 
-    <CoinTransferModal
-      @transfer="createCoinTransfer"
-      @toggle="toggleCoinTransferModal"
-      :show="state.coinTransfer.showModal"
-      :coin="state.coinTransfer.coin"
+    <CoinSendModal
+      @send="sendCoin"
+      @toggle="toggleModal('send')"
+      :show="state.send.showModal"
+      :coin="state.send.coin"
+      :coins="state.safeCoins"
     />
   </template>
 </template>
@@ -51,7 +52,7 @@
 <script lang="ts" setup>
 import CoinsTable from "@/components/table/CoinsTable.vue";
 import CoinDepositModal from "@/components/modal/CoinDeposit.vue";
-import CoinTransferModal from "@/components/modal/CoinTransfer.vue";
+import CoinSendModal from "@/components/modal/CoinSend.vue";
 import { useConnectionStore, useSafeStore } from "@/store";
 import { storeToRefs } from "pinia";
 import { onMounted, reactive } from "vue";
@@ -62,12 +63,12 @@ const safeStore = useSafeStore();
 const { safe } = storeToRefs(safeStore);
 
 interface State {
-  coinDeposit: {
+  deposit: {
     coin?: BasicCoin;
     showModal: boolean;
   };
-  coinTransfer: {
-    coin?: Coin;
+  send: {
+    coin?: BasicCoin;
     showModal: boolean;
   };
   safeCoins: Coin[];
@@ -75,11 +76,11 @@ interface State {
 }
 
 const state: State = reactive({
-  coinDeposit: {
+  deposit: {
     showModal: false,
     coin: undefined,
   },
-  coinTransfer: {
+  send: {
     showModal: false,
     coin: undefined,
   },
@@ -96,27 +97,20 @@ onMounted(async () => {
   state.userCoins = await coin.getAddressBasicCoins(address.value);
 });
 
-function toggleCoinDepositModal(coin?: BasicCoin) {
-  state.coinDeposit.showModal = !state.coinDeposit.showModal;
-  state.coinDeposit.coin = coin;
+function toggleModal(action: "deposit" | "send", coin?: BasicCoin) {
+  state[action].showModal = !state[action].showModal;
+  state[action].coin = coin;
 }
 
-function toggleCoinTransferModal(coin?: Coin) {
-  state.coinTransfer.showModal = !state.coinTransfer.showModal;
-  state.coinTransfer.coin = coin;
-}
-
-async function coinDeposit(input: { amount: string; coin: BasicCoin }) {
+async function depositCoin(input: { amount: string; coin: BasicCoin }) {
   await safeStore.depositCoin(input);
 }
 
-async function createCoinTransfer(
-  input: {
-    amount: string;
-    recipient: string;
-  },
-  coin: Coin
-) {
-  await safeStore.createCoinTransfer(input, coin);
+async function sendCoin(input: {
+  amount: string;
+  recipient: string;
+  coin: Coin;
+}) {
+  await safeStore.createCoinWithdrawalTransaction(input);
 }
 </script>

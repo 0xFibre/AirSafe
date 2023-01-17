@@ -56,14 +56,18 @@ export const useSafeStore = defineStore("safe", {
       console.log(result);
     },
 
-    async createCoinTransfer(
-      input: { amount: string; recipient: string },
-      coin: BasicCoin
-    ) {
-      const amount = utils.parseBalance(input.amount, coin.metadata.decimals);
+    async createCoinWithdrawalTransaction(input: {
+      amount: string;
+      recipient: string;
+      coin: BasicCoin;
+    }) {
+      const amount = utils.parseBalance(
+        input.amount,
+        input.coin.metadata.decimals
+      );
 
-      const transferData = serializer.serialize("TransferData", {
-        coin_type: Buffer.from(coin.coinType),
+      const transferData = serializer.serialize("WithdrawCoinData", {
+        coin_type: Buffer.from(input.coin.coinType),
         amount: amount.toString(),
         recipient: input.recipient,
       });
@@ -74,7 +78,6 @@ export const useSafeStore = defineStore("safe", {
         safeId: this.activeSafeId!,
       };
 
-      // console.log(serializer.deserialize("TransferData", transferData));
       const result = await safeService.createTransaction(data);
       console.log(result);
     },
@@ -97,8 +100,8 @@ export const useSafeStore = defineStore("safe", {
       console.log(result);
     },
 
-    async executeTransferTransaction(transactionId: string, coin: BasicCoin) {
-      const result = await safeService.executeTransferTransaction({
+    async executeCoinWithdrawal(transactionId: string, coin: BasicCoin) {
+      const result = await safeService.executeCoinWithdrawal({
         transactionId,
         safeId: this.activeSafeId!,
         coin,

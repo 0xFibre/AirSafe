@@ -40,9 +40,9 @@
             variant="tonal"
             class="ms-1"
             density="comfortable"
-            @click="$emit('transfer', coin)"
+            @click="$emit('send', coin)"
           >
-            Transfer
+            Send
           </v-btn>
         </td>
       </tr>
@@ -58,7 +58,7 @@ import { Coin } from "@/lib/types";
 import { utils } from "@/utils";
 
 defineProps<{ coins: Coin[] }>();
-defineEmits(["deposit", "transfer"]);
+defineEmits(["deposit", "send"]);
 </script>
 
 <style scoped>

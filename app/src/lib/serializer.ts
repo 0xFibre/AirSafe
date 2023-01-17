@@ -1,6 +1,6 @@
 import { bcs } from "@mysten/sui.js";
 
-bcs.registerStructType("TransferData", {
+bcs.registerStructType("CoinWithdrawalData", {
   coin_type: "vector<u8>",
   amount: "u64",
   recipient: "address",

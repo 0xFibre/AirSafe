@@ -35,7 +35,7 @@ export interface DepositCoinData {
   coin: BasicCoin;
 }
 
-export interface ExecuteTransferTransactionData {
+export interface ExecuteCoinWithdrawalData {
   safeId: string;
   transactionId: string;
   coin: BasicCoin;
