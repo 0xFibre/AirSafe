@@ -84,6 +84,11 @@
       </template>
     </tbody>
   </v-table>
+
+  <Empty
+    v-if="transactions.length < 1"
+    msg="You do not have any transactions yet"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -91,6 +96,7 @@ import { useSafeStore, useTransactionStore } from "@/store";
 import { storeToRefs } from "pinia";
 import { onMounted } from "vue";
 import { utils } from "@/utils";
+import Empty from "@/components/Empty.vue";
 
 const safeStore = useSafeStore();
 const transactionStore = useTransactionStore();
