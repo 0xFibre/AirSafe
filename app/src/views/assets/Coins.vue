@@ -1,10 +1,8 @@
 <template>
   <Loading v-if="state.loading" />
   <template v-else>
-    <div class="d-flex my-5">
-      <h6 class="text-h6 font-weight-bold fonted">Coins</h6>
-
-      <v-spacer />
+    <div class="d-flex my-5 justify-space-between">
+      <h6 class="text-h6 font-weight-bold">Coins</h6>
 
       <v-btn
         flat

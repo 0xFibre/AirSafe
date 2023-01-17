@@ -1,7 +1,5 @@
 <template>
-  <div class="my-5">
-    <h6 class="text-h6 font-weight-bold fonted">Transactions</h6>
-  </div>
+  <PageTextHeader title="Transactions" />
 
   <Loading v-if="state.loading" />
   <template v-else>
@@ -101,6 +99,7 @@ import { onMounted, reactive } from "vue";
 import { utils } from "@/utils";
 import Empty from "@/components/Empty.vue";
 import Loading from "@/components/Loading.vue";
+import PageTextHeader from "@/components/header/PageTextHeader.vue";
 
 const safeStore = useSafeStore();
 const transactionStore = useTransactionStore();

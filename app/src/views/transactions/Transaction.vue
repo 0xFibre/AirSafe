@@ -1,7 +1,5 @@
 <template>
-  <div class="my-5">
-    <h6 class="text-h6 font-weight-bold fonted">Transaction</h6>
-  </div>
+  <PageTextHeader title="Transaction" />
 
   <Loading v-if="state.loading" />
   <template v-else>
@@ -211,6 +209,7 @@ import { useRoute } from "vue-router";
 import makeBlockie from "ethereum-blockies-base64";
 import { SafeTransactionType } from "@/lib/types";
 import Loading from "@/components/Loading.vue";
+import PageTextHeader from "@/components/header/PageTextHeader.vue";
 
 const route = useRoute();
 const safeStore = useSafeStore();

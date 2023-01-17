@@ -6,7 +6,9 @@
     v-if="!$route.meta.hideSideBar"
   >
     <div class="text-center my-3">
-      <h6 class="text-h6 fonted font-weight-bold">{{ config.appName }}</h6>
+      <h6 class="text-h6 fonted font-weight-bold no-select">
+        {{ config.appName }}
+      </h6>
     </div>
 
     <v-divider class="mb-3 mt-5" />
@@ -81,7 +83,7 @@
     />
 
     <v-app-bar-title class="d-sm-none">
-      <h4>{{ config.appName }}</h4>
+      <h4 class="no-select">{{ config.appName }}</h4>
     </v-app-bar-title>
 
     <v-spacer />
