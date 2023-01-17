@@ -19,8 +19,8 @@
 
     <v-card flat>
       <CoinsTable
-        @deposit="toggleModal('deposit')"
-        @send="toggleModal('send')"
+        @deposit="toggleModal"
+        @send="toggleModal"
         :coins="state.safeCoins"
       />
     </v-card>

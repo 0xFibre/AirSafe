@@ -29,7 +29,7 @@
             variant="tonal"
             class="me-1"
             density="comfortable"
-            @click="$emit('deposit', coin)"
+            @click="$emit('deposit', 'deposit', coin)"
           >
             Deposit
           </v-btn>
@@ -40,7 +40,7 @@
             variant="tonal"
             class="ms-1"
             density="comfortable"
-            @click="$emit('send', coin)"
+            @click="$emit('send', 'send', coin)"
           >
             Send
           </v-btn>
