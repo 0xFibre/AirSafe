@@ -6,6 +6,7 @@ import Owners from "@/views/owners/Owners.vue";
 import Transactions from "@/views/transactions/Transactions.vue";
 import Transaction from "@/views/transactions/Transaction.vue";
 import Connect from "@/views/Connect.vue";
+import Settings from "@/views/Settings.vue";
 import { useConnectionStore, useSafeStore } from "@/store";
 
 const routes = [
@@ -51,6 +52,15 @@ const routes = [
     path: "/owners",
     name: "Owners",
     component: Owners,
+    meta: {
+      access: "safe",
+    },
+  },
+
+  {
+    path: "/settings",
+    name: "Settings",
+    component: Settings,
     meta: {
       access: "safe",
     },
