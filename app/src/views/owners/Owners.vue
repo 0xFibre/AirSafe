@@ -73,13 +73,17 @@ const state: State = reactive({
 onMounted(async () => {
   try {
     state.loading = true;
-    await safeStore.fetchActiveSafe();
+    await loadData();
   } catch (e) {
     console.log(e);
   } finally {
     state.loading = false;
   }
 });
+
+async function loadData() {
+  await safeStore.fetchActiveSafe();
+}
 
 function toggleModal(action: "add" | "remove", owner?: string) {
   state[action].show = !state[action].show;
@@ -91,5 +95,6 @@ async function manageOwner(
   input: { owner: string; threshold: string }
 ) {
   await safeStore.manageOwnerTransaction({ ...input, type });
+  await loadData();
 }
 </script>

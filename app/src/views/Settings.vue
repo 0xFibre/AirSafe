@@ -86,8 +86,8 @@ const state: State = reactive({
 onMounted(async () => {
   try {
     state.loading = true;
-    await safeStore.fetchActiveSafe();
-    state.input.threshold = String(safe?.value?.threshold);
+
+    await loadData();
   } catch (e) {
     console.log(e);
   } finally {
@@ -95,7 +95,13 @@ onMounted(async () => {
   }
 });
 
+async function loadData() {
+  await safeStore.fetchActiveSafe();
+  state.input.threshold = String(safe?.value?.threshold);
+}
+
 async function changeThreshold() {
   await safeStore.changeThresholdTransaction(state.input.threshold);
+  await loadData();
 }
 </script>

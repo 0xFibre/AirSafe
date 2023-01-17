@@ -90,9 +90,7 @@ const { address } = storeToRefs(connectionStore);
 onMounted(async () => {
   try {
     state.loading = true;
-    await safeStore.fetchActiveSafe();
-    state.safeCoins = safe?.value ? await safe.value.getCoinBalances() : [];
-    state.userCoins = await coin.getAddressBasicCoins(address.value);
+    await loadData();
   } catch (e) {
     console.log(e);
   } finally {
@@ -105,8 +103,15 @@ function toggleModal(action: "deposit" | "send", coin?: BasicCoin) {
   state[action].coin = coin;
 }
 
+async function loadData() {
+  await safeStore.fetchActiveSafe();
+  state.safeCoins = safe?.value ? await safe.value.getCoinBalances() : [];
+  state.userCoins = await coin.getAddressBasicCoins(address.value);
+}
+
 async function depositCoin(input: { amount: string; coin: BasicCoin }) {
   await safeStore.depositCoin(input);
+  await loadData();
 }
 
 async function sendCoin(input: {
@@ -115,5 +120,6 @@ async function sendCoin(input: {
   coin: BasicCoin;
 }) {
   await safeStore.createCoinWithdrawalTransaction(input);
+  await loadData();
 }
 </script>

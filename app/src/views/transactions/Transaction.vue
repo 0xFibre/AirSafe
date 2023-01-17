@@ -233,8 +233,7 @@ const state: State = reactive({
 onMounted(async () => {
   try {
     state.loading = true;
-    await safeStore.fetchActiveSafe();
-    await transactionStore.fetchTransaction(<string>route.params.id);
+    await loadData();
   } catch (e) {
     console.log(e);
   } finally {
@@ -242,12 +241,19 @@ onMounted(async () => {
   }
 });
 
+async function loadData() {
+  await safeStore.fetchActiveSafe();
+  await transactionStore.fetchTransaction(<string>route.params.id);
+}
+
 async function approveSafeTransaction() {
   await safeStore.approveTransaction(<string>route.params.id);
+  await loadData();
 }
 
 async function rejectSafeTransaction() {
   await safeStore.rejectTransaction(<string>route.params.id);
+  await loadData();
 }
 
 async function executeSafeTransaction() {
@@ -263,6 +269,8 @@ async function executeSafeTransaction() {
     case SafeTransactionType.CHANGE_THRESHOLD:
       await safeStore.executePolicyChange(<string>route.params.id);
   }
+
+  await loadData();
 }
 
 function toggleExpansion(s: string) {
