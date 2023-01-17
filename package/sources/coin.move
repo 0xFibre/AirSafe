@@ -15,28 +15,17 @@ module airsafe::coin {
     friend airsafe::main;
     friend airsafe::transaction;
 
-    public(friend) fun deposit<T>(safe: &mut Safe, payment: vector<Coin<T>>, amount: u64, ctx: &mut TxContext) {
-        let coin = vector::pop_back(&mut payment);
-        
-        pay::join_vec(&mut coin, payment);
-
-        let split_coin = coin::split(&mut coin, amount, ctx);
-
-        if(coin::value(&coin) == 0) {
-            coin::destroy_zero(coin);
-        } else {
-            pay::keep(coin, ctx);
-        };
-
-        internal_deposit(safe, split_coin);
+    public(friend) fun deposit<T>(safe: &mut Safe, coins: vector<Coin<T>>, amount: u64, ctx: &mut TxContext) {
+        let payment = collect_payment(coins, amount, ctx);
+        make_deposit(safe, payment);
     }
 
     public(friend) fun withdraw<T>(safe: &mut Safe, amount: u64, recipient: address, ctx: &mut TxContext) {
-        let withdrawal_coin = internal_withdrawal<T>(safe, amount, ctx);
-        transfer::transfer(withdrawal_coin, recipient);
+        let withdrawal = make_withdrawal<T>(safe, amount, ctx);
+        transfer::transfer(withdrawal, recipient);
     }
 
-    fun internal_deposit<T>(safe: &mut Safe, new_coin: Coin<T>) {
+    fun make_deposit<T>(safe: &mut Safe, new_coin: Coin<T>) {
         let coin_type = ascii::into_bytes(type_name::into_string(type_name::get<T>()));
         let safe_id = safe::borrow_uid_mut(safe);
 
@@ -48,7 +37,7 @@ module airsafe::coin {
         }
     }
 
-    fun internal_withdrawal<T>(safe: &mut Safe, amount: u64, ctx: &mut TxContext): Coin<T> {
+    fun make_withdrawal<T>(safe: &mut Safe, amount: u64, ctx: &mut TxContext): Coin<T> {
         let coin_type = ascii::into_bytes(type_name::into_string(type_name::get<T>()));
         let safe_id = safe::borrow_uid_mut(safe);
 
@@ -56,5 +45,20 @@ module airsafe::coin {
  
         let coin = ofield::borrow_mut<vector<u8>, Coin<T>>(safe_id, coin_type);
         coin::split(coin, amount, ctx)
+    }
+
+    fun collect_payment<T>(coins: vector<Coin<T>>, amount: u64, ctx: &mut TxContext): Coin<T> {
+        let coin = vector::pop_back(&mut coins);
+        pay::join_vec(&mut coin, coins);
+
+        let split_coin = coin::split(&mut coin, amount, ctx);
+
+        if(coin::value(&coin) == 0) {
+            coin::destroy_zero(coin);
+        } else {
+            pay::keep(coin, ctx);
+        };
+
+        split_coin
     }
 }
