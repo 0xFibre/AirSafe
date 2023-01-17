@@ -73,15 +73,68 @@ export const useSafeStore = defineStore("safe", {
       const transferData = serializer.serialize(
         safeTransactionTypeData[SafeTransactionType.COIN_WITHDRAWAL],
         {
-          coin_type: Buffer.from(input.coin.coinType),
+          coin_type: Uint8Array.from(
+            new TextEncoder().encode(input.coin.coinType)
+          ),
           amount: amount.toString(),
           recipient: input.recipient,
         }
       );
 
       const data = {
-        type: 1,
+        type: SafeTransactionType.COIN_WITHDRAWAL,
         data: transferData,
+        safeId: this.activeSafeId!,
+      };
+
+      const result = await safeService.createTransaction(data);
+      console.log(result);
+    },
+
+    async manageOwnerTransaction(input: {
+      type: "add" | "remove";
+      owner: string;
+      threshold: string;
+    }) {
+      let txData: string, type: SafeTransactionType;
+      switch (input.type) {
+        case "add":
+          type = SafeTransactionType.ADD_OWNER;
+          txData = serializer.serialize(safeTransactionTypeData[type], {
+            owner: input.owner,
+            threshold: input.threshold,
+          });
+          break;
+        case "remove":
+          type = SafeTransactionType.REMOVE_OWNER;
+          txData = serializer.serialize(safeTransactionTypeData[type], {
+            owner: input.owner,
+            threshold: input.threshold,
+          });
+          break;
+        default:
+          throw new Error("Invalid owner management type");
+      }
+
+      const data = {
+        type,
+        data: txData,
+        safeId: this.activeSafeId!,
+      };
+
+      const result = await safeService.createTransaction(data);
+      console.log(result);
+    },
+
+    async changeThresholdTransaction(threshold: string) {
+      const txData = serializer.serialize(
+        safeTransactionTypeData[SafeTransactionType.CHANGE_THRESHOLD],
+        { threshold }
+      );
+
+      const data = {
+        type: SafeTransactionType.CHANGE_THRESHOLD,
+        data: txData,
         safeId: this.activeSafeId!,
       };
 

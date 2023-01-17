@@ -77,7 +77,7 @@ export interface Coin extends BasicCoin {
 export interface CreateSafeTransactionData {
   safeId: string;
   data: string;
-  type: number;
+  type: SafeTransactionType;
 }
 
 export enum SafeTransactionType {
