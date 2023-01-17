@@ -4,14 +4,13 @@
     url("/fonts/circular-bold.woff2") format("woff2");
 }
 
-.v-application,
-[class*="text-"] {
+* {
   text-transform: unset !important;
-  font-family: Circular, sans-serif !important;
 }
 
-main {
-  background-color: #f3f3f3 !important;
+.v-application,
+[class*="text-"] {
+  font-family: Circular, sans-serif !important;
 }
 
 .no-select {
