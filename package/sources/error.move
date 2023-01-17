@@ -52,4 +52,8 @@ module vallet::error {
     public fun transaction_not_approved(): u64 {
         ERROR_PREFIX + 12
     }
+
+    public fun owners_empty(): u64 {
+        ERROR_PREFIX + 13
+    }
 }

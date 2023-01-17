@@ -35,6 +35,8 @@ module vallet::owner {
         assert!(is_owner(safe, owner), error::owner_not_exists());
 
         vec_set::remove(safe::borrow_owners_mut(safe), &owner);
+        assert!(vec_set::size(safe::borrow_owners(safe)) > 0, error::owners_empty());
+
         registry::unregister_safe(registry, object::id(safe), owner);
     }
 
