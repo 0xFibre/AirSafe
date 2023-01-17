@@ -80,6 +80,7 @@ module airsafe::transaction {
     }
 
     public(friend) fun approve_transaction(safe: &mut Safe, transaction: &mut Transaction, ctx: &mut TxContext) {
+        assert!(transaction.index > safe::stale_transaction_index(safe), error::transaction_is_stale());
         assert!(transaction.status == ACTIVE_TRANSACTION_STATUS, error::invalid_transaction_status());
 
         let sender = tx_context::sender(ctx);
@@ -98,6 +99,7 @@ module airsafe::transaction {
     }
 
     public(friend) fun reject_transaction(safe: &mut Safe, transaction: &mut Transaction, ctx: &mut TxContext) {
+        assert!(transaction.index > safe::stale_transaction_index(safe), error::transaction_is_stale());
         assert!(transaction.status == ACTIVE_TRANSACTION_STATUS, error::invalid_transaction_status());
         
         let sender = tx_context::sender(ctx);
@@ -110,8 +112,8 @@ module airsafe::transaction {
             vec_set::insert(&mut transaction.rejecters, sender);
         };
 
-        let limit = safe::owners_count(safe) - safe::threshold(safe);
-        if(vec_set::size(&transaction.rejecters) > limit) {
+        let rejections_limit = safe::owners_count(safe) - safe::threshold(safe);
+        if(vec_set::size(&transaction.rejecters) > rejections_limit) {
             transaction.status = REJECTED_TRANSACTION_STATUS;
         }
     }
