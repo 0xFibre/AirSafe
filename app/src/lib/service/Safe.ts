@@ -259,14 +259,29 @@ export class SafeService {
     const typeData = safeTransactionTypeData[type];
     const result = serializer.deserialize(typeData, Uint8Array.from(data));
 
-    if (type === SafeTransactionType.COIN_WITHDRAWAL) {
-      return {
-        coinType: new TextDecoder().decode(Uint8Array.from(result.coin_type)),
-        amount: result.amount,
-        recipient: result.recipient,
-      };
+    switch (type) {
+      case SafeTransactionType.COIN_WITHDRAWAL:
+        return {
+          coinType: new TextDecoder().decode(Uint8Array.from(result.coin_type)),
+          amount: result.amount,
+          recipient: result.recipient,
+        };
+      case SafeTransactionType.ADD_OWNER:
+        return {
+          owner: result.owner,
+          threshold: result.threshold,
+        };
+      case SafeTransactionType.REMOVE_OWNER:
+        return {
+          owner: result.owner,
+          threshold: result.threshold,
+        };
+      case SafeTransactionType.CHANGE_THRESHOLD:
+        return {
+          threshold: result.threshold,
+        };
+      default:
+        throw new Error("");
     }
-
-    throw new Error("");
   }
 }
