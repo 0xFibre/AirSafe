@@ -87,7 +87,7 @@
     <v-spacer />
 
     <div v-if="isConnected">
-      <v-btn flat variant="text" prepend-icon="mdi-view-sequential" to="/safes">
+      <v-btn flat variant="text" prepend-icon="mdi-safe" to="/safes">
         Safes
       </v-btn>
 
