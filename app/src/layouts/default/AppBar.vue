@@ -14,7 +14,7 @@
     <v-list-item lines="two">
       <template v-slot:prepend>
         <v-avatar rounded size="50" v-if="activeSafeId">
-          <v-img :src="blockie(activeSafeId)" />
+          <v-img :src="makeBlockie(activeSafeId)" />
         </v-avatar>
       </template>
 
@@ -125,7 +125,7 @@
 
 <script lang="ts" setup>
 import { utils } from "@/utils";
-import blockie from "ethereum-blockies-base64";
+import makeBlockie from "ethereum-blockies-base64";
 import { useConnectionStore, useSafeStore } from "@/store";
 import { storeToRefs } from "pinia";
 import { Ref, ref } from "vue";
