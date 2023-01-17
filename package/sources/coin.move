@@ -15,10 +15,10 @@ module vallet::coin {
     friend vallet::main;
     friend vallet::transaction;
 
-    public(friend) fun deposit<T>(safe: &mut Safe, coins: vector<Coin<T>>, amount: u64, ctx: &mut TxContext) {
-        let coin = vector::pop_back(&mut coins);
+    public(friend) fun deposit<T>(safe: &mut Safe, payment: vector<Coin<T>>, amount: u64, ctx: &mut TxContext) {
+        let coin = vector::pop_back(&mut payment);
         
-        pay::join_vec(&mut coin, coins);
+        pay::join_vec(&mut coin, payment);
 
         let split_coin = coin::split(&mut coin, amount, ctx);
 

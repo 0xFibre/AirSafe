@@ -21,8 +21,8 @@ module vallet::main {
         transfer::share_object(safe);
     }
 
-    public entry fun deposit_coin<T>(safe: &mut Safe, coins: vector<Coin<T>>, amount: u64, ctx: &mut TxContext) {
-        coin::deposit<T>(safe, coins, amount, ctx);
+    public entry fun deposit_coin<T>(safe: &mut Safe, payment: vector<Coin<T>>, amount: u64, ctx: &mut TxContext) {
+        coin::deposit<T>(safe, payment, amount, ctx);
     }
 
     public entry fun create_transaction(safe: &mut Safe, type: u8, data: vector<u8>, ctx: &mut TxContext) {
