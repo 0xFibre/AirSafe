@@ -80,7 +80,7 @@
       class="d-md-block d-lg-none"
     />
 
-    <v-app-bar-title>
+    <v-app-bar-title class="d-sm-none">
       <h4>{{ config.appName }}</h4>
     </v-app-bar-title>
 
@@ -98,7 +98,7 @@
         prepend-icon="mdi-account-outline"
         class="me-3"
       >
-        {{ utils.truncate0x(address) }}
+        <span class="d-none d-sm-block"> {{ utils.truncate0x(address) }}</span>
       </v-btn>
 
       <v-menu activator="#menu-activator" location="bottom">
