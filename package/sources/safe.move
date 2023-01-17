@@ -18,6 +18,7 @@ module airsafe::safe {
         creator: address,
         owners: VecSet<address>,
         transactions_count: u64,
+        stale_transaction_index: u64,
         transactions: vector<ID>
     }
 
@@ -33,6 +34,7 @@ module airsafe::safe {
             creator: tx_context::sender(ctx),
             owners: vec_set::empty(),
             transactions_count: 0,
+            stale_transaction_index: 0,
             transactions: vector::empty()
         }
     }
@@ -70,10 +72,15 @@ module airsafe::safe {
     }
 
     public(friend) fun set_threshold(self: &mut Safe, threshold: u64) {
-        assert!(threshold > 0, error::invalid_threshold());
-        assert!(threshold <= vec_set::size(&self.owners), error::invalid_threshold());
-
         self.threshold = threshold
+    }
+
+    public(friend) fun stale_transaction_index(self: &Safe): u64 {
+        self.stale_transaction_index
+    }
+
+    public(friend) fun set_stale_transaction_index(self: &mut Safe, stale_transaction_index: u64) {
+        self.stale_transaction_index = stale_transaction_index
     }
 
     public(friend) fun borrow_uid_mut(self: &mut Safe): &mut UID {
