@@ -7,5 +7,5 @@
 </template>
 
 <script lang="ts" setup>
-defineProps<{ title: string; value: string }>();
+defineProps<{ title: string; value: string | number | bigint | boolean }>();
 </script>

@@ -1,4 +1,3 @@
-import { serializer } from "../serializer";
 import {
   BasicCoin,
   SafeTransactionData,
@@ -41,5 +40,13 @@ export class SafeTransaction implements SafeTransactionData {
 
   get statusValue() {
     return safeTransactionStatusValue[this.status];
+  }
+
+  isApprovedBy(owner: string) {
+    return this.approvers.includes(owner);
+  }
+
+  isRejectedBy(owner: string) {
+    return this.rejecters.includes(owner);
   }
 }

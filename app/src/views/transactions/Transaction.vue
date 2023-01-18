@@ -21,6 +21,8 @@
         <TransactionInfoCard :transaction="transaction" />
         <TransactionStatusCard
           :transaction="transaction"
+          :safe="safe!"
+          :address="address"
           @approve="approveSafeTransaction"
           @reject="rejectSafeTransaction"
           @execute="executeSafeTransaction"
@@ -31,7 +33,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useSafeStore, useTransactionStore } from "@/store";
+import { useConnectionStore, useSafeStore, useTransactionStore } from "@/store";
 import { storeToRefs } from "pinia";
 import { onMounted, reactive } from "vue";
 import { useRoute } from "vue-router";
@@ -46,7 +48,10 @@ import TransactionStatusCard from "@/components/transactions/TransactionStatusCa
 const route = useRoute();
 const safeStore = useSafeStore();
 const transactionStore = useTransactionStore();
+const connectionStore = useConnectionStore();
+const { safe } = storeToRefs(safeStore);
 const { transaction } = storeToRefs(transactionStore);
+const { address } = storeToRefs(connectionStore);
 
 interface State {
   loading: boolean;

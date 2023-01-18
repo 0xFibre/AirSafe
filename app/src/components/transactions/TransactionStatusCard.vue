@@ -7,17 +7,30 @@
     <v-divider />
 
     <v-card-text>
-      <KVText title="Approvals" :value="String(transaction.approvers.length)" />
       <KVText
-        title="Rejections"
-        :value="String(transaction.rejecters.length)"
+        title="Approvals"
+        :value="`${transaction.approvers.length} out of ${safe.threshold}`"
       />
+      <KVText title="Rejections" :value="transaction.rejecters.length" />
 
       <div class="d-flex mt-5" v-if="transaction.status == 1">
-        <v-btn flat class="me-1" color="success" @click="$emit('approve')">
+        <v-btn
+          flat
+          class="me-2 w-50"
+          color="success"
+          @click="$emit('approve')"
+          :disabled="transaction.isApprovedBy(address)"
+        >
           Approve
         </v-btn>
-        <v-btn flat class="ms-1" color="error" @click="$emit('reject')">
+
+        <v-btn
+          flat
+          class="ms-2 w-50"
+          color="error"
+          @click="$emit('reject')"
+          :disabled="transaction.isRejectedBy(address)"
+        >
           Reject
         </v-btn>
       </div>
@@ -49,9 +62,9 @@
 </template>
 
 <script lang="ts" setup>
-import { SafeTransaction } from "@/lib/entity";
+import { Safe, SafeTransaction } from "@/lib/entity";
 import KVText from "@/components/text/KVText.vue";
 
-defineProps<{ transaction: SafeTransaction }>();
+defineProps<{ transaction: SafeTransaction; safe: Safe; address: string }>();
 defineEmits(["approve", "reject", "execute"]);
 </script>
