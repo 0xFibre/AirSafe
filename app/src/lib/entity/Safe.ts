@@ -63,26 +63,24 @@ export class Safe implements SafeData {
       const object = objects[i];
 
       if (object.status === "Exists") {
-        if (!CoinAPI.isCoin(object)) {
-          throw new Error("Object is not a coin");
+        if (CoinAPI.isCoin(object)) {
+          const coinType = CoinAPI.getCoinType(getMoveObjectType(object)!);
+          const metadata = await provider.getCoinMetadata(coinType!);
+          const balance = CoinAPI.getBalance(object);
+
+          const iconUrl = metadata.iconUrl
+            ? metadata.iconUrl
+            : !metadata.iconUrl && CoinAPI.isSUI(object)
+            ? "/assets/coins/sui.svg"
+            : "/assets/coins/unknown.svg";
+
+          coins.push({
+            id: getObjectId(object),
+            metadata: { ...metadata, iconUrl },
+            coinType: coinType!,
+            balance: balance || 0n,
+          });
         }
-
-        const coinType = CoinAPI.getCoinType(getMoveObjectType(object)!);
-        const metadata = await provider.getCoinMetadata(coinType!);
-        const balance = CoinAPI.getBalance(object);
-
-        const iconUrl = metadata.iconUrl
-          ? metadata.iconUrl
-          : !metadata.iconUrl && CoinAPI.isSUI(object)
-          ? "/assets/coins/sui.svg"
-          : "/assets/coins/unknown.svg";
-
-        coins.push({
-          id: getObjectId(object),
-          metadata: { ...metadata, iconUrl },
-          coinType: coinType!,
-          balance: balance || 0n,
-        });
       }
     }
 
