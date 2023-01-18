@@ -4,6 +4,8 @@
   text-transform: unset !important;
 }
 
+*,
+.v-btn,
 .v-application,
 [class*="text-"] {
   font-family: Sora, sans-serif !important;
@@ -17,11 +19,6 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-}
-
-.safe-nav-btn > .v-btn__overlay,
-.v-btn[aria-haspopup="menu"][aria-expanded="true"] > .v-btn__overlay {
-  opacity: 0 !important;
 }
 
 th,
