@@ -10,7 +10,6 @@
       </template>
 
       <v-list-item-subtitle style="opacity: unset">
-        <v-btn flat variant="text" icon="mdi-qrcode" size="x-small" />
         <v-btn flat variant="text" icon="mdi-content-copy" size="x-small" />
         <v-btn
           flat
