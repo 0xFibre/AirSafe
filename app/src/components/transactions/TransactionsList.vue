@@ -4,17 +4,26 @@
       <template v-for="(transaction, i) in transactions" :key="i">
         <tr>
           <td>
-            <div class="mb-2 mb-sm-0">
-              <v-btn
-                flat
-                variant="text"
-                color="primary"
-                density="compact"
-                append-icon="mdi-arrow-top-right"
-              >
-                {{ utils.truncate0x(transaction.id) }}
-              </v-btn>
-            </div>
+            <v-icon
+              v-if="transaction.type == 1"
+              icon="mdi-arrow-top-right"
+              color="error"
+            />
+            <v-icon
+              v-else-if="transaction.type == 2"
+              icon="mdi-account-plus"
+              color="success"
+            />
+            <v-icon
+              v-else-if="transaction.type == 3"
+              icon="mdi-account-minus"
+              color="error"
+            />
+            <v-icon
+              v-else-if="transaction.type == 4"
+              icon="mdi-cog"
+              color="grey"
+            />
           </td>
           <td>
             <div class="mb-2 mb-sm-0">
