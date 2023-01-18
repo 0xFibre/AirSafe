@@ -118,7 +118,7 @@ module airsafe::transaction {
         }
     }
 
-    public(friend) fun execute_coin_withdrawal<T>(safe: &mut Safe, transaction: &mut Transaction, ctx: &mut TxContext) {
+    public(friend) fun execute_coin_withdrawal_transaction<T>(safe: &mut Safe, transaction: &mut Transaction, ctx: &mut TxContext) {
         assert!(transaction.status == APPROVED_TRANSACTION_STATUS, error::invalid_transaction_status());
         
         let bcs = bcs::new(transaction.data);
@@ -129,7 +129,7 @@ module airsafe::transaction {
         transaction.status = EXECUTED_TRANSACTION_STATUS;
     }
 
-    public(friend) fun execute_policy_change(registry: &mut Registry, safe: &mut Safe, transaction: &mut Transaction, _ctx: &mut TxContext) {
+    public(friend) fun execute_policy_change_transaction(registry: &mut Registry, safe: &mut Safe, transaction: &mut Transaction, _ctx: &mut TxContext) {
         assert!(transaction.status == APPROVED_TRANSACTION_STATUS, error::invalid_transaction_status());
         
         let bcs = bcs::new(transaction.data);

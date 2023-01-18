@@ -49,15 +49,15 @@ module airsafe::main {
         transaction::reject_transaction(safe, transaction, ctx);
     }
 
-    public entry fun execute_coin_withdrawal<T>(safe: &mut Safe, transaction: &mut Transaction, ctx: &mut TxContext) {
+    public entry fun execute_coin_withdrawal_transaction<T>(safe: &mut Safe, transaction: &mut Transaction, ctx: &mut TxContext) {
         assert!(object::borrow_id(safe) == &transaction::safe_id(transaction), error::safe_transaction_mismatch());
 
-        transaction::execute_coin_withdrawal<T>(safe, transaction, ctx);
+        transaction::execute_coin_withdrawal_transaction<T>(safe, transaction, ctx);
     }
 
-    public entry fun execute_policy_change(registry: &mut Registry, safe: &mut Safe, transaction: &mut Transaction, ctx: &mut TxContext) {
+    public entry fun execute_policy_change_transaction(registry: &mut Registry, safe: &mut Safe, transaction: &mut Transaction, ctx: &mut TxContext) {
         assert!(object::borrow_id(safe) == &transaction::safe_id(transaction), error::safe_transaction_mismatch());
 
-        transaction::execute_policy_change(registry, safe, transaction, ctx);
+        transaction::execute_policy_change_transaction(registry, safe, transaction, ctx);
     }
 }
