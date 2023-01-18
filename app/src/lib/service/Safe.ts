@@ -50,22 +50,6 @@ export class SafeService {
     return await connection.executeMoveCall(moveCallPayload);
   }
 
-  // async depositCoin(data: DepositCoinData) {
-  //   const moveCallPayload = {
-  //     packageObjectId: this._packageObjectId,
-  //     module: this.module,
-  //     function: "deposit_coin",
-  //     typeArguments: ["0x2::sui::SUI"],
-  //     arguments: [
-  //       data.safeId,
-  //       ["0x409d701d5041b6a1a892cadddd4be3e130c18a99"],
-  //       "100000",
-  //     ],
-  //   };
-
-  //   return await connection.executeMoveCall(moveCallPayload);
-  // }
-
   async depositCoin(data: DepositCoinData) {
     const {
       sender,
@@ -137,7 +121,7 @@ export class SafeService {
     const moveCallPayload = {
       packageObjectId: this._packageObjectId,
       module: this.module,
-      function: "execute_coin_withdrawal",
+      function: "execute_coin_withdrawal_transaction",
       typeArguments: [data.coin.coinType],
       arguments: [data.safeId, data.transactionId],
     };
@@ -149,7 +133,7 @@ export class SafeService {
     const moveCallPayload = {
       packageObjectId: this._packageObjectId,
       module: this.module,
-      function: "execute_policy_change",
+      function: "execute_policy_change_transaction",
       typeArguments: [],
       arguments: [this._registryObjectId, data.safeId, data.transactionId],
     };

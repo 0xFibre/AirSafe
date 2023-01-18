@@ -82,17 +82,25 @@
       class="d-md-block d-lg-none"
     />
 
-    <v-app-bar-title class="d-sm-none">
+    <v-app-bar-title class="d-lg-none">
       <h4 class="no-select">{{ config.appName }}</h4>
     </v-app-bar-title>
 
-    <v-spacer />
+    <v-spacer class="d-lg-none" />
+
+    <v-btn
+      v-if="isConnected"
+      flat
+      variant="text"
+      prepend-icon="mdi-safe"
+      to="/safes"
+    >
+      Safes
+    </v-btn>
+
+    <v-spacer class="d-none d-lg-block" />
 
     <div v-if="isConnected">
-      <v-btn flat variant="text" prepend-icon="mdi-safe" to="/safes">
-        Safes
-      </v-btn>
-
       <v-btn
         id="menu-activator"
         flat
