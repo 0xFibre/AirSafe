@@ -71,7 +71,8 @@
               </v-chip>
             </div>
           </td>
-          <td>
+
+          <td class="text-right">
             <div class="mb-2 mb-sm-0 align-self-end">
               <v-btn
                 flat
