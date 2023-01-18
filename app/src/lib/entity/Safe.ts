@@ -79,15 +79,10 @@ export class Safe implements SafeData {
 
         coins.push({
           id: getObjectId(object),
-          metadata: {
-            ...metadata,
-            iconUrl,
-          },
+          metadata: { ...metadata, iconUrl },
           coinType: coinType!,
           balance: balance || 0n,
         });
-      } else {
-        throw new Error("Object not found");
       }
     }
 
