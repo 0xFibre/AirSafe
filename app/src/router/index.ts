@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import CreateSafe from "@/views/safes/Create.vue";
 import Safes from "@/views/safes/Safes.vue";
 import Coins from "@/views/assets/Coins.vue";
+import Nfts from "@/views/assets/Nfts.vue";
 import Owners from "@/views/owners/Owners.vue";
 import Transactions from "@/views/transactions/Transactions.vue";
 import Transaction from "@/views/transactions/Transaction.vue";
@@ -43,6 +44,15 @@ const routes = [
     path: "/assets/coins",
     name: "Coins",
     component: Coins,
+    meta: {
+      access: "safe",
+    },
+  },
+
+  {
+    path: "/assets/nfts",
+    name: "Nfts",
+    component: Nfts,
     meta: {
       access: "safe",
     },

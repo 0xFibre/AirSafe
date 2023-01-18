@@ -2,6 +2,7 @@ import { connection, utils } from "@/utils";
 import { getObjectFields, ObjectId } from "@mysten/sui.js";
 import { coin } from "../coin";
 import { Safe, SafeTransaction } from "../entity";
+import { nft } from "../nft";
 import { Provider } from "../provider";
 import { serializer } from "../serializer";
 import {
@@ -9,7 +10,9 @@ import {
   CreateSafeData,
   CreateSafeTransactionData,
   DepositCoinData,
+  DepositNftData,
   ExecuteCoinWithdrawalData,
+  ExecuteNftWithdrawalData,
   ExecutePolicyChangeData,
   SafeData,
   SafeTransactionData,
@@ -81,6 +84,20 @@ export class SafeService {
     return await connection.executeMoveCall(moveCallPayload);
   }
 
+  async depositNft(data: DepositNftData) {
+    const { nft } = data;
+
+    const moveCallPayload = {
+      packageObjectId: this._packageObjectId,
+      module: this.module,
+      function: "deposit_asset",
+      typeArguments: [nft.type],
+      arguments: [data.safeId, nft.id],
+    };
+
+    return await connection.executeMoveCall(moveCallPayload);
+  }
+
   async createTransaction(data: CreateSafeTransactionData) {
     const moveCallPayload = {
       packageObjectId: this._packageObjectId,
@@ -123,6 +140,18 @@ export class SafeService {
       module: this.module,
       function: "execute_coin_withdrawal_transaction",
       typeArguments: [data.coin.coinType],
+      arguments: [data.safeId, data.transactionId],
+    };
+
+    return await connection.executeMoveCall(moveCallPayload);
+  }
+
+  async executeNftWithdrawal(data: ExecuteNftWithdrawalData) {
+    const moveCallPayload = {
+      packageObjectId: this._packageObjectId,
+      module: this.module,
+      function: "execute_asset_withdrawal_transaction",
+      typeArguments: [data.assetType],
       arguments: [data.safeId, data.transactionId],
     };
 
@@ -263,6 +292,14 @@ export class SafeService {
         return {
           coinType: new TextDecoder().decode(Uint8Array.from(result.coin_type)),
           amount: result.amount,
+          recipient: result.recipient,
+        };
+      case SafeTransactionType.ASSET_WITHDRAWAL:
+        return {
+          assetId: result.asset_id,
+          assetType: new TextDecoder().decode(
+            Uint8Array.from(result.asset_type)
+          ),
           recipient: result.recipient,
         };
       case SafeTransactionType.ADD_OWNER:

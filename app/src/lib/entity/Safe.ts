@@ -1,7 +1,13 @@
 import { env } from "@/config";
-import { Coin as CoinAPI, getMoveObjectType } from "@mysten/sui.js";
+import {
+  Coin as CoinAPI,
+  getMoveObjectType,
+  getObjectFields,
+  getObjectId,
+} from "@mysten/sui.js";
 import { Provider } from "../provider";
-import { Coin, SafeData } from "../types";
+import { nft } from "../nft";
+import { Coin, Nft, SafeData } from "../types";
 
 const provider = new Provider(env.suiRpcUrl);
 
@@ -27,6 +33,22 @@ export class Safe implements SafeData {
     return Promise.all(
       dynamicFields.map((field) => this.getCoin(field.objectId))
     );
+  }
+
+  async getNfts(): Promise<Nft[]> {
+    const dynamicFields = await provider.getDynamicFields(this.id);
+
+    const nfts = [];
+    for (let i = 0; i < dynamicFields.length; i++) {
+      const field = dynamicFields[i];
+      const nft = await this.getNft(field.objectId);
+
+      if (nft) {
+        nfts.push(nft);
+      }
+    }
+
+    return nfts;
   }
 
   async getCoin(id: string): Promise<Coin> {
@@ -59,5 +81,22 @@ export class Safe implements SafeData {
     }
 
     throw new Error("Object not found");
+  }
+
+  async getNft(id: string): Promise<Nft | undefined> {
+    const object = await provider.getObject(id);
+
+    const fields = getObjectFields(object);
+
+    // @ts-expect-error
+    if (nft.isNft(object.details)) {
+      return {
+        id: getObjectId(object),
+        name: fields?.name,
+        description: fields?.description,
+        url: nft.parseUrl(fields?.url),
+        type: getMoveObjectType(object)!,
+      };
+    }
   }
 }

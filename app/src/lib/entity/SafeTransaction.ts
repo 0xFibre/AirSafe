@@ -1,5 +1,6 @@
 import {
   BasicCoin,
+  Nft,
   SafeTransactionData,
   SafeTransactionStatus,
   safeTransactionStatusValue,

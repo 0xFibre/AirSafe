@@ -9,11 +9,19 @@
     <v-divider />
 
     <v-card-text>
-      <template v-if="transaction.type == 1">
+      <template v-if="transaction.type == 0">
         <KVText
           title="Amount"
           :value="`${utils.formatBalance(transaction.input.amount, transaction.coin?.metadata.decimals!)} ${transaction?.coin?.metadata.symbol}`"
         />
+
+        <KVText
+          title="Recipient"
+          :value="utils.truncate0x(`0x${transaction.input.recipient}`)"
+        />
+      </template>
+      <template v-if="transaction.type == 1">
+        <KVText title="NFT ID" :value="transaction.input.assetId" />
 
         <KVText
           title="Recipient"

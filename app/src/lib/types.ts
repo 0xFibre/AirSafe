@@ -35,10 +35,21 @@ export interface DepositCoinData {
   coin: BasicCoin;
 }
 
+export interface DepositNftData {
+  safeId: string;
+  nft: Nft;
+}
+
 export interface ExecuteCoinWithdrawalData {
   safeId: string;
   transactionId: string;
   coin: BasicCoin;
+}
+
+export interface ExecuteNftWithdrawalData {
+  safeId: string;
+  transactionId: string;
+  assetType: string;
 }
 
 export interface ExecutePolicyChangeData {
@@ -74,6 +85,14 @@ export interface BasicCoin {
   metadata: CoinMetadata;
 }
 
+export interface Nft {
+  id: string;
+  name: string;
+  url: string;
+  description: string;
+  type: string;
+}
+
 export interface Coin extends BasicCoin {
   id: string;
   balance: bigint;
@@ -86,15 +105,14 @@ export interface CreateSafeTransactionData {
 }
 
 export enum SafeTransactionType {
-  None,
   COIN_WITHDRAWAL,
+  ASSET_WITHDRAWAL,
   ADD_OWNER,
   REMOVE_OWNER,
   CHANGE_THRESHOLD,
 }
 
 export enum SafeTransactionStatus {
-  None,
   ACTIVE,
   APPROVED,
   REJECTED,
@@ -108,23 +126,22 @@ export interface TransferCoinData {
 }
 
 export const safeTransactionTypeData = {
-  [SafeTransactionType.None]: "",
   [SafeTransactionType.COIN_WITHDRAWAL]: "CoinWithdrawalData",
+  [SafeTransactionType.ASSET_WITHDRAWAL]: "WithdrawalData",
   [SafeTransactionType.ADD_OWNER]: "AddOwnerData",
   [SafeTransactionType.REMOVE_OWNER]: "RemoveOwnerData",
   [SafeTransactionType.CHANGE_THRESHOLD]: "ChangeThresholdData",
 };
 
 export const safeTransactionTypeValue = {
-  [SafeTransactionType.None]: "",
   [SafeTransactionType.COIN_WITHDRAWAL]: "Coin withdrawal",
+  [SafeTransactionType.ASSET_WITHDRAWAL]: "NFT Withdrawal",
   [SafeTransactionType.ADD_OWNER]: "Add owner",
   [SafeTransactionType.REMOVE_OWNER]: "Remove owner",
   [SafeTransactionType.CHANGE_THRESHOLD]: "Change threshold",
 };
 
 export const safeTransactionStatusValue = {
-  [SafeTransactionType.None]: "",
   [SafeTransactionStatus.ACTIVE]: "Active",
   [SafeTransactionStatus.APPROVED]: "Approved",
   [SafeTransactionStatus.REJECTED]: "Rejected",

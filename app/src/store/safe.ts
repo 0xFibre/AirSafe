@@ -3,6 +3,7 @@ import { serializer } from "@/lib/serializer";
 import { safeService } from "@/lib/service";
 import {
   BasicCoin,
+  Nft,
   SafeTransactionType,
   safeTransactionTypeData,
 } from "@/lib/types";
@@ -60,6 +61,15 @@ export const useSafeStore = defineStore("safe", {
       console.log(result);
     },
 
+    async depositNft(input: { nft: Nft }) {
+      const result = await safeService.depositNft({
+        nft: input.nft,
+        safeId: this.activeSafeId!,
+      });
+
+      console.log(result);
+    },
+
     async createCoinWithdrawalTransaction(input: {
       amount: string;
       recipient: string;
@@ -83,6 +93,29 @@ export const useSafeStore = defineStore("safe", {
 
       const data = {
         type: SafeTransactionType.COIN_WITHDRAWAL,
+        data: transferData,
+        safeId: this.activeSafeId!,
+      };
+
+      const result = await safeService.createTransaction(data);
+      console.log(result);
+    },
+
+    async createNftWithdrawalTransaction(input: {
+      recipient: string;
+      nft: Nft;
+    }) {
+      const transferData = serializer.serialize(
+        safeTransactionTypeData[SafeTransactionType.ASSET_WITHDRAWAL],
+        {
+          asset_id: input.nft.id,
+          asset_type: Uint8Array.from(new TextEncoder().encode(input.nft.type)),
+          recipient: input.recipient,
+        }
+      );
+
+      const data = {
+        type: SafeTransactionType.ASSET_WITHDRAWAL,
         data: transferData,
         safeId: this.activeSafeId!,
       };
@@ -165,6 +198,16 @@ export const useSafeStore = defineStore("safe", {
         transactionId,
         safeId: this.activeSafeId!,
         coin,
+      });
+
+      console.log(result);
+    },
+
+    async executeNftWithdrawal(transactionId: string, assetType: string) {
+      const result = await safeService.executeNftWithdrawal({
+        transactionId,
+        safeId: this.activeSafeId!,
+        assetType,
       });
 
       console.log(result);

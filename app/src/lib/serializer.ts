@@ -10,6 +10,14 @@ bcs
       recipient: "address",
     }
   )
+  .registerStructType(
+    safeTransactionTypeData[SafeTransactionType.ASSET_WITHDRAWAL],
+    {
+      asset_id: "address",
+      asset_type: "vector<u8>",
+      recipient: "address",
+    }
+  )
   .registerStructType(safeTransactionTypeData[SafeTransactionType.ADD_OWNER], {
     owner: "address",
     threshold: "u64",

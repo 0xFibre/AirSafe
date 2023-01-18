@@ -34,7 +34,8 @@ module airsafe::transaction {
     }
 
     struct AssetWithdrawalData has drop {
-        asset_id: vector<u8>,
+        asset_id: address,
+        asset_type: vector<u8>,
         recipient: address,
     }
 
@@ -205,7 +206,8 @@ module airsafe::transaction {
 
     fun deserialize_asset_withdrawal_data(bcs: BCS): AssetWithdrawalData {
         let data = AssetWithdrawalData {
-            asset_id: bcs::peel_vec_u8(&mut bcs),
+            asset_id: bcs::peel_address(&mut bcs),
+            asset_type: bcs::peel_vec_u8(&mut bcs),
             recipient: bcs::peel_address(&mut bcs),
         };
 

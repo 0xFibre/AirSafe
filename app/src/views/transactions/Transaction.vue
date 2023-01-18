@@ -102,6 +102,12 @@ async function executeSafeTransaction() {
         transaction.value.coin!
       );
       break;
+    case SafeTransactionType.ASSET_WITHDRAWAL:
+      await safeStore.executeNftWithdrawal(
+        <string>route.params.id,
+        transaction.value.input.assetType
+      );
+      break;
     case SafeTransactionType.ADD_OWNER:
     case SafeTransactionType.REMOVE_OWNER:
     case SafeTransactionType.CHANGE_THRESHOLD:
