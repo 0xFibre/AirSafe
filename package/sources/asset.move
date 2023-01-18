@@ -13,8 +13,8 @@ module airsafe::asset {
         make_deposit(safe, asset);
     }
 
-    public(friend) fun withdraw<A: key + store>(safe: &mut Safe, asset_id: ID, recipient: address) {
-        let asset = make_withdrawal<A>(safe, asset_id);
+    public(friend) fun withdraw<A: key + store>(safe: &mut Safe, asset_id: vector<u8>, recipient: address) {
+        let asset = make_withdrawal<A>(safe, object::id_from_bytes(asset_id));
         transfer::transfer(asset, recipient);
     }
 
