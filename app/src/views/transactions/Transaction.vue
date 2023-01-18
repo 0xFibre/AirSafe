@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useConnectionStore, useSafeStore, useTransactionStore } from "@/store";
+import { useConnectionStore, useSafeStore } from "@/store";
 import { storeToRefs } from "pinia";
 import { onMounted, reactive } from "vue";
 import { useRoute } from "vue-router";
@@ -47,10 +47,8 @@ import TransactionStatusCard from "@/components/transactions/TransactionStatusCa
 
 const route = useRoute();
 const safeStore = useSafeStore();
-const transactionStore = useTransactionStore();
 const connectionStore = useConnectionStore();
-const { safe } = storeToRefs(safeStore);
-const { transaction } = storeToRefs(transactionStore);
+const { safe, transaction } = storeToRefs(safeStore);
 const { address } = storeToRefs(connectionStore);
 
 interface State {
@@ -81,7 +79,7 @@ onMounted(async () => {
 
 async function loadData() {
   await safeStore.fetchActiveSafe();
-  await transactionStore.fetchTransaction(<string>route.params.id);
+  await safeStore.fetchTransaction(<string>route.params.id);
 }
 
 async function approveSafeTransaction() {

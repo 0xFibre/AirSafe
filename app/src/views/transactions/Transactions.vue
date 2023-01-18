@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useSafeStore, useTransactionStore } from "@/store";
+import { useSafeStore } from "@/store";
 import { storeToRefs } from "pinia";
 import { onMounted, reactive } from "vue";
 import Empty from "@/components/Empty.vue";
@@ -18,8 +18,7 @@ import PageTextHeader from "@/components/header/PageTextHeader.vue";
 import TransactionsList from "@/components/transactions/TransactionsList.vue";
 
 const safeStore = useSafeStore();
-const transactionStore = useTransactionStore();
-const { transactions } = storeToRefs(transactionStore);
+const { transactions } = storeToRefs(safeStore);
 
 const state: { loading: boolean } = reactive({ loading: false });
 
@@ -27,7 +26,7 @@ onMounted(async () => {
   try {
     state.loading = true;
     await safeStore.fetchActiveSafe();
-    await transactionStore.fetchTransactions();
+    await safeStore.fetchTransactions();
   } catch (e) {
     console.log(e);
   } finally {

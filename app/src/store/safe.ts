@@ -1,4 +1,4 @@
-import { Safe } from "@/lib/entity";
+import { Safe, SafeTransaction } from "@/lib/entity";
 import { serializer } from "@/lib/serializer";
 import { safeService } from "@/lib/service";
 import {
@@ -12,14 +12,24 @@ import { useLocalStorage } from "@vueuse/core";
 import { defineStore } from "pinia";
 import { useConnectionStore } from "./connection";
 
+interface SafeStore {
+  safes: Safe[];
+  safe?: Safe;
+  activeSafeId: string | null;
+  transactions: SafeTransaction[];
+  transaction?: SafeTransaction;
+}
+
 export const useSafeStore = defineStore("safe", {
   state: () =>
-    <{ safes: Safe[]; safe?: Safe; activeSafeId: string | null }>{
+    <SafeStore>{
       safes: [],
       activeSafeId: <string | null>(
         (<unknown>useLocalStorage("activeSafeId", null))
       ),
       safe: undefined,
+      transactions: [],
+      transaction: undefined,
     },
 
   actions: {
@@ -220,6 +230,17 @@ export const useSafeStore = defineStore("safe", {
       });
 
       console.log(result);
+    },
+
+    async fetchTransactions() {
+      const { safe } = useSafeStore();
+      this.transactions = await safeService.getSafeTransactions(
+        safe?.transactions!
+      );
+    },
+
+    async fetchTransaction(id: string) {
+      this.transaction = await safeService.getSafeTransaction(id);
     },
   },
 });
