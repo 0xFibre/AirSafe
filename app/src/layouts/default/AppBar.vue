@@ -1,198 +1,29 @@
 <template>
-  <v-navigation-drawer
-    elevation="0"
-    border="0"
-    v-model="drawer"
-    v-if="!$route.meta.hideSideBar"
-  >
-    <div class="text-center my-3">
-      <h6 class="text-h6 fonted font-weight-bold no-select">
-        {{ config.appName }}
-      </h6>
-    </div>
-
-    <v-divider class="mb-3 mt-5" />
-
-    <v-list-item lines="two">
-      <template v-slot:prepend>
-        <v-avatar rounded size="50" v-if="activeSafeId">
-          <v-img :src="makeBlockie(activeSafeId)" />
-        </v-avatar>
-      </template>
-
-      <v-list-item-title v-if="activeSafeId">
-        {{ utils.truncate0x(activeSafeId) }}
-      </v-list-item-title>
-
-      <v-list-item-subtitle style="opacity: unset">
-        <v-btn flat variant="text" icon="mdi-qrcode" size="x-small" />
-        <v-btn flat variant="text" icon="mdi-content-copy" size="x-small" />
-        <v-btn flat variant="text" icon="mdi-open-in-new" size="x-small" />
-      </v-list-item-subtitle>
-    </v-list-item>
-
-    <div class="pa-3">
-      <v-btn flat block variant="flat" color="primary" prepend-icon="mdi-plus">
-        New transaction
-      </v-btn>
-    </div>
-
-    <v-list density="comfortable" nav>
-      <template v-for="(item, i) in sideBarItems">
-        <template v-if="item.children">
-          <v-list-group :value="item.title" :key="i">
-            <template v-slot:activator="{ props }">
-              <v-list-item
-                color="primary"
-                v-bind="props"
-                :prepend-icon="item.icon"
-                :title="item.title"
-              />
-            </template>
-
-            <template v-for="(child, i) in item.children" :key="i">
-              <v-list-item
-                color="primary"
-                :title="child.title"
-                :prepend-icon="child.icon"
-                :value="child.title"
-                :to="child.path"
-              />
-            </template>
-          </v-list-group>
-        </template>
-
-        <template v-else>
-          <v-list-item
-            :key="i"
-            color="primary"
-            :to="item.path"
-            density="comfortable"
-            :title="item.title"
-            :prepend-icon="item.icon"
-          />
-        </template>
-      </template>
-    </v-list>
-  </v-navigation-drawer>
-
-  <v-app-bar flat v-if="!$route.meta.hideAppBar">
-    <v-app-bar-nav-icon
-      @click="drawer = !drawer"
-      class="d-md-block d-lg-none"
-    />
-
-    <v-app-bar-title class="d-lg-none">
-      <h4 class="no-select">{{ config.appName }}</h4>
-    </v-app-bar-title>
-
-    <v-spacer class="d-lg-none" />
-
-    <v-btn
-      v-if="isConnected"
-      flat
-      variant="text"
-      prepend-icon="mdi-safe"
-      to="/safes"
-    >
-      Safes
-    </v-btn>
-
-    <v-spacer class="d-none d-lg-block" />
-
-    <div v-if="isConnected">
-      <v-btn
-        id="menu-activator"
-        flat
-        variant="text"
-        prepend-icon="mdi-account-outline"
-        class="me-3"
-      >
-        <span class="d-none d-sm-block"> {{ utils.truncate0x(address) }}</span>
-      </v-btn>
-
-      <v-menu activator="#menu-activator" location="bottom">
-        <v-list nav density="comfortable">
-          <v-list-item
-            v-for="(item, index) in menuItems"
-            :key="index"
-            :value="index"
-          >
-            <template v-slot:prepend>
-              <v-icon :icon="item.icon" />
-            </template>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-    </div>
-
-    <v-btn v-else flat rounded variant="flat" color="primary" to="/connect">
-      Connect wallet
-    </v-btn>
-  </v-app-bar>
+  <Drawer
+    :app-name="config.appName"
+    :active-safe-id="activeSafeId!"
+    :show="drawer"
+  />
+  <AppBar
+    :address="address"
+    :is-connected="isConnected"
+    :app-name="config.appName"
+    @toggle-drawer="drawer = !drawer"
+  />
 </template>
 
 <script lang="ts" setup>
-import { utils } from "@/utils";
-import makeBlockie from "ethereum-blockies-base64";
 import { useConnectionStore, useSafeStore } from "@/store";
 import { storeToRefs } from "pinia";
 import { Ref, ref } from "vue";
 import { config } from "@/config";
+import Drawer from "@/components/bars/Drawer.vue";
+import AppBar from "@/components/bars/AppBar.vue";
 
 const drawer: Ref<boolean | null> = ref(null);
+
 const connectionStore = useConnectionStore();
 const safeStore = useSafeStore();
 const { address, isConnected } = storeToRefs(connectionStore);
 const { activeSafeId } = storeToRefs(safeStore);
-
-const sideBarItems = [
-  {
-    title: "Dashboard",
-    icon: "mdi-view-dashboard-outline",
-    path: "/dashboard",
-  },
-  {
-    title: "Assets",
-    icon: "mdi-atom",
-    children: [
-      {
-        title: "Coins",
-        icon: "mdi-checkbox-multiple-blank-circle-outline",
-        path: "/assets/coins",
-      },
-      {
-        title: "NFTs",
-        icon: "mdi-layers-outline",
-        path: "/assets/nfts",
-      },
-    ],
-  },
-  {
-    title: "Transactions",
-    icon: "mdi-arrow-top-left-bottom-right",
-    path: "/transactions",
-  },
-  {
-    title: "Owners",
-    icon: "mdi-account-multiple-outline",
-    path: "/owners",
-  },
-  // {
-  //   divider: true,
-  // },
-  {
-    title: "Settings",
-    icon: "mdi-cog-outline",
-    path: "/settings",
-  },
-];
-
-const menuItems = [
-  {
-    title: "Settings",
-    icon: "mdi-cog",
-  },
-];
 </script>
