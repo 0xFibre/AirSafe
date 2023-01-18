@@ -10,7 +10,9 @@
         <v-divider />
 
         <v-card-text>
-          <p class="text-body-2 mb-3">Safe Name</p>
+          <p class="text-body-2 mb-3">
+            Safe Name (This is only stored locally)
+          </p>
           <v-text-field color="primary" variant="outlined" density="compact" />
 
           <div class="d-flex">
