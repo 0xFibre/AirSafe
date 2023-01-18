@@ -63,7 +63,9 @@ watch(
     const cv = await qrcode.toCanvas(props.id, {
       quality: 1,
       width: 200,
-      color: { dark: "#000000" },
+      color: {
+        dark: "#000000",
+      },
     });
 
     const qs = document.querySelector("#qrContainer");
