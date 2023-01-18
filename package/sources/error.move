@@ -48,4 +48,9 @@ module airsafe::error {
     public fun transaction_is_stale(): u64 {
         ERROR_PREFIX + 12
     }
+
+    public fun asset_not_found(): u64 {
+        ERROR_PREFIX + 4
+    }
+
 }

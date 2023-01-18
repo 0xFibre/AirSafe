@@ -9,6 +9,7 @@ module airsafe::safe {
 
     friend airsafe::main;
     friend airsafe::coin;
+    friend airsafe::asset;
     friend airsafe::owner;
     friend airsafe::transaction;
 
