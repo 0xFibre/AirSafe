@@ -170,10 +170,12 @@ export class SafeService {
     const objectBatch = await this._provider.getObjectBatch(ids);
 
     return Promise.all(
-      objectBatch.map(
-        async (transaction) =>
-          await this._buildSafeTransaction(getObjectFields(transaction)!)
-      )
+      objectBatch
+        .map(
+          async (transaction) =>
+            await this._buildSafeTransaction(getObjectFields(transaction)!)
+        )
+        .reverse()
     );
   }
 
