@@ -5,51 +5,65 @@
         <tr>
           <td>
             <v-icon
-              v-if="transaction.type == 1"
+              v-if="[0, 1].includes(transaction.type)"
               icon="mdi-arrow-top-right"
               color="error"
             />
+
             <v-icon
               v-else-if="transaction.type == 2"
               icon="mdi-account-plus"
               color="success"
             />
+
             <v-icon
               v-else-if="transaction.type == 3"
               icon="mdi-account-minus"
               color="error"
             />
+
             <v-icon
               v-else-if="transaction.type == 4"
               icon="mdi-cog"
               color="grey"
             />
           </td>
+
           <td>
             <div class="mb-2 mb-sm-0">
               {{ transaction.typeValue }}
             </div>
           </td>
+
           <td>
-            <div
-              v-if="transaction.coin"
-              class="mb-2 mb-sm-0 d-flex align-start align-sm-center"
-            >
+            <div v-if="transaction.type == 0" class="d-flex align-center">
               <v-avatar size="20" class="me-2">
-                <v-img :src="transaction.coin.metadata.iconUrl" />
+                <v-img :src="transaction.coin?.metadata.iconUrl" />
               </v-avatar>
 
-              <div class="mb-2 mb-sm-0">
+              <div>
                 {{
                   utils.formatBalance(
                     transaction.input.amount,
-                    transaction.coin.metadata.decimals
+                    transaction.coin?.metadata.decimals!
                   )
                 }}
-                {{ transaction.coin.metadata.symbol }}
+                {{ transaction.coin?.metadata.symbol }}
               </div>
             </div>
+
+            <div v-else-if="transaction.type == 1" class="d-flex align-center">
+              {{ transaction.input.assetType }}
+            </div>
+
+            <div
+              v-else-if="[2, 3].includes(transaction.type)"
+              class="d-flex align-center"
+            >
+              {{ utils.truncate0x(`0x${transaction.input.owner}`, 6) }}
+            </div>
           </td>
+
           <td>
             <div class="mb-2 mb-sm-0 text-center">
               <v-chip

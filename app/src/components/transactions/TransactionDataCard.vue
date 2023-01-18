@@ -14,20 +14,24 @@
           title="Amount"
           :value="`${utils.formatBalance(transaction.input.amount, transaction.coin?.metadata.decimals!)} ${transaction?.coin?.metadata.symbol}`"
         />
-
         <KVText
           title="Recipient"
           :value="utils.truncate0x(`0x${transaction.input.recipient}`)"
         />
       </template>
+
       <template v-if="transaction.type == 1">
-        <KVText title="NFT ID" :value="transaction.input.assetId" />
-
+        <KVText
+          title="NFT ID"
+          :value="utils.truncate0x(`0x${transaction.input.assetId}`)"
+        />
+        <KVText title="NFT Type" :value="transaction.input.assetType" />
         <KVText
           title="Recipient"
           :value="utils.truncate0x(`0x${transaction.input.recipient}`)"
         />
       </template>
+
       <template v-else>
         <KVText
           title="Owner"

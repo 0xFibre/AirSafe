@@ -23,3 +23,9 @@
 .v-btn[aria-haspopup="menu"][aria-expanded="true"] > .v-btn__overlay {
   opacity: 0 !important;
 }
+
+th,
+td,
+tr {
+  white-space: nowrap !important;
+}
