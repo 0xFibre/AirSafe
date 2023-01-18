@@ -44,7 +44,6 @@
                 v-model="input.threshold"
                 :min="1"
                 :max="safe.owners.length - 1"
-                @input="$emit('input', 'threshold', input.threshold)"
                 hide-details
               >
                 <template v-slot:append>
@@ -72,19 +71,24 @@
 
 <script lang="ts" setup>
 import { Safe } from "@/lib/entity";
-import { watch, reactive } from "vue";
+import { watch, reactive, onMounted } from "vue";
 
 defineEmits(["remove", "toggle"]);
 const props = defineProps<{ show: boolean; owner: string; safe: Safe }>();
-
 const input: { threshold: string } = reactive({ threshold: "" });
 
 watch(
-  () => props.safe,
-  (safe) => {
-    input.threshold = String(
-      safe.threshold == safe.owners.length ? safe.threshold - 1 : safe.threshold
-    );
+  () => props.show,
+  () => {
+    if (props.safe) {
+      updateThresholdWithOwners(props.safe.owners, props.safe.threshold);
+    }
   }
 );
+
+function updateThresholdWithOwners(owners: string[], threshold: number) {
+  input.threshold = (
+    threshold == owners.length ? threshold - 1 : threshold
+  ).toString();
+}
 </script>

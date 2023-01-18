@@ -41,7 +41,6 @@
                 color="primary"
                 type="number"
                 variant="outlined"
-                placeholder="Threshold"
                 v-model="input.threshold"
                 :min="1"
                 :max="safe.owners.length + 1"
@@ -84,8 +83,12 @@ const input: { threshold: string; owner: string } = reactive({
 });
 
 watch(
-  () => props.safe,
-  (safe) => (input.threshold = String(safe.threshold))
+  () => props.show,
+  () => {
+    if (props.safe) {
+      input.threshold = String(props.safe.threshold);
+    }
+  }
 );
 
 function toggleModal() {
