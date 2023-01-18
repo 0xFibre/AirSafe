@@ -19,7 +19,17 @@
         />
       </v-card-text>
 
-      <v-card-text>
+      <v-card-text class="mb-5">
+        <v-row class="mb-5">
+          <v-col cols="12" sm="6">
+            <v-img style="border-radius: 4px" :src="nft?.url" cover />
+          </v-col>
+          <v-col cols="12" sm="6">
+            <h6 class="text-h6 font-weight-bold">{{ nft?.name }}</h6>
+            <p class="text-body-2">{{ nft?.description }}</p>
+          </v-col>
+        </v-row>
+
         <div class="mb-3">
           <p class="text-body-2 mb-3">Recipient address</p>
           <v-text-field
