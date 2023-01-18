@@ -10,6 +10,7 @@ module airsafe::transaction {
     use airsafe::registry::{Registry};
     use airsafe::owner;
     use airsafe::coin;
+    use airsafe::asset;
     use airsafe::error;
 
     friend airsafe::main;
@@ -32,6 +33,11 @@ module airsafe::transaction {
         recipient: address,
     }
 
+    struct AssetWithdrawalData has drop {
+        asset_id: vector<u8>,
+        recipient: address,
+    }
+
     struct AddOwnerData has drop {
         owner: address,
         threshold: u64
@@ -46,12 +52,13 @@ module airsafe::transaction {
         threshold: u64,
     }
 
-    const ACTIVE_TRANSACTION_STATUS: u8 = 1;
-    const APPROVED_TRANSACTION_STATUS: u8 = 2;
-    const REJECTED_TRANSACTION_STATUS: u8 = 3;
-    const EXECUTED_TRANSACTION_STATUS: u8 = 4;
+    const ACTIVE_TRANSACTION_STATUS: u8 = 0;
+    const APPROVED_TRANSACTION_STATUS: u8 = 1;
+    const REJECTED_TRANSACTION_STATUS: u8 = 2;
+    const EXECUTED_TRANSACTION_STATUS: u8 = 3;
 
-    const COIN_WITHDRAWAL_TRANSACTION_TYPE: u8 = 1;
+    const COIN_WITHDRAWAL_TRANSACTION_TYPE: u8 = 0;
+    const ASSET_WITHDRAWAL_TRANSACTION_TYPE: u8 = 1;
     const ADD_OWNER_TRANSACTION_TYPE: u8 = 2;
     const REMOVE_OWNER_TRANSACTION_TYPE: u8 = 3;
     const CHANGE_THRESHOLD_TRANSACTION_TYPE: u8 = 4;
@@ -129,6 +136,17 @@ module airsafe::transaction {
         transaction.status = EXECUTED_TRANSACTION_STATUS;
     }
 
+    public(friend) fun execute_asset_withdrawal_transaction<A: key + store>(safe: &mut Safe, transaction: &mut Transaction) {
+        assert!(transaction.status == APPROVED_TRANSACTION_STATUS, error::invalid_transaction_status());
+        
+        let bcs = bcs::new(transaction.data);
+        let data = deserialize_asset_withdrawal_data(bcs);
+
+        asset::withdraw<A>(safe, data.asset_id, data.recipient);
+
+        transaction.status = EXECUTED_TRANSACTION_STATUS;
+    }
+
     public(friend) fun execute_policy_change_transaction(registry: &mut Registry, safe: &mut Safe, transaction: &mut Transaction, _ctx: &mut TxContext) {
         assert!(transaction.status == APPROVED_TRANSACTION_STATUS, error::invalid_transaction_status());
         
@@ -160,6 +178,8 @@ module airsafe::transaction {
 
         if(type == COIN_WITHDRAWAL_TRANSACTION_TYPE) {
             deserialize_coin_withdrawal_data(bcs);
+        } else if(type == ASSET_WITHDRAWAL_TRANSACTION_TYPE) {
+            deserialize_asset_withdrawal_data(bcs);
         } else if(type == ADD_OWNER_TRANSACTION_TYPE) {
             deserialize_add_owner_data(bcs);
         } else if(type == REMOVE_OWNER_TRANSACTION_TYPE) {
@@ -175,6 +195,17 @@ module airsafe::transaction {
         let data = CoinWithdrawalData {
             coin_type: bcs::peel_vec_u8(&mut bcs),
             amount: bcs::peel_u64(&mut bcs),
+            recipient: bcs::peel_address(&mut bcs),
+        };
+
+        assert!(vector::is_empty(&bcs::into_remainder_bytes(bcs)), error::invalid_transaction_data());
+
+        data
+    }
+
+    fun deserialize_asset_withdrawal_data(bcs: BCS): AssetWithdrawalData {
+        let data = AssetWithdrawalData {
+            asset_id: bcs::peel_vec_u8(&mut bcs),
             recipient: bcs::peel_address(&mut bcs),
         };
 

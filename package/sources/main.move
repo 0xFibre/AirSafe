@@ -12,6 +12,7 @@ module airsafe::main {
     use airsafe::owner;
     use airsafe::error;
     use airsafe::coin;
+    use airsafe::asset;
 
     public entry fun create_safe(registry: &mut Registry, threshold: u64, owners: vector<address>, ctx: &mut TxContext) {
         assert!(vector::borrow(&owners, 0) == &tx_context::sender(ctx), error::invalid_members());
@@ -24,6 +25,10 @@ module airsafe::main {
 
     public entry fun deposit_coin<T>(safe: &mut Safe, payment: vector<Coin<T>>, amount: u64, ctx: &mut TxContext) {
         coin::deposit<T>(safe, payment, amount, ctx);
+    }
+
+    public entry fun deposit_asset<A: key + store>(safe: &mut Safe, asset: A, _ctx: &mut TxContext) {
+        asset::deposit<A>(safe, asset);
     }
 
     public entry fun create_transaction(safe: &mut Safe, type: u8, data: vector<u8>, ctx: &mut TxContext) {
@@ -53,6 +58,12 @@ module airsafe::main {
         assert!(object::borrow_id(safe) == &transaction::safe_id(transaction), error::safe_transaction_mismatch());
 
         transaction::execute_coin_withdrawal_transaction<T>(safe, transaction, ctx);
+    }
+
+     public entry fun execute_asset_withdrawal_transaction<A: key + store>(safe: &mut Safe, transaction: &mut Transaction, _ctx: &mut TxContext) {
+        assert!(object::borrow_id(safe) == &transaction::safe_id(transaction), error::safe_transaction_mismatch());
+
+        transaction::execute_asset_withdrawal_transaction<A>(safe, transaction);
     }
 
     public entry fun execute_policy_change_transaction(registry: &mut Registry, safe: &mut Safe, transaction: &mut Transaction, ctx: &mut TxContext) {
