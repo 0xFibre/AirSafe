@@ -25,7 +25,13 @@
       </v-list-item-title>
 
       <v-list-item-subtitle style="opacity: unset">
-        <v-btn flat variant="text" icon="mdi-qrcode" size="x-small" />
+        <v-btn
+          flat
+          variant="text"
+          icon="mdi-qrcode"
+          size="x-small"
+          @click="$emit('showQr')"
+        />
         <v-btn flat variant="text" icon="mdi-content-copy" size="x-small" />
         <v-btn flat variant="text" icon="mdi-open-in-new" size="x-small" />
       </v-list-item-subtitle>
@@ -82,6 +88,7 @@ import { utils } from "@/utils";
 import makeBlockie from "ethereum-blockies-base64";
 
 defineProps<{ show: boolean | null; activeSafeId: string; appName: string }>();
+defineEmits(["showQr"]);
 
 const iitems = [
   {
