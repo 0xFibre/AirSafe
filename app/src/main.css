@@ -21,3 +21,8 @@
   -ms-user-select: none;
   user-select: none;
 }
+
+.safe-nav-btn > .v-btn__overlay,
+.v-btn[aria-haspopup="menu"][aria-expanded="true"] > .v-btn__overlay {
+  opacity: 0 !important;
+}

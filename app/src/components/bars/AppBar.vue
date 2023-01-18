@@ -9,29 +9,30 @@
       <h4 class="no-select">{{ appName }}</h4>
     </v-app-bar-title>
 
-    <v-spacer class="d-lg-none" />
+    <v-spacer />
 
-    <v-btn
-      v-if="isConnected"
-      flat
-      variant="text"
-      prepend-icon="mdi-safe"
-      to="/safes"
-    >
-      Safes
-    </v-btn>
-
-    <v-spacer class="d-none d-lg-block" />
+    <div class="d-none d-sm-inline" v-if="isConnected">
+      <v-btn
+        flat
+        class="me-3 safe-nav-btn"
+        variant="text"
+        prepend-icon="mdi-safe"
+        density="compact"
+        to="/safes"
+      >
+        Safes
+      </v-btn>
+    </div>
 
     <div v-if="isConnected">
       <v-btn
         id="menu-activator"
         flat
-        variant="text"
+        density="comfortable"
         prepend-icon="mdi-account-outline"
         class="me-3"
       >
-        <span class="d-none d-sm-block"> {{ utils.truncate0x(address) }}</span>
+        <span> {{ utils.truncate0x(address) }}</span>
       </v-btn>
 
       <AppBarMenu activator="#menu-activator" :items="menuItems" />
