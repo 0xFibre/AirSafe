@@ -34,20 +34,7 @@
         <span class="d-none d-sm-block"> {{ utils.truncate0x(address) }}</span>
       </v-btn>
 
-      <v-menu activator="#menu-activator" location="bottom">
-        <v-list nav density="comfortable">
-          <v-list-item
-            v-for="(item, index) in menuItems"
-            :key="index"
-            :value="index"
-          >
-            <template v-slot:prepend>
-              <v-icon :icon="item.icon" />
-            </template>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
+      <AppBarMenu activator="#menu-activator" :items="menuItems" />
     </div>
 
     <v-btn v-else flat rounded variant="flat" color="primary" to="/connect">
@@ -57,7 +44,10 @@
 </template>
 
 <script lang="ts" setup>
+import { useConnectionStore } from "@/store";
 import { utils } from "@/utils";
+import { useRouter } from "vue-router";
+import AppBarMenu from "./AppBarMenu.vue";
 
 defineEmits(["toggleDrawer"]);
 defineProps<{
@@ -68,8 +58,21 @@ defineProps<{
 
 const menuItems = [
   {
-    title: "Settings",
-    icon: "mdi-cog",
+    title: "View in explorer",
+    icon: "mdi-open-in-new",
+  },
+  {
+    title: "Disconnect",
+    icon: "mdi-logout",
+    function: disconnect,
   },
 ];
+
+const connectionStore = useConnectionStore();
+const router = useRouter();
+
+async function disconnect() {
+  await connectionStore.destroyConnection();
+  router.push({ name: "Connect" });
+}
 </script>

@@ -29,7 +29,7 @@ export const useConnectionStore = defineStore("connection", {
       };
     },
 
-    async destroyConnection(wallet: string) {
+    async destroyConnection() {
       await connection.disconnect();
       this.connection = { address: "", isConnected: false, wallet: "" };
     },
