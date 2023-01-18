@@ -49,4 +49,6 @@ export class SafeTransaction implements SafeTransactionData {
   isRejectedBy(owner: string) {
     return this.rejecters.includes(owner);
   }
+
+  // isStale() {}
 }
