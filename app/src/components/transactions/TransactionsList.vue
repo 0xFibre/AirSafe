@@ -51,7 +51,7 @@
             </div>
           </td>
           <td>
-            <div class="mb-2 mb-sm-0">
+            <div class="mb-2 mb-sm-0 text-center">
               <v-chip
                 label
                 density="comfortable"
