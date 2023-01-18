@@ -56,13 +56,13 @@
                 label
                 density="comfortable"
                 :color="
-                  transaction.status == 1
+                  transaction.status == 0
                     ? 'primary'
-                    : transaction.status == 2
+                    : transaction.status == 1
                     ? 'success'
-                    : transaction.status == 3
+                    : transaction.status == 2
                     ? 'error'
-                    : transaction.status == 4
+                    : transaction.status == 3
                     ? 'success'
                     : ''
                 "

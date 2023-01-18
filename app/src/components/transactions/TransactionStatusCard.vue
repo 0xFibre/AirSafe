@@ -13,7 +13,7 @@
       />
       <KVText title="Rejections" :value="transaction.rejecters.length" />
 
-      <div class="d-flex align-center mt-5" v-if="transaction.status == 1">
+      <div class="d-flex align-center mt-5" v-if="transaction.status == 0">
         <v-btn
           flat
           class="w-auto me-2"
@@ -35,7 +35,7 @@
         </v-btn>
       </div>
       <v-btn
-        v-else-if="transaction.status == 2"
+        v-else-if="transaction.status == 1"
         flat
         block
         class="mt-5"
@@ -46,12 +46,12 @@
       </v-btn>
 
       <v-chip
-        v-else-if="transaction.status == 3 || transaction.status == 4"
+        v-else-if="transaction.status == 2 || transaction.status == 3"
         flat
         label
         class="mt-5"
         variant="outlined"
-        :color="transaction.status == 3 ? 'error' : 'success'"
+        :color="transaction.status == 2 ? 'error' : 'success'"
       >
         <span class="text-center">
           {{ transaction.statusValue }}
