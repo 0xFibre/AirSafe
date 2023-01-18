@@ -6,7 +6,7 @@ import {
   getObjectId,
 } from "@mysten/sui.js";
 import { Provider } from "../provider";
-import { nft } from "../nft";
+import { nft } from "@/lib/nft";
 import { Coin, Nft, SafeData } from "../types";
 
 const provider = new Provider(env.suiRpcUrl);
@@ -30,9 +30,13 @@ export class Safe implements SafeData {
 
   async getCoinBalances(): Promise<Coin[]> {
     const dynamicFields = await provider.getDynamicFields(this.id);
-    return Promise.all(
-      dynamicFields.map((field) => this.getCoin(field.objectId))
-    );
+    const objectIds = [];
+    for (let i = 0; i < dynamicFields.length; i++) {
+      const field = dynamicFields[i];
+      objectIds.push(field.objectId);
+    }
+
+    return await this.getCoinBatch(objectIds);
   }
 
   async getNfts(): Promise<Nft[]> {
@@ -51,36 +55,43 @@ export class Safe implements SafeData {
     return nfts;
   }
 
-  async getCoin(id: string): Promise<Coin> {
-    const object = await provider.getObject(id);
+  async getCoinBatch(objectIds: string[]): Promise<Coin[]> {
+    const objects = await provider.getObjectBatch(objectIds);
 
-    if (object.status === "Exists") {
-      if (!CoinAPI.isCoin(object)) {
-        throw new Error("Object is not a coin");
+    const coins = [];
+    for (let i = 0; i < objects.length; i++) {
+      const object = objects[i];
+
+      if (object.status === "Exists") {
+        if (!CoinAPI.isCoin(object)) {
+          throw new Error("Object is not a coin");
+        }
+
+        const coinType = CoinAPI.getCoinType(getMoveObjectType(object)!);
+        const metadata = await provider.getCoinMetadata(coinType!);
+        const balance = CoinAPI.getBalance(object);
+
+        const iconUrl = metadata.iconUrl
+          ? metadata.iconUrl
+          : !metadata.iconUrl && CoinAPI.isSUI(object)
+          ? "/assets/coins/sui.svg"
+          : "/assets/coins/unknown.svg";
+
+        coins.push({
+          id: getObjectId(object),
+          metadata: {
+            ...metadata,
+            iconUrl,
+          },
+          coinType: coinType!,
+          balance: balance || 0n,
+        });
+      } else {
+        throw new Error("Object not found");
       }
-
-      const coinType = CoinAPI.getCoinType(getMoveObjectType(object)!);
-      const metadata = await provider.getCoinMetadata(coinType!);
-      const balance = CoinAPI.getBalance(object);
-
-      const iconUrl = metadata.iconUrl
-        ? metadata.iconUrl
-        : !metadata.iconUrl && CoinAPI.isSUI(object)
-        ? "/assets/coins/sui.svg"
-        : "/assets/coins/unknown.svg";
-
-      return {
-        id,
-        metadata: {
-          ...metadata,
-          iconUrl,
-        },
-        coinType: coinType!,
-        balance: balance || 0n,
-      };
     }
 
-    throw new Error("Object not found");
+    return coins;
   }
 
   async getNft(id: string): Promise<Nft | undefined> {
