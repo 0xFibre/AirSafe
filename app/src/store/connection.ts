@@ -4,7 +4,7 @@ import { connection } from "@/utils";
 
 export const useConnectionStore = defineStore("connection", {
   state: () => ({
-    connection: useLocalStorage("vallet:connection", {
+    connection: useLocalStorage("connection", {
       address: "",
       wallet: "",
       isConnected: false,
