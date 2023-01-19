@@ -58,9 +58,14 @@
       </v-card>
     </v-col>
   </v-row>
+
+  <div class="my-12">
+    <Empty msg="Nothing to load here..." />
+  </div>
 </template>
 
 <script lang="ts" setup>
+import Empty from "@/components/Empty.vue";
 import PageTextHeader from "@/components/header/PageTextHeader.vue";
 import { Coin, Nft } from "@/lib/types";
 import { useSafeStore } from "@/store";
