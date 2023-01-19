@@ -78,7 +78,7 @@ export class Safe implements SafeData {
             id: getObjectId(object),
             metadata: { ...metadata, iconUrl },
             coinType: coinType!,
-            balance: balance || 0n,
+            balance: balance || BigInt(0),
           });
         }
       }
