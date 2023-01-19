@@ -88,9 +88,9 @@ export interface BasicCoin {
 
 export interface Nft {
   id: string;
-  name: string;
+  name?: string;
   url: string;
-  description: string;
+  description?: string;
   type: string;
 }
 

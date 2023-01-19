@@ -35,7 +35,7 @@
                     cover
                   />
 
-                  <p class="text-body-2 my-3">{{ nft.name }}</p>
+                  <p class="text-body-2 my-3">{{ nft.name || "N/A" }}</p>
 
                   <v-btn
                     block

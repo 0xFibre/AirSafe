@@ -1,5 +1,5 @@
 import { env } from "@/config";
-import { Coin, getMoveObjectType, getObjectFields, getObjectId, SuiMoveObject, SuiObject } from "@mysten/sui.js";
+import { Coin, getMoveObjectType, getObjectFields, getObjectId, SuiObject } from "@mysten/sui.js";
 import { Provider } from "./provider";
 import { Nft } from "./types";
 
@@ -8,7 +8,7 @@ const provider = new Provider(env.suiRpcUrl);
 function isNft(object: SuiObject) {
   // @ts-expect-error
   const fields = getObjectFields(object);
-  return !!fields?.url && !!fields?.description;
+  return (!!fields?.url && !!fields?.description) || (!!fields?.url && !!fields?.attributes);
 }
 
 async function getAddressNfts(address: string): Promise<Nft[]> {
