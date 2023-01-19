@@ -2,7 +2,7 @@ import { env } from "@/config";
 import { SafeService } from "./Safe";
 
 const safeServiceData = {
-  packageObjectId: env.valletPackageId,
+  packageObjectId: env.airsafePackageId,
   registryObjectId: env.safeRegistryId,
   rpcUrl: env.suiRpcUrl,
 };
