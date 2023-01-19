@@ -21,7 +21,15 @@
       <template v-else>
         <v-list v-for="safe in safes" :key="safe.id" lines="two">
           <v-list-item class="my-0 py-2" :prepend-avatar="blockie(safe.id)">
-            <v-list-item-title>{{ safe.id }}</v-list-item-title>
+            <v-list-item-title>
+              {{
+                safeStore.safeName(safe.id)
+                  ? `${safeStore.safeName(safe.id)} (${utils.truncate0x(
+                      safe.id
+                    )})`
+                  : utils.truncate0x(safe.id)
+              }}
+            </v-list-item-title>
 
             <v-list-item-action>
               <v-btn flat variant="text" icon="mdi-qrcode" size="x-small" />
@@ -68,6 +76,7 @@ import blockie from "ethereum-blockies-base64";
 import Empty from "@/components/Empty.vue";
 import { useRouter } from "vue-router";
 import Loading from "@/components/Loading.vue";
+import { utils } from "@/utils";
 
 const safeStore = useSafeStore();
 const router = useRouter();
