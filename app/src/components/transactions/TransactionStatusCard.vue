@@ -13,21 +13,27 @@
       />
       <KVText title="Rejections" :value="transaction.rejecters.length" />
 
-      <div class="d-flex align-center mt-5" v-if="transaction.status == 0">
+      <div
+        class="d-flex align-center mt-5"
+        style="gap: 6px"
+        v-if="transaction.status == 0"
+      >
         <v-btn
           flat
-          class="w-auto me-2"
+          class="w-50"
           color="success"
+          variant="tonal"
           @click="$emit('approve')"
           :disabled="transaction.isApprovedBy(address)"
         >
           Approve
         </v-btn>
-        <v-spacer />
+
         <v-btn
           flat
-          class="w-auto ms-2"
+          class="w-50"
           color="error"
+          variant="tonal"
           @click="$emit('reject')"
           :disabled="transaction.isRejectedBy(address)"
         >
@@ -40,6 +46,7 @@
         block
         class="mt-5"
         color="primary"
+        variant="tonal"
         @click="$emit('execute')"
       >
         Execute
