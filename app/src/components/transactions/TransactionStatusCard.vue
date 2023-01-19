@@ -24,7 +24,7 @@
           color="success"
           variant="tonal"
           @click="$emit('approve')"
-          :disabled="transaction.isApprovedBy(address)"
+          :disabled="transaction.isApprovedBy(address) || submitting"
         >
           Approve
         </v-btn>
@@ -35,7 +35,7 @@
           color="error"
           variant="tonal"
           @click="$emit('reject')"
-          :disabled="transaction.isRejectedBy(address)"
+          :disabled="transaction.isRejectedBy(address) || submitting"
         >
           Reject
         </v-btn>
@@ -48,6 +48,7 @@
         color="primary"
         variant="tonal"
         @click="$emit('execute')"
+        :disabled="submitting"
       >
         Execute
       </v-btn>
@@ -72,6 +73,11 @@
 import { Safe, SafeTransaction } from "@/lib/entity";
 import KVText from "@/components/text/KVText.vue";
 
-defineProps<{ transaction: SafeTransaction; safe: Safe; address: string }>();
+defineProps<{
+  transaction: SafeTransaction;
+  safe: Safe;
+  address: string;
+  submitting: boolean;
+}>();
 defineEmits(["approve", "reject", "execute"]);
 </script>

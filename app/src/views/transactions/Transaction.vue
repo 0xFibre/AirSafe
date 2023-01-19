@@ -26,6 +26,7 @@
           @approve="approveSafeTransaction"
           @reject="rejectSafeTransaction"
           @execute="executeSafeTransaction"
+          :submitting="state.submitting"
         />
       </v-col>
     </v-row>
@@ -54,6 +55,7 @@ const { address } = storeToRefs(connectionStore);
 
 interface State {
   loading: boolean;
+  submitting: boolean;
   expansion: {
     approvers: boolean;
     rejecters: boolean;
@@ -63,6 +65,7 @@ interface State {
 const toast = useToast();
 const state: State = reactive({
   loading: false,
+  submitting: false,
   expansion: {
     approvers: true,
     rejecters: true,
@@ -87,24 +90,31 @@ async function loadData() {
 
 async function approveSafeTransaction() {
   try {
+    state.submitting = true;
     await safeStore.approveTransaction(<string>route.params.id);
     await loadData();
   } catch (e) {
     toast.error(e.message);
+  } finally {
+    state.submitting = false;
   }
 }
 
 async function rejectSafeTransaction() {
+  state.submitting = true;
   try {
     await safeStore.rejectTransaction(<string>route.params.id);
     await loadData();
   } catch (e) {
     toast.error(e.message);
+  } finally {
+    state.submitting = false;
   }
 }
 
 async function executeSafeTransaction() {
   try {
+    state.submitting = true;
     switch (transaction?.value?.type) {
       case SafeTransactionType.COIN_WITHDRAWAL:
         await safeStore.executeCoinWithdrawal(
@@ -127,6 +137,8 @@ async function executeSafeTransaction() {
     await loadData();
   } catch (e) {
     toast.error(e.message);
+  } finally {
+    state.submitting = false;
   }
 }
 
