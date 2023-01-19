@@ -2,17 +2,37 @@
   <v-window-item :value="window">
     <v-card-text>
       <h6 class="text-h6 font-weight-bold">Approve Transaction</h6>
-      <p>Approve the transaction to create your safe in your wallet</p>
+      <p>Approve the transaction to create your safe from your wallet</p>
     </v-card-text>
 
     <v-divider />
 
     <v-card-text>
-      <p class="text-center">Approving....</p>
+      <div class="my-12 text-center">
+        <v-icon
+          size="100"
+          v-if="status == 'neutral'"
+          color="primary"
+          icon="mdi-sync"
+          class="mdi-spin"
+        />
+
+        <div v-if="status == 'success'">
+          <v-icon size="100" color="success" icon="mdi-check-circle-outline" />
+          <p class="text-subtitle-1">Safe created succesfuly</p>
+        </div>
+
+        <div v-if="status == 'error'">
+          <v-icon size="100" color="error" icon="mdi-cancel-circle-outline" />
+          <p class="text-subtitle-1">
+            An error occured while creating your safe
+          </p>
+        </div>
+      </div>
     </v-card-text>
   </v-window-item>
 </template>
 
 <script lang="ts" setup>
-defineProps<{ window: number }>();
+defineProps<{ window: number; status: string }>();
 </script>

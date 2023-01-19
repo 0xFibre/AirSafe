@@ -14,7 +14,7 @@
             <span>Name</span>
           </v-col>
           <v-col cols="8">
-            <span>{{ input.name }}</span>
+            <span>{{ input.name || "N/A" }}</span>
           </v-col>
         </v-row>
       </div>

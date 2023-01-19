@@ -74,10 +74,9 @@
               color="primary"
               type="number"
               variant="outlined"
-              placeholder="Threshold"
               v-model="input.threshold"
               :min="1"
-              :max="input.owners.length"
+              :max="input.owners.filter((o) => !!o).length"
               @input="$emit('input', 'threshold', input.threshold)"
               hide-details
             >
@@ -105,7 +104,7 @@ const props = defineProps<{ window: number; address: string }>();
 const input: Input = reactive({
   name: "",
   owners: [props.address],
-  threshold: "",
+  threshold: "1",
 });
 
 defineEmits(["input"]);

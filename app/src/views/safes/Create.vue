@@ -10,7 +10,7 @@
         <v-window :model-value="state.window.value">
           <CreateInput :window="1" @input="updateInput" :address="address" />
           <CreatePreview :window="2" :input="state.input" />
-          <CreateApprove :window="3" />
+          <CreateApprove :window="3" :status="state.status" />
         </v-window>
 
         <v-card-text class="d-flex">
@@ -61,6 +61,7 @@ interface State {
     owners: string[];
     threshold: string;
   };
+  status: string;
 }
 
 const safeStore = useSafeStore();
@@ -76,8 +77,9 @@ const state: State = reactive({
   input: {
     name: "",
     owners: [address.value],
-    threshold: "",
+    threshold: "1",
   },
+  status: "neutral",
 });
 
 const rules = {
@@ -96,14 +98,14 @@ const rules = {
 const $v = useVuelidate(rules, state.input);
 
 async function createSafe() {
-  console.log(await $v.value.$validate(), state.input);
   if (await $v.value.$validate()) {
     const payload = {
       threshold: state.input.threshold,
+      name: state.input.name,
       owners: state.input.owners.filter((member) => !!member),
     };
 
-    await safeStore.createSafe(payload.threshold, payload.owners);
+    await safeStore.createSafe(payload);
   }
 }
 

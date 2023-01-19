@@ -18,6 +18,7 @@ interface SafeStore {
   activeSafeId: string | null;
   transactions: SafeTransaction[];
   transaction?: SafeTransaction;
+  safeNames: Record<string, string>;
 }
 
 const textEncoder = new TextEncoder();
@@ -32,11 +33,36 @@ export const useSafeStore = defineStore("safe", {
       safe: undefined,
       transactions: [],
       transaction: undefined,
+      safeNames: <Record<string, string>>(
+        (<unknown>useLocalStorage("safeNames", {}))
+      ),
     },
 
+  getters: {
+    safeName: (state) => (safeId: string) => state.safeNames[safeId],
+  },
+
   actions: {
-    async createSafe(threshold: string, owners: string[]) {
-      return await safeService.createSafe({ threshold, owners });
+    async createSafe(data: {
+      name: string;
+      threshold: string;
+      owners: string[];
+    }) {
+      const result = await safeService.createSafe({
+        threshold: data.threshold,
+        owners: data.owners,
+      });
+
+      const safe = result?.effects.created![0];
+
+      this.setSafeName(safe?.reference.objectId!, data.name);
+      await this.setActiveSafeId(safe?.reference.objectId!);
+
+      return safe;
+    },
+
+    setSafeName(safeId: string, name: string) {
+      this.safeNames[safeId] = name;
     },
 
     async fetchSafes() {
