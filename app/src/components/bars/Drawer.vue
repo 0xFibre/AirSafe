@@ -50,7 +50,7 @@
       </v-btn>
     </div>
 
-    <v-list density="comfortable" nav>
+    <v-list nav>
       <template v-for="(item, i) in iitems">
         <template v-if="item.children">
           <v-list-group :value="item.title" :key="i">
