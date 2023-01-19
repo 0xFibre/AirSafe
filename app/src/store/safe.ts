@@ -1,4 +1,5 @@
 import { Safe, SafeTransaction } from "@/lib/entity";
+import { response } from "@/lib/response";
 import { serializer } from "@/lib/serializer";
 import { safeService } from "@/lib/service";
 import {
@@ -53,14 +54,19 @@ export const useSafeStore = defineStore("safe", {
         owners: data.owners,
       });
 
-      const safe = result?.effects.created![0];
-      const loadSafe = await safeService.getSafe(safe?.reference.objectId!);
+      if (result) {
+        const transaction = response.validateSuiTransactionResponse(result);
+        const safe = transaction.effects.created![0];
+        const loadSafe = await safeService.getSafe(safe?.reference.objectId!);
 
-      this.safes = [...this.safes, loadSafe];
-      this.setSafeName(loadSafe.id, data.name);
-      await this.setActiveSafeId(loadSafe.id);
+        this.safes = [...this.safes, loadSafe];
+        this.setSafeName(loadSafe.id, data.name);
+        await this.setActiveSafeId(loadSafe.id);
 
-      return loadSafe;
+        return loadSafe;
+      }
+
+      throw new Error(`Error: Unable to send transaction`);
     },
 
     setSafeName(safeId: string, name: string) {

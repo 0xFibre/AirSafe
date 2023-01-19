@@ -50,6 +50,8 @@ import { useVuelidate } from "@vuelidate/core";
 import { required, between } from "@vuelidate/validators";
 import { useSafeStore, useConnectionStore } from "@/store";
 import { storeToRefs } from "pinia";
+import { useToast } from "vue-toastification";
+import { useRouter } from "vue-router";
 
 interface State {
   window: {
@@ -96,16 +98,23 @@ const rules = {
 };
 
 const $v = useVuelidate(rules, state.input);
+const toast = useToast();
+const router = useRouter();
 
 async function createSafe() {
-  if (await $v.value.$validate()) {
-    const payload = {
-      threshold: state.input.threshold,
-      name: state.input.name,
-      owners: state.input.owners.filter((member) => !!member),
-    };
+  try {
+    if (await $v.value.$validate()) {
+      const payload = {
+        threshold: state.input.threshold,
+        name: state.input.name,
+        owners: state.input.owners.filter((member) => !!member),
+      };
 
-    await safeStore.createSafe(payload);
+      await safeStore.createSafe(payload);
+      router.push({ name: "Dashboard" });
+    }
+  } catch (e) {
+    toast.error(e.message);
   }
 }
 
