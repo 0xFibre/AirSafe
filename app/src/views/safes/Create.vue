@@ -19,6 +19,7 @@
             variant="outlined"
             prepend-icon="mdi-arrow-left"
             color="primary"
+            :disabled="state.submitting"
             @click="goBack"
           >
             Back
@@ -31,9 +32,10 @@
             variant="flat"
             append-icon="mdi-arrow-right"
             color="primary"
+            :disabled="state.submitting"
             @click="goNext"
           >
-            Next
+            {{ state.status == "error" ? "Try again?" : "Next" }}
           </v-btn>
         </v-card-text>
       </v-card>
@@ -63,6 +65,7 @@ interface State {
     owners: string[];
     threshold: string;
   };
+  submitting: boolean;
   status: string;
 }
 
@@ -81,6 +84,7 @@ const state: State = reactive({
     owners: [address.value],
     threshold: "1",
   },
+  submitting: false,
   status: "neutral",
 });
 
@@ -103,6 +107,7 @@ const router = useRouter();
 
 async function createSafe() {
   try {
+    state.submitting = true;
     if (await $v.value.$validate()) {
       const payload = {
         threshold: state.input.threshold,
@@ -111,10 +116,15 @@ async function createSafe() {
       };
 
       await safeStore.createSafe(payload);
+
+      state.status = "success";
       router.push({ name: "Dashboard" });
     }
   } catch (e) {
+    state.status = "error";
     toast.error(e.message);
+  } finally {
+    state.submitting = false;
   }
 }
 

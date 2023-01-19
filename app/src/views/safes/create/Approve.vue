@@ -19,13 +19,13 @@
 
         <div v-if="status == 'success'">
           <v-icon size="100" color="success" icon="mdi-check-circle-outline" />
-          <p class="text-subtitle-1">Safe created succesfuly</p>
+          <p class="text-subtitle-1 mt-3">Safe has been created succesfuly</p>
         </div>
 
         <div v-if="status == 'error'">
-          <v-icon size="100" color="error" icon="mdi-cancel-circle-outline" />
-          <p class="text-subtitle-1">
-            An error occured while creating your safe
+          <v-icon size="100" color="error" icon="mdi-close-circle-outline" />
+          <p class="text-subtitle-1 mt-3">
+            An error occured while creating safe
           </p>
         </div>
       </div>

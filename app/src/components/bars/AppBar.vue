@@ -7,7 +7,7 @@
       />
 
       <v-app-bar-title
-        :class="$route.name != 'Safes' ? 'd-lg-none' : undefined"
+        :class="$route.meta.access != 'auth' ? 'd-lg-none' : undefined"
       >
         <h4 class="no-select">{{ appName }}</h4>
       </v-app-bar-title>
