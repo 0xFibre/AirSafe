@@ -35,13 +35,19 @@ import { connection } from "@/utils";
 import { useConnectionStore } from "@/store";
 import { useRouter } from "vue-router";
 import { config } from "@/config";
+import { useToast } from "vue-toastification";
 
 const router = useRouter();
+const toast = useToast();
 const connectionStore = useConnectionStore();
 const { wallets } = connection;
 
 async function connect(name: string) {
-  await connectionStore.establishConnection(name);
-  router.push({ name: "Safes" });
+  try {
+    await connectionStore.establishConnection(name);
+    router.push({ name: "Safes" });
+  } catch (e) {
+    toast.error(e.message);
+  }
 }
 </script>

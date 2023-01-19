@@ -52,6 +52,7 @@ import { onMounted, reactive } from "vue";
 import { BasicCoin, Coin } from "@/lib/types";
 import { coin } from "@/lib/coin";
 import Loading from "@/components/Loading.vue";
+import { useToast } from "vue-toastification";
 
 const safeStore = useSafeStore();
 const { safe } = storeToRefs(safeStore);
@@ -84,6 +85,7 @@ const state: State = reactive({
   userCoins: [],
 });
 
+const toast = useToast();
 const connectionStore = useConnectionStore();
 const { address } = storeToRefs(connectionStore);
 
@@ -92,7 +94,7 @@ onMounted(async () => {
     state.loading = true;
     await loadData();
   } catch (e) {
-    console.log(e);
+    toast.error(e.message);
   } finally {
     state.loading = false;
   }
@@ -110,9 +112,13 @@ async function loadData() {
 }
 
 async function depositCoin(input: { amount: string; coin: BasicCoin }) {
-  await safeStore.depositCoin(input);
-  state.deposit.showModal = false;
-  await loadData();
+  try {
+    await safeStore.depositCoin(input);
+    state.deposit.showModal = false;
+    await loadData();
+  } catch (e) {
+    toast.error(e.message);
+  }
 }
 
 async function sendCoin(input: {
@@ -120,8 +126,12 @@ async function sendCoin(input: {
   recipient: string;
   coin: BasicCoin;
 }) {
-  await safeStore.createCoinWithdrawalTransaction(input);
-  state.send.showModal = false;
-  await loadData();
+  try {
+    await safeStore.createCoinWithdrawalTransaction(input);
+    state.send.showModal = false;
+    await loadData();
+  } catch (e) {
+    toast.error(e.message);
+  }
 }
 </script>

@@ -3,19 +3,20 @@
 
   <v-row>
     <v-col cols="12" sm="4">
-      <v-card flat height="100">
+      <v-card flat height="110">
         <v-card-text>
           <div class="d-flex align-center mb-3">
             <div>Total assets value</div>
           </div>
 
-          <h5 class="text-h5 font-weight-bold">$ 0</h5>
+          <Loading v-if="state.loading" />
+          <h5 v-else class="text-h5 font-weight-bold">$ 0</h5>
         </v-card-text>
       </v-card>
     </v-col>
 
     <v-col cols="12" sm="4">
-      <v-card flat height="100">
+      <v-card flat height="110">
         <v-card-text>
           <div class="d-flex align-center mb-3">
             <div>Total coins</div>
@@ -31,13 +32,16 @@
             </v-btn>
           </div>
 
-          <h5 class="text-h5 font-weight-bold">{{ state.coins.length }}</h5>
+          <Loading v-if="state.loading" />
+          <h5 v-else class="text-h5 font-weight-bold">
+            {{ state.coins.length }}
+          </h5>
         </v-card-text>
       </v-card>
     </v-col>
 
     <v-col cols="12" sm="4">
-      <v-card flat height="100">
+      <v-card flat height="110">
         <v-card-text>
           <div class="d-flex align-center mb-3">
             <div>Total NFTs</div>
@@ -53,7 +57,10 @@
             </v-btn>
           </div>
 
-          <h5 class="text-h5 font-weight-bold">{{ state.nfts.length }}</h5>
+          <Loading v-if="state.loading" />
+          <h5 v-else class="text-h5 font-weight-bold">
+            {{ state.nfts.length }}
+          </h5>
         </v-card-text>
       </v-card>
     </v-col>
@@ -67,22 +74,33 @@
 <script lang="ts" setup>
 import Empty from "@/components/Empty.vue";
 import PageTextHeader from "@/components/header/PageTextHeader.vue";
+import Loading from "@/components/Loading.vue";
 import { Coin, Nft } from "@/lib/types";
 import { useSafeStore } from "@/store";
 import { storeToRefs } from "pinia";
 import { onMounted, reactive } from "vue";
-
-const safeStore = useSafeStore();
-const { safe } = storeToRefs(safeStore);
+import { useToast } from "vue-toastification";
 
 interface State {
   coins: Coin[];
   nfts: Nft[];
+  loading: boolean;
 }
+const safeStore = useSafeStore();
+const { safe } = storeToRefs(safeStore);
+const toast = useToast();
 
-const state: State = reactive({ coins: [], nfts: [] });
+const state: State = reactive({ loading: false, coins: [], nfts: [] });
+
 onMounted(async () => {
-  await loadData();
+  try {
+    state.loading = true;
+    await loadData();
+  } catch (e) {
+    toast.error(e.message);
+  } finally {
+    state.loading = false;
+  }
 });
 
 async function loadData() {

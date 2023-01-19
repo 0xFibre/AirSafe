@@ -47,7 +47,9 @@ import { onMounted, reactive } from "vue";
 import Loading from "@/components/Loading.vue";
 import { nft } from "@/lib/nft";
 import { Nft } from "@/lib/types";
+import { useToast } from "vue-toastification";
 
+const toast = useToast();
 const safeStore = useSafeStore();
 const { safe } = storeToRefs(safeStore);
 
@@ -84,7 +86,7 @@ onMounted(async () => {
     state.loading = true;
     await loadData();
   } catch (e) {
-    console.log(e);
+    toast.error(e.message);
   } finally {
     state.loading = false;
   }
@@ -102,14 +104,22 @@ async function loadData() {
 }
 
 async function depositNft(input: { nft: Nft }) {
-  await safeStore.depositNft(input);
-  state.deposit.showModal = false;
-  await loadData();
+  try {
+    await safeStore.depositNft(input);
+    state.deposit.showModal = false;
+    await loadData();
+  } catch (e) {
+    toast.error(e);
+  }
 }
 
 async function sendNft(input: { recipient: string; nft: Nft }) {
-  await safeStore.createNftWithdrawalTransaction(input);
-  state.send.showModal = false;
-  await loadData();
+  try {
+    await safeStore.createNftWithdrawalTransaction(input);
+    state.send.showModal = false;
+    await loadData();
+  } catch (e) {
+    toast.error(e);
+  }
 }
 </script>

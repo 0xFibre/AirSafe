@@ -16,8 +16,10 @@ import Empty from "@/components/Empty.vue";
 import Loading from "@/components/Loading.vue";
 import PageTextHeader from "@/components/header/PageTextHeader.vue";
 import TransactionsList from "@/components/transactions/TransactionsList.vue";
+import { useToast } from "vue-toastification";
 
 const safeStore = useSafeStore();
+const toast = useToast();
 const { transactions } = storeToRefs(safeStore);
 
 const state: { loading: boolean } = reactive({ loading: false });
@@ -28,7 +30,7 @@ onMounted(async () => {
     await safeStore.fetchActiveSafe();
     await safeStore.fetchTransactions();
   } catch (e) {
-    console.log(e);
+    toast.error(e.message);
   } finally {
     state.loading = false;
   }

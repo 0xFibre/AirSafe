@@ -44,6 +44,7 @@ import TransactionDataCard from "@/components/transactions/TransactionDataCard.v
 import TransactionActorsCard from "@/components/transactions/TransactionActorsCard.vue";
 import TransactionInfoCard from "@/components/transactions/TransactionInfoCard.vue";
 import TransactionStatusCard from "@/components/transactions/TransactionStatusCard.vue";
+import { useToast } from "vue-toastification";
 
 const route = useRoute();
 const safeStore = useSafeStore();
@@ -58,6 +59,8 @@ interface State {
     rejecters: boolean;
   };
 }
+
+const toast = useToast();
 const state: State = reactive({
   loading: false,
   expansion: {
@@ -71,7 +74,7 @@ onMounted(async () => {
     state.loading = true;
     await loadData();
   } catch (e) {
-    console.log(e);
+    toast.error(e.message);
   } finally {
     state.loading = false;
   }
@@ -83,36 +86,48 @@ async function loadData() {
 }
 
 async function approveSafeTransaction() {
-  await safeStore.approveTransaction(<string>route.params.id);
-  await loadData();
+  try {
+    await safeStore.approveTransaction(<string>route.params.id);
+    await loadData();
+  } catch (e) {
+    toast.error(e.message);
+  }
 }
 
 async function rejectSafeTransaction() {
-  await safeStore.rejectTransaction(<string>route.params.id);
-  await loadData();
+  try {
+    await safeStore.rejectTransaction(<string>route.params.id);
+    await loadData();
+  } catch (e) {
+    toast.error(e.message);
+  }
 }
 
 async function executeSafeTransaction() {
-  switch (transaction?.value?.type) {
-    case SafeTransactionType.COIN_WITHDRAWAL:
-      await safeStore.executeCoinWithdrawal(
-        <string>route.params.id,
-        transaction.value.coin!
-      );
-      break;
-    case SafeTransactionType.ASSET_WITHDRAWAL:
-      await safeStore.executeAssetWithdrawal(
-        <string>route.params.id,
-        transaction.value.input.assetType
-      );
-      break;
-    case SafeTransactionType.ADD_OWNER:
-    case SafeTransactionType.REMOVE_OWNER:
-    case SafeTransactionType.CHANGE_THRESHOLD:
-      await safeStore.executePolicyChange(<string>route.params.id);
-  }
+  try {
+    switch (transaction?.value?.type) {
+      case SafeTransactionType.COIN_WITHDRAWAL:
+        await safeStore.executeCoinWithdrawal(
+          <string>route.params.id,
+          transaction.value.coin!
+        );
+        break;
+      case SafeTransactionType.ASSET_WITHDRAWAL:
+        await safeStore.executeAssetWithdrawal(
+          <string>route.params.id,
+          transaction.value.input.assetType
+        );
+        break;
+      case SafeTransactionType.ADD_OWNER:
+      case SafeTransactionType.REMOVE_OWNER:
+      case SafeTransactionType.CHANGE_THRESHOLD:
+        await safeStore.executePolicyChange(<string>route.params.id);
+    }
 
-  await loadData();
+    await loadData();
+  } catch (e) {
+    toast.error(e.message);
+  }
 }
 
 function toggleExpansion(s: keyof State["expansion"]) {

@@ -59,6 +59,7 @@ import WithdrawAssetInput from "./new/WithdrawAssetInput.vue";
 import { onMounted, reactive } from "vue";
 import { useSafeStore } from "@/store";
 import { storeToRefs } from "pinia";
+import { useToast } from "vue-toastification";
 
 interface State {
   input: {
@@ -77,6 +78,7 @@ interface State {
   nfts: Nft[];
 }
 
+const toast = useToast();
 const safeStore = useSafeStore();
 const { safe } = storeToRefs(safeStore);
 const state: State = reactive({
@@ -95,7 +97,11 @@ const types = [
 ];
 
 onMounted(async () => {
-  await loadData();
+  try {
+    await loadData();
+  } catch (e) {
+    toast.error(e.message);
+  }
 });
 
 async function loadData() {
@@ -115,26 +121,30 @@ function updateInputData(
 }
 
 async function createTransaction() {
-  if (
-    state.input.type ==
-    safeTransactionTypeValue[SafeTransactionType.COIN_WITHDRAWAL]
-  ) {
-    if (state.input.withdrawCoin.coin) {
-      await safeStore.createCoinWithdrawalTransaction({
-        ...state.input.withdrawCoin,
-        coin: state.input.withdrawCoin.coin,
-      });
+  try {
+    if (
+      state.input.type ==
+      safeTransactionTypeValue[SafeTransactionType.COIN_WITHDRAWAL]
+    ) {
+      if (state.input.withdrawCoin.coin) {
+        await safeStore.createCoinWithdrawalTransaction({
+          ...state.input.withdrawCoin,
+          coin: state.input.withdrawCoin.coin,
+        });
+      }
+    } else if (
+      state.input.type ==
+      safeTransactionTypeValue[SafeTransactionType.ASSET_WITHDRAWAL]
+    ) {
+      if (state.input.withdrawNft.nft) {
+        await safeStore.createNftWithdrawalTransaction({
+          ...state.input.withdrawNft,
+          nft: state.input.withdrawNft.nft,
+        });
+      }
     }
-  } else if (
-    state.input.type ==
-    safeTransactionTypeValue[SafeTransactionType.ASSET_WITHDRAWAL]
-  ) {
-    if (state.input.withdrawNft.nft) {
-      await safeStore.createNftWithdrawalTransaction({
-        ...state.input.withdrawNft,
-        nft: state.input.withdrawNft.nft,
-      });
-    }
+  } catch (e) {
+    toast.error(e.message);
   }
 }
 </script>

@@ -45,7 +45,9 @@ import OwnersList from "@/components/owners/OwnersList.vue";
 import AddOwnerModal from "@/components/owners/AddOwnerModal.vue";
 import RemoveOwner from "@/components/owners/RemoveOwner.vue";
 import Loading from "@/components/Loading.vue";
+import { useToast } from "vue-toastification";
 
+const toast = useToast();
 const safeStore = useSafeStore();
 const { safe } = storeToRefs(safeStore);
 
@@ -75,7 +77,7 @@ onMounted(async () => {
     state.loading = true;
     await loadData();
   } catch (e) {
-    console.log(e);
+    toast.error(e.message);
   } finally {
     state.loading = false;
   }
@@ -94,7 +96,11 @@ async function manageOwner(
   type: "add" | "remove",
   input: { owner: string; threshold: string }
 ) {
-  await safeStore.manageOwnerTransaction({ ...input, type });
-  await loadData();
+  try {
+    await safeStore.manageOwnerTransaction({ ...input, type });
+    await loadData();
+  } catch (e) {
+    toast.error(e.message);
+  }
 }
 </script>
