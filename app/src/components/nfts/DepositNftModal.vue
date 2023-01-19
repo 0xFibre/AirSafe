@@ -81,6 +81,10 @@ function toggleModal() {
 }
 
 function selectNft(nft: Nft) {
-  input.nft = nft;
+  if (input.nft?.id === nft.id) {
+    input.nft = undefined;
+  } else {
+    input.nft = nft;
+  }
 }
 </script>
