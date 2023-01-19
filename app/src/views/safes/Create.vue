@@ -35,7 +35,13 @@
             :disabled="state.submitting"
             @click="goNext"
           >
-            {{ state.status == "error" ? "Try again?" : "Next" }}
+            {{
+              state.status == "error"
+                ? "Try again?"
+                : state.window.value == state.window.total
+                ? "Create"
+                : "Next"
+            }}
           </v-btn>
         </v-card-text>
       </v-card>
