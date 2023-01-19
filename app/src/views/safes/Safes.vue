@@ -77,18 +77,21 @@ import Empty from "@/components/Empty.vue";
 import { useRouter } from "vue-router";
 import Loading from "@/components/Loading.vue";
 import { utils } from "@/utils";
+import { useToast } from "vue-toastification";
 
 const safeStore = useSafeStore();
 const router = useRouter();
+const toast = useToast();
 const { safes } = storeToRefs(safeStore);
 
 const state: { loading: boolean } = reactive({ loading: false });
+
 onMounted(async () => {
   try {
     state.loading = true;
     await safeStore.fetchSafes();
   } catch (e) {
-    console.log(e);
+    toast.error(e.message);
   } finally {
     state.loading = false;
   }
@@ -96,6 +99,6 @@ onMounted(async () => {
 
 function setActiveSafe(id: string) {
   safeStore.setActiveSafeId(id);
-  router.push({ name: "Owners" });
+  router.push({ name: "Dashboard" });
 }
 </script>

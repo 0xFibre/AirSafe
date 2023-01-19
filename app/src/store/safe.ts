@@ -88,9 +88,11 @@ export const useSafeStore = defineStore("safe", {
 
     async setActiveSafeId(id: string) {
       const safe = this.safes.find((safe) => safe.id === id);
-      if (safe) {
-        this.activeSafeId = id;
+      if (!safe) {
+        throw new Error(`Safe not found`);
       }
+
+      this.activeSafeId = id;
     },
 
     async depositCoin(input: { amount: string; coin: BasicCoin }) {
