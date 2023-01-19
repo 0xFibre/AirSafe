@@ -11,8 +11,8 @@ import {
   CreateSafeTransactionData,
   DepositCoinData,
   DepositNftData,
+  ExecuteAssetWithdrawalData,
   ExecuteCoinWithdrawalData,
-  ExecuteNftWithdrawalData,
   ExecutePolicyChangeData,
   SafeData,
   SafeTransactionData,
@@ -146,7 +146,7 @@ export class SafeService {
     return await connection.executeMoveCall(moveCallPayload);
   }
 
-  async executeNftWithdrawal(data: ExecuteNftWithdrawalData) {
+  async executeAssetWithdrawal(data: ExecuteAssetWithdrawalData) {
     const moveCallPayload = {
       packageObjectId: this._packageObjectId,
       module: this.module,

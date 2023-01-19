@@ -46,7 +46,7 @@ export interface ExecuteCoinWithdrawalData {
   coin: BasicCoin;
 }
 
-export interface ExecuteNftWithdrawalData {
+export interface ExecuteAssetWithdrawalData {
   safeId: string;
   transactionId: string;
   assetType: string;

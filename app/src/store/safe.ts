@@ -213,8 +213,8 @@ export const useSafeStore = defineStore("safe", {
       console.log(result);
     },
 
-    async executeNftWithdrawal(transactionId: string, assetType: string) {
-      const result = await safeService.executeNftWithdrawal({
+    async executeAssetWithdrawal(transactionId: string, assetType: string) {
+      const result = await safeService.executeAssetWithdrawal({
         transactionId,
         safeId: this.activeSafeId!,
         assetType,

@@ -101,7 +101,7 @@ async function executeSafeTransaction() {
       );
       break;
     case SafeTransactionType.ASSET_WITHDRAWAL:
-      await safeStore.executeNftWithdrawal(
+      await safeStore.executeAssetWithdrawal(
         <string>route.params.id,
         transaction.value.input.assetType
       );
