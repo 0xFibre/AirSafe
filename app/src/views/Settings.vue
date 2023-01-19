@@ -11,13 +11,18 @@
 
         <v-card-text>
           <p class="text-body-2 mb-3">
-            Safe Name (This is only stored locally)
+            Safe Name (This is only stored on your device)
           </p>
-          <v-text-field color="primary" variant="outlined" density="compact" />
+          <v-text-field
+            color="primary"
+            variant="outlined"
+            density="compact"
+            v-model="state.input.safeName"
+          />
 
           <div class="d-flex">
             <v-spacer />
-            <v-btn flat color="primary">Update</v-btn>
+            <v-btn flat color="primary" @click="changeSafeName">Update</v-btn>
           </div>
         </v-card-text>
       </v-card>
@@ -76,12 +81,14 @@ interface State {
   loading: boolean;
   input: {
     threshold: string;
+    safeName: string;
   };
 }
 const state: State = reactive({
   loading: false,
   input: {
     threshold: "",
+    safeName: "",
   },
 });
 
@@ -100,10 +107,15 @@ onMounted(async () => {
 async function loadData() {
   await safeStore.fetchActiveSafe();
   state.input.threshold = String(safe?.value?.threshold);
+  state.input.safeName = safeStore.safeName(safe?.value?.id!);
 }
 
 async function changeThreshold() {
   await safeStore.changeThresholdTransaction(state.input.threshold);
   await loadData();
+}
+
+function changeSafeName() {
+  safeStore.setSafeName(safe?.value?.id!, state.input.safeName);
 }
 </script>
