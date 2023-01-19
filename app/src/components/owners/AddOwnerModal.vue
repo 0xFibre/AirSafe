@@ -35,7 +35,7 @@
           <p class="text-body-2 mb-3">New threshold</p>
 
           <v-row>
-            <v-col class="my-0" cols="6">
+            <v-col class="my-0" cols="8" md="6">
               <v-text-field
                 density="compact"
                 color="primary"
