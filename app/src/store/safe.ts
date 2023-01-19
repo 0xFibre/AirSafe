@@ -54,11 +54,13 @@ export const useSafeStore = defineStore("safe", {
       });
 
       const safe = result?.effects.created![0];
+      const loadSafe = await safeService.getSafe(safe?.reference.objectId!);
 
-      this.setSafeName(safe?.reference.objectId!, data.name);
-      await this.setActiveSafeId(safe?.reference.objectId!);
+      this.safes = [...this.safes, loadSafe];
+      this.setSafeName(loadSafe.id, data.name);
+      await this.setActiveSafeId(loadSafe.id);
 
-      return safe;
+      return loadSafe;
     },
 
     setSafeName(safeId: string, name: string) {
