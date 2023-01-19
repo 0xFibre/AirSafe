@@ -73,7 +73,7 @@
                   transaction.status == 0
                     ? 'primary'
                     : transaction.status == 1
-                    ? 'success'
+                    ? 'info'
                     : transaction.status == 2
                     ? 'error'
                     : transaction.status == 3
