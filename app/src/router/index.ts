@@ -8,6 +8,7 @@ import Transactions from "@/views/transactions/Transactions.vue";
 import Transaction from "@/views/transactions/Transaction.vue";
 import NewTransaction from "@/views/transactions/New.vue";
 import Connect from "@/views/Connect.vue";
+import Dashboard from "@/views/Dashboard.vue";
 import Settings from "@/views/Settings.vue";
 import { useConnectionStore, useSafeStore } from "@/store";
 
@@ -38,6 +39,15 @@ const routes = [
     meta: {
       access: "auth",
       hideSideBar: true,
+    },
+  },
+
+  {
+    path: "/dashboard",
+    name: "Dashboard",
+    component: Dashboard,
+    meta: {
+      access: "safe",
     },
   },
 
