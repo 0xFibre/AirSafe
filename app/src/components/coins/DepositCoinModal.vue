@@ -61,6 +61,7 @@
           variant="flat"
           color="primary"
           @click="$emit('deposit', input)"
+          :disabled="submitting"
         >
           Deposit
         </v-btn>
@@ -77,6 +78,7 @@ import { watch, reactive } from "vue";
 const event = defineEmits(["deposit", "toggle"]);
 const props = defineProps<{
   show: boolean;
+  submitting: boolean;
   coin?: BasicCoin;
   coins: BasicCoin[];
 }>();

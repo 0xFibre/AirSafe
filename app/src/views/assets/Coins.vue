@@ -30,6 +30,7 @@
       :show="state.deposit.showModal"
       :coin="state.deposit.coin"
       :coins="state.userCoins"
+      :submitting="state.deposit.submitting"
     />
 
     <SendCoinModal
@@ -38,6 +39,7 @@
       :show="state.send.showModal"
       :coin="state.send.coin"
       :coins="state.safeCoins"
+      :submitting="state.send.submitting"
     />
   </template>
 </template>
@@ -62,10 +64,12 @@ interface State {
   deposit: {
     coin?: BasicCoin;
     showModal: boolean;
+    submitting: boolean;
   };
   send: {
     coin?: BasicCoin;
     showModal: boolean;
+    submitting: boolean;
   };
   safeCoins: Coin[];
   userCoins: BasicCoin[];
@@ -75,11 +79,11 @@ const state: State = reactive({
   loading: false,
   deposit: {
     showModal: false,
-    coin: undefined,
+    submitting: false,
   },
   send: {
     showModal: false,
-    coin: undefined,
+    submitting: false,
   },
   safeCoins: [],
   userCoins: [],
@@ -113,11 +117,14 @@ async function loadData() {
 
 async function depositCoin(input: { amount: string; coin: BasicCoin }) {
   try {
+    state.send.submitting = true;
     await safeStore.depositCoin(input);
     state.deposit.showModal = false;
     await loadData();
   } catch (e) {
     toast.error(e.message);
+  } finally {
+    state.send.submitting = false;
   }
 }
 
@@ -127,11 +134,14 @@ async function sendCoin(input: {
   coin: BasicCoin;
 }) {
   try {
+    state.send.submitting = true;
     await safeStore.createCoinWithdrawalTransaction(input);
     state.send.showModal = false;
     await loadData();
   } catch (e) {
     toast.error(e.message);
+  } finally {
+    state.send.submitting = false;
   }
 }
 </script>

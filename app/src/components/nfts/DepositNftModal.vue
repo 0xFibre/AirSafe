@@ -59,6 +59,7 @@
           variant="flat"
           color="primary"
           @click="$emit('deposit', input)"
+          :disabled="submitting"
         >
           Deposit
         </v-btn>
@@ -72,7 +73,7 @@ import { Nft } from "@/lib/types";
 import { reactive } from "vue";
 
 const event = defineEmits(["deposit", "toggle"]);
-defineProps<{ show: boolean; nfts: Nft[] }>();
+defineProps<{ show: boolean; submitting: boolean; nfts: Nft[] }>();
 const input: { nft?: Nft } = reactive({ nft: undefined });
 
 function toggleModal() {

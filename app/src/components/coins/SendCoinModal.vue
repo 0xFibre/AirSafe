@@ -80,6 +80,7 @@
           variant="flat"
           color="primary"
           @click="$emit('send', input)"
+          :disabled="submitting"
         >
           Send
         </v-btn>
@@ -95,6 +96,7 @@ import { reactive, watch } from "vue";
 defineEmits(["send", "toggle"]);
 const props = defineProps<{
   show: boolean;
+  submitting: boolean;
   coin?: BasicCoin;
   coins: BasicCoin[];
 }>();

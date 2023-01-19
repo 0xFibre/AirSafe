@@ -26,6 +26,7 @@
       @toggle="toggleModal('deposit')"
       :show="state.deposit.showModal"
       :nfts="state.userNfts"
+      :submitting="state.deposit.submitting"
     />
 
     <SendNftModal
@@ -33,6 +34,7 @@
       @toggle="toggleModal('send')"
       :show="state.send.showModal"
       :nft="state.send.nft"
+      :submitting="state.send.submitting"
     />
   </template>
 </template>
@@ -57,10 +59,12 @@ interface State {
   loading: boolean;
   deposit: {
     showModal: boolean;
+    submitting: boolean;
   };
   send: {
     nft?: Nft;
     showModal: boolean;
+    submitting: boolean;
   };
   safeNfts: Nft[];
   userNfts: Nft[];
@@ -70,9 +74,11 @@ const state: State = reactive({
   loading: false,
   deposit: {
     showModal: false,
+    submitting: false,
   },
   send: {
     showModal: false,
+    submitting: false,
   },
   safeNfts: [],
   userNfts: [],
@@ -105,21 +111,27 @@ async function loadData() {
 
 async function depositNft(input: { nft: Nft }) {
   try {
+    state.deposit.submitting = true;
     await safeStore.depositNft(input);
     state.deposit.showModal = false;
     await loadData();
   } catch (e) {
     toast.error(e);
+  } finally {
+    state.deposit.submitting = true;
   }
 }
 
 async function sendNft(input: { recipient: string; nft: Nft }) {
   try {
+    state.send.submitting = true;
     await safeStore.createNftWithdrawalTransaction(input);
     state.send.showModal = false;
     await loadData();
   } catch (e) {
     toast.error(e);
+  } finally {
+    state.send.submitting = true;
   }
 }
 </script>

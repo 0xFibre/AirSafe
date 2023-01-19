@@ -50,6 +50,7 @@
           variant="flat"
           color="primary"
           @click="$emit('send', { ...input, nft })"
+          :disabled="submitting"
         >
           Send
         </v-btn>
@@ -63,7 +64,7 @@ import { Nft } from "@/lib/types";
 import { reactive } from "vue";
 
 defineEmits(["send", "toggle"]);
-defineProps<{ show: boolean; nft?: Nft }>();
+defineProps<{ show: boolean; submitting: boolean; nft?: Nft }>();
 
 const input: { recipient: string } = reactive({ recipient: "" });
 </script>
