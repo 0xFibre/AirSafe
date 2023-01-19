@@ -62,6 +62,7 @@
           variant="flat"
           color="primary"
           @click="$emit('add', input)"
+          :disabled="submitting"
         >
           Add owner
         </v-btn>
@@ -75,7 +76,7 @@ import { Safe } from "@/lib/entity";
 import { watch, reactive } from "vue";
 
 const event = defineEmits(["add", "toggle"]);
-const props = defineProps<{ show: boolean; safe: Safe }>();
+const props = defineProps<{ show: boolean; submitting: boolean; safe: Safe }>();
 
 const input: { threshold: string; owner: string } = reactive({
   owner: "",

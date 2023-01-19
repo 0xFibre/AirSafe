@@ -61,6 +61,7 @@
           variant="flat"
           color="primary"
           @click="$emit('remove', { ...input, owner })"
+          :disabled="submitting"
         >
           Remove owner
         </v-btn>
@@ -74,7 +75,12 @@ import { Safe } from "@/lib/entity";
 import { watch, reactive, onMounted } from "vue";
 
 defineEmits(["remove", "toggle"]);
-const props = defineProps<{ show: boolean; owner: string; safe: Safe }>();
+const props = defineProps<{
+  show: boolean;
+  owner: string;
+  submitting: boolean;
+  safe: Safe;
+}>();
 const input: { threshold: string } = reactive({ threshold: "" });
 
 watch(

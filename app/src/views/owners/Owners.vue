@@ -22,6 +22,7 @@
       <AddOwnerModal
         :safe="safe!"
         :show="state.add.show"
+        :submitting="state.add.submitting"
         @toggle="toggleModal('add')"
         @add="(input) => manageOwner('add', input)"
       />
@@ -30,6 +31,7 @@
         :safe="safe!"
         :show="state.remove.show"
         :owner="state.remove.owner"
+        :submitting="state.remove.submitting"
         @toggle="(owner) => toggleModal('remove', owner)"
         @remove="(input) => manageOwner('remove', input)"
       />
@@ -55,20 +57,24 @@ interface State {
   loading: boolean;
   add: {
     show: boolean;
+    submitting: boolean;
   };
   remove: {
     show: boolean;
     owner: string;
+    submitting: boolean;
   };
 }
 const state: State = reactive({
   loading: false,
   add: {
     show: false,
+    submitting: false,
   },
   remove: {
     show: false,
     owner: "",
+    submitting: false,
   },
 });
 
@@ -97,10 +103,13 @@ async function manageOwner(
   input: { owner: string; threshold: string }
 ) {
   try {
+    state[type].submitting = true;
     await safeStore.manageOwnerTransaction({ ...input, type });
     await loadData();
   } catch (e) {
     toast.error(e.message);
+  } finally {
+    state[type].submitting = false;
   }
 }
 </script>
