@@ -68,6 +68,8 @@ import { useSafeStore } from "@/store";
 import { storeToRefs } from "pinia";
 import { useToast } from "vue-toastification";
 import Loading from "@/components/Loading.vue";
+import { SafeTransaction } from "@/lib/entity";
+import { useRouter } from "vue-router";
 
 interface State {
   input: {
@@ -89,6 +91,7 @@ interface State {
 }
 
 const toast = useToast();
+const router = useRouter();
 const safeStore = useSafeStore();
 const { safe } = storeToRefs(safeStore);
 const state: State = reactive({
@@ -138,25 +141,30 @@ function updateInputData(
 async function createTransaction() {
   try {
     state.submitting = true;
+
     if (
       state.input.type ==
       safeTransactionTypeValue[SafeTransactionType.COIN_WITHDRAWAL]
     ) {
       if (state.input.withdrawCoin.coin) {
-        await safeStore.createCoinWithdrawalTransaction({
+        const transaction = await safeStore.createCoinWithdrawalTransaction({
           ...state.input.withdrawCoin,
           coin: state.input.withdrawCoin.coin,
         });
+
+        router.push({ name: "Transaction", params: { id: transaction.id } });
       }
     } else if (
       state.input.type ==
       safeTransactionTypeValue[SafeTransactionType.ASSET_WITHDRAWAL]
     ) {
       if (state.input.withdrawNft.nft) {
-        await safeStore.createNftWithdrawalTransaction({
+        const transaction = await safeStore.createNftWithdrawalTransaction({
           ...state.input.withdrawNft,
           nft: state.input.withdrawNft.nft,
         });
+
+        router.push({ name: "Transaction", params: { id: transaction.id } });
       }
     }
   } catch (e) {

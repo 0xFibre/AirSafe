@@ -55,6 +55,7 @@ import { BasicCoin, Coin } from "@/lib/types";
 import { coin } from "@/lib/coin";
 import Loading from "@/components/Loading.vue";
 import { useToast } from "vue-toastification";
+import { useRouter } from "vue-router";
 
 const safeStore = useSafeStore();
 const { safe } = storeToRefs(safeStore);
@@ -90,6 +91,7 @@ const state: State = reactive({
 });
 
 const toast = useToast();
+const router = useRouter();
 const connectionStore = useConnectionStore();
 const { address } = storeToRefs(connectionStore);
 
@@ -135,9 +137,9 @@ async function sendCoin(input: {
 }) {
   try {
     state.send.submitting = true;
-    await safeStore.createCoinWithdrawalTransaction(input);
+    const transaction = await safeStore.createCoinWithdrawalTransaction(input);
     state.send.showModal = false;
-    await loadData();
+    router.push({ name: "Transaction", params: { id: transaction.id } });
   } catch (e) {
     toast.error(e.message);
   } finally {

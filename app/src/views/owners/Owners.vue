@@ -48,8 +48,10 @@ import AddOwnerModal from "@/components/owners/AddOwnerModal.vue";
 import RemoveOwner from "@/components/owners/RemoveOwner.vue";
 import Loading from "@/components/Loading.vue";
 import { useToast } from "vue-toastification";
+import { useRouter } from "vue-router";
 
 const toast = useToast();
+const router = useRouter();
 const safeStore = useSafeStore();
 const { safe } = storeToRefs(safeStore);
 
@@ -104,8 +106,11 @@ async function manageOwner(
 ) {
   try {
     state[type].submitting = true;
-    await safeStore.manageOwnerTransaction({ ...input, type });
-    await loadData();
+    const transaction = await safeStore.manageOwnerTransaction({
+      ...input,
+      type,
+    });
+    router.push({ name: "Transaction", params: { id: transaction.id } });
   } catch (e) {
     toast.error(e.message);
   } finally {

@@ -50,6 +50,7 @@ import Loading from "@/components/Loading.vue";
 import { nft } from "@/lib/nft";
 import { Nft } from "@/lib/types";
 import { useToast } from "vue-toastification";
+import { useRouter } from "vue-router";
 
 const toast = useToast();
 const safeStore = useSafeStore();
@@ -84,6 +85,7 @@ const state: State = reactive({
   userNfts: [],
 });
 
+const router = useRouter();
 const connectionStore = useConnectionStore();
 const { address } = storeToRefs(connectionStore);
 
@@ -125,9 +127,9 @@ async function depositNft(input: { nft: Nft }) {
 async function sendNft(input: { recipient: string; nft: Nft }) {
   try {
     state.send.submitting = true;
-    await safeStore.createNftWithdrawalTransaction(input);
+    const transaction = await safeStore.createNftWithdrawalTransaction(input);
     state.send.showModal = false;
-    await loadData();
+    router.push({ name: "Transaction", params: { id: transaction.id } });
   } catch (e) {
     toast.error(e.message);
   } finally {

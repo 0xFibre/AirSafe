@@ -73,6 +73,7 @@ import Loading from "@/components/Loading.vue";
 import { useSafeStore } from "@/store";
 import { storeToRefs } from "pinia";
 import { onMounted, reactive } from "vue";
+import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 
 const safeStore = useSafeStore();
@@ -87,6 +88,7 @@ interface State {
 }
 
 const toast = useToast();
+const router = useRouter();
 const state: State = reactive({
   loading: false,
   input: {
@@ -114,8 +116,10 @@ async function loadData() {
 
 async function changeThreshold() {
   try {
-    await safeStore.changeThresholdTransaction(state.input.threshold);
-    await loadData();
+    const transaction = await safeStore.changeThresholdTransaction(
+      state.input.threshold
+    );
+    router.push({ name: "Transaction", params: { id: transaction.id } });
   } catch (e) {
     toast.error(e.message);
   }

@@ -56,14 +56,14 @@ export const useSafeStore = defineStore("safe", {
 
       if (result) {
         const transaction = response.validateSuiTransactionResponse(result);
-        const safe = transaction.effects.created![0];
-        const loadSafe = await safeService.getSafe(safe?.reference.objectId!);
+        const { reference: ref } = transaction.effects.created![0];
+        const safe = await safeService.getSafe(ref.objectId);
 
-        this.safes = [...this.safes, loadSafe];
-        this.setSafeName(loadSafe.id, data.name);
-        await this.setActiveSafeId(loadSafe.id);
+        this.safes = [...this.safes, safe];
+        this.setSafeName(safe.id, data.name);
+        await this.setActiveSafeId(safe.id);
 
-        return loadSafe;
+        return safe;
       }
 
       throw new Error(`Error: Unable to send transaction`);
@@ -118,32 +118,47 @@ export const useSafeStore = defineStore("safe", {
       });
     },
 
+    async createTransaction(type: SafeTransactionType, data: string) {
+      const result = await safeService.createTransaction({
+        data,
+        type,
+        safeId: this.activeSafeId!,
+      });
+
+      if (result) {
+        const transaction = response.validateSuiTransactionResponse(result);
+        const { reference: ref } = transaction.effects.created![0];
+        const tx = await safeService.getSafeTransaction(ref.objectId);
+
+        this.transactions = [...this.transactions, tx];
+        return tx;
+      }
+
+      throw new Error(`Error: Unable to send transaction`);
+    },
+
     async createCoinWithdrawalTransaction(input: {
       amount: string;
       recipient: string;
       coin: BasicCoin;
     }) {
-      const amount = utils.parseBalance(
-        input.amount,
-        input.coin.metadata.decimals
-      );
+      const amount = utils
+        .parseBalance(input.amount, input.coin.metadata.decimals)
+        .toString();
 
-      const transferData = serializer.serialize(
+      const data = serializer.serialize(
         safeTransactionTypeData[SafeTransactionType.COIN_WITHDRAWAL],
         {
           coin_type: Uint8Array.from(textEncoder.encode(input.coin.coinType)),
-          amount: amount.toString(),
+          amount: amount,
           recipient: input.recipient,
         }
       );
 
-      const data = {
-        type: SafeTransactionType.COIN_WITHDRAWAL,
-        data: transferData,
-        safeId: this.activeSafeId!,
-      };
-
-      return await safeService.createTransaction(data);
+      return await this.createTransaction(
+        SafeTransactionType.COIN_WITHDRAWAL,
+        data
+      );
     },
 
     async createNftWithdrawalTransaction(input: {
@@ -162,14 +177,11 @@ export const useSafeStore = defineStore("safe", {
       return await this.createAssetWithdrawalTransaction(withdrawalData);
     },
 
-    async createAssetWithdrawalTransaction(withdrawalData: string) {
-      const data = {
-        type: SafeTransactionType.ASSET_WITHDRAWAL,
-        data: withdrawalData,
-        safeId: this.activeSafeId!,
-      };
-
-      return await safeService.createTransaction(data);
+    async createAssetWithdrawalTransaction(data: string) {
+      return await this.createTransaction(
+        SafeTransactionType.ASSET_WITHDRAWAL,
+        data
+      );
     },
 
     async manageOwnerTransaction(input: {
@@ -177,18 +189,18 @@ export const useSafeStore = defineStore("safe", {
       owner: string;
       threshold: string;
     }) {
-      let txData: string, type: SafeTransactionType;
+      let data: string, type: SafeTransactionType;
       switch (input.type) {
         case "add":
           type = SafeTransactionType.ADD_OWNER;
-          txData = serializer.serialize(safeTransactionTypeData[type], {
+          data = serializer.serialize(safeTransactionTypeData[type], {
             owner: input.owner,
             threshold: input.threshold,
           });
           break;
         case "remove":
           type = SafeTransactionType.REMOVE_OWNER;
-          txData = serializer.serialize(safeTransactionTypeData[type], {
+          data = serializer.serialize(safeTransactionTypeData[type], {
             owner: input.owner,
             threshold: input.threshold,
           });
@@ -197,28 +209,19 @@ export const useSafeStore = defineStore("safe", {
           throw new Error("Invalid owner management type");
       }
 
-      const data = {
-        type,
-        data: txData,
-        safeId: this.activeSafeId!,
-      };
-
-      return await safeService.createTransaction(data);
+      return await this.createTransaction(type, data);
     },
 
     async changeThresholdTransaction(threshold: string) {
-      const txData = serializer.serialize(
+      const data = serializer.serialize(
         safeTransactionTypeData[SafeTransactionType.CHANGE_THRESHOLD],
         { threshold }
       );
 
-      const data = {
-        type: SafeTransactionType.CHANGE_THRESHOLD,
-        data: txData,
-        safeId: this.activeSafeId!,
-      };
-
-      return await safeService.createTransaction(data);
+      return await this.createTransaction(
+        SafeTransactionType.CHANGE_THRESHOLD,
+        data
+      );
     },
 
     async approveTransaction(transactionId: string) {
