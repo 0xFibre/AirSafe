@@ -9,7 +9,6 @@
 .v-application,
 [class*="text-"] {
   font-family: Sora, sans-serif !important;
-  /* font-family: Montserrat, sans-serif !important; */
 }
 
 .no-select {
