@@ -35,9 +35,10 @@ export interface DepositCoinData {
   coin: BasicCoin;
 }
 
-export interface DepositNftData {
+export interface DepositAssetData {
   safeId: string;
-  nft: Nft;
+  assetId: string;
+  assetType: string;
 }
 
 export interface ExecuteCoinWithdrawalData {

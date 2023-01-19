@@ -10,7 +10,7 @@ import {
   CreateSafeData,
   CreateSafeTransactionData,
   DepositCoinData,
-  DepositNftData,
+  DepositAssetData,
   ExecuteAssetWithdrawalData,
   ExecuteCoinWithdrawalData,
   ExecutePolicyChangeData,
@@ -84,15 +84,13 @@ export class SafeService {
     return await connection.executeMoveCall(moveCallPayload);
   }
 
-  async depositNft(data: DepositNftData) {
-    const { nft } = data;
-
+  async depositAsset(data: DepositAssetData) {
     const moveCallPayload = {
       packageObjectId: this._packageObjectId,
       module: this.module,
       function: "deposit_asset",
-      typeArguments: [nft.type],
-      arguments: [data.safeId, nft.id],
+      typeArguments: [data.assetType],
+      arguments: [data.safeId, data.assetId],
     };
 
     return await connection.executeMoveCall(moveCallPayload);

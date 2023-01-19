@@ -20,6 +20,8 @@ interface SafeStore {
   transaction?: SafeTransaction;
 }
 
+const textEncoder = new TextEncoder();
+
 export const useSafeStore = defineStore("safe", {
   state: () =>
     <SafeStore>{
@@ -34,8 +36,7 @@ export const useSafeStore = defineStore("safe", {
 
   actions: {
     async createSafe(threshold: string, owners: string[]) {
-      const result = await safeService.createSafe({ threshold, owners });
-      console.log(result);
+      return await safeService.createSafe({ threshold, owners });
     },
 
     async fetchSafes() {
@@ -61,23 +62,24 @@ export const useSafeStore = defineStore("safe", {
     async depositCoin(input: { amount: string; coin: BasicCoin }) {
       const { address } = useConnectionStore();
 
-      const result = await safeService.depositCoin({
+      return await safeService.depositCoin({
         amount: input.amount,
         coin: input.coin,
         sender: address,
         safeId: this.activeSafeId!,
       });
-
-      console.log(result);
     },
 
     async depositNft(input: { nft: Nft }) {
-      const result = await safeService.depositNft({
-        nft: input.nft,
+      return await this.depositAsset(input.nft.type, input.nft.id);
+    },
+
+    async depositAsset(assetType: string, assetId: string) {
+      return await safeService.depositAsset({
+        assetType,
+        assetId,
         safeId: this.activeSafeId!,
       });
-
-      console.log(result);
     },
 
     async createCoinWithdrawalTransaction(input: {
@@ -93,9 +95,7 @@ export const useSafeStore = defineStore("safe", {
       const transferData = serializer.serialize(
         safeTransactionTypeData[SafeTransactionType.COIN_WITHDRAWAL],
         {
-          coin_type: Uint8Array.from(
-            new TextEncoder().encode(input.coin.coinType)
-          ),
+          coin_type: Uint8Array.from(textEncoder.encode(input.coin.coinType)),
           amount: amount.toString(),
           recipient: input.recipient,
         }
@@ -107,15 +107,14 @@ export const useSafeStore = defineStore("safe", {
         safeId: this.activeSafeId!,
       };
 
-      const result = await safeService.createTransaction(data);
-      console.log(result);
+      return await safeService.createTransaction(data);
     },
 
     async createNftWithdrawalTransaction(input: {
       recipient: string;
       nft: Nft;
     }) {
-      const transferData = serializer.serialize(
+      const withdrawalData = serializer.serialize(
         safeTransactionTypeData[SafeTransactionType.ASSET_WITHDRAWAL],
         {
           asset_id: input.nft.id,
@@ -124,14 +123,17 @@ export const useSafeStore = defineStore("safe", {
         }
       );
 
+      return await this.createAssetWithdrawalTransaction(withdrawalData);
+    },
+
+    async createAssetWithdrawalTransaction(withdrawalData: string) {
       const data = {
         type: SafeTransactionType.ASSET_WITHDRAWAL,
-        data: transferData,
+        data: withdrawalData,
         safeId: this.activeSafeId!,
       };
 
-      const result = await safeService.createTransaction(data);
-      console.log(result);
+      return await safeService.createTransaction(data);
     },
 
     async manageOwnerTransaction(input: {
@@ -165,8 +167,7 @@ export const useSafeStore = defineStore("safe", {
         safeId: this.activeSafeId!,
       };
 
-      const result = await safeService.createTransaction(data);
-      console.log(result);
+      return await safeService.createTransaction(data);
     },
 
     async changeThresholdTransaction(threshold: string) {
@@ -181,56 +182,49 @@ export const useSafeStore = defineStore("safe", {
         safeId: this.activeSafeId!,
       };
 
-      const result = await safeService.createTransaction(data);
-      console.log(result);
+      return await safeService.createTransaction(data);
     },
 
     async approveTransaction(transactionId: string) {
-      const result = await safeService.approveTransaction({
+      return await safeService.approveTransaction({
         transactionId,
         safeId: this.activeSafeId!,
       });
-
-      console.log(result);
     },
 
     async rejectTransaction(transactionId: string) {
-      const result = await safeService.rejectTransaction({
+      return await safeService.rejectTransaction({
         transactionId,
         safeId: this.activeSafeId!,
       });
-
-      console.log(result);
     },
 
+    // Transaction execution functions
+
     async executeCoinWithdrawal(transactionId: string, coin: BasicCoin) {
-      const result = await safeService.executeCoinWithdrawal({
+      return await safeService.executeCoinWithdrawal({
         transactionId,
         safeId: this.activeSafeId!,
         coin,
       });
-
-      console.log(result);
     },
 
     async executeAssetWithdrawal(transactionId: string, assetType: string) {
-      const result = await safeService.executeAssetWithdrawal({
+      return await safeService.executeAssetWithdrawal({
         transactionId,
         safeId: this.activeSafeId!,
         assetType,
       });
-
-      console.log(result);
     },
 
     async executePolicyChange(transactionId: string) {
-      const result = await safeService.executePolicyChange({
+      return await safeService.executePolicyChange({
         transactionId,
         safeId: this.activeSafeId!,
       });
-
-      console.log(result);
     },
+
+    // transactions fetch functions
 
     async fetchTransactions() {
       const { safe } = useSafeStore();
