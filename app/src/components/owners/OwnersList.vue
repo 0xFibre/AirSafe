@@ -1,6 +1,6 @@
 <template>
-  <v-list lines="two">
-    <v-list-item class="my-0 py-2" v-for="owner in owners" :key="owner">
+  <v-list class="py-0" lines="two">
+    <v-list-item v-for="owner in owners" :key="owner">
       <v-list-item-title>{{ owner }}</v-list-item-title>
 
       <template v-slot:prepend>

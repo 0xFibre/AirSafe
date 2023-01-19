@@ -19,8 +19,8 @@
       <Empty v-if="safes.length < 1" msg="You do not own any Safe" />
 
       <template v-else>
-        <v-list v-for="safe in safes" :key="safe.id" lines="two">
-          <v-list-item class="my-0 py-2" :prepend-avatar="blockie(safe.id)">
+        <v-list class="py-0" v-for="safe in safes" :key="safe.id" lines="two">
+          <v-list-item :prepend-avatar="makeBlockie(safe.id)">
             <v-list-item-title>
               {{
                 safeStore.safeName(safe.id)
@@ -72,7 +72,7 @@ import { env } from "@/config";
 import { useSafeStore } from "@/store";
 import { storeToRefs } from "pinia";
 import { onMounted, reactive } from "vue";
-import blockie from "ethereum-blockies-base64";
+import makeBlockie from "ethereum-blockies-base64";
 import Empty from "@/components/Empty.vue";
 import { useRouter } from "vue-router";
 import Loading from "@/components/Loading.vue";

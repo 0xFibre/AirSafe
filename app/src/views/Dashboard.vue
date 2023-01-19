@@ -60,7 +60,7 @@
   </v-row>
 
   <div class="my-12">
-    <Empty msg="Nothing to load here..." />
+    <Empty msg="Hey fren! Nothing to load here for now..." />
   </div>
 </template>
 
