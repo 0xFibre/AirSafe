@@ -38,7 +38,14 @@
     </v-list-item>
 
     <div class="pa-3">
-      <v-btn flat block variant="flat" color="primary" prepend-icon="mdi-plus">
+      <v-btn
+        flat
+        block
+        variant="flat"
+        color="primary"
+        prepend-icon="mdi-plus"
+        to="/transaction/new"
+      >
         New transaction
       </v-btn>
     </div>

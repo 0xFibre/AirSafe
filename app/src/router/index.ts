@@ -6,6 +6,7 @@ import Nfts from "@/views/assets/Nfts.vue";
 import Owners from "@/views/owners/Owners.vue";
 import Transactions from "@/views/transactions/Transactions.vue";
 import Transaction from "@/views/transactions/Transaction.vue";
+import NewTransaction from "@/views/transactions/New.vue";
 import Connect from "@/views/Connect.vue";
 import Settings from "@/views/Settings.vue";
 import { useConnectionStore, useSafeStore } from "@/store";
@@ -80,6 +81,14 @@ const routes = [
     path: "/transactions",
     name: "Transactions",
     component: Transactions,
+    meta: {
+      access: "safe",
+    },
+  },
+  {
+    path: "/transaction/new",
+    name: "NewTransaction",
+    component: NewTransaction,
     meta: {
       access: "safe",
     },
