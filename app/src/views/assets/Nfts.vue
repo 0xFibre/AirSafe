@@ -116,7 +116,7 @@ async function depositNft(input: { nft: Nft }) {
     state.deposit.showModal = false;
     await loadData();
   } catch (e) {
-    toast.error(e);
+    toast.error(e.message);
   } finally {
     state.deposit.submitting = false;
   }
@@ -129,7 +129,7 @@ async function sendNft(input: { recipient: string; nft: Nft }) {
     state.send.showModal = false;
     await loadData();
   } catch (e) {
-    toast.error(e);
+    toast.error(e.message);
   } finally {
     state.send.submitting = false;
   }

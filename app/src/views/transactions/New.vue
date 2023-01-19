@@ -1,5 +1,6 @@
 <template>
-  <v-row>
+  <Loading v-if="state.loading" />
+  <v-row v-else>
     <v-col cols="12" sm="8" md="6" class="mx-auto">
       <PageTextHeader title="New transaction" />
 
@@ -37,7 +38,13 @@
             :nfts="state.nfts"
           />
 
-          <v-btn flat block color="primary" @click="createTransaction">
+          <v-btn
+            flat
+            block
+            color="primary"
+            @click="createTransaction"
+            :disabled="state.submitting"
+          >
             Submit
           </v-btn>
         </v-card-text>
@@ -60,6 +67,7 @@ import { onMounted, reactive } from "vue";
 import { useSafeStore } from "@/store";
 import { storeToRefs } from "pinia";
 import { useToast } from "vue-toastification";
+import Loading from "@/components/Loading.vue";
 
 interface State {
   input: {
@@ -74,6 +82,8 @@ interface State {
       nft?: Nft;
     };
   };
+  loading: boolean;
+  submitting: boolean;
   coins: BasicCoin[];
   nfts: Nft[];
 }
@@ -87,6 +97,8 @@ const state: State = reactive({
     withdrawCoin: { amount: "", recipient: "" },
     withdrawNft: { recipient: "" },
   },
+  loading: false,
+  submitting: false,
   coins: [],
   nfts: [],
 });
@@ -98,9 +110,12 @@ const types = [
 
 onMounted(async () => {
   try {
+    state.loading = true;
     await loadData();
   } catch (e) {
     toast.error(e.message);
+  } finally {
+    state.loading = false;
   }
 });
 
@@ -122,6 +137,7 @@ function updateInputData(
 
 async function createTransaction() {
   try {
+    state.submitting = true;
     if (
       state.input.type ==
       safeTransactionTypeValue[SafeTransactionType.COIN_WITHDRAWAL]
@@ -145,6 +161,8 @@ async function createTransaction() {
     }
   } catch (e) {
     toast.error(e.message);
+  } finally {
+    state.submitting = false;
   }
 }
 </script>

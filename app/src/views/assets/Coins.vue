@@ -117,14 +117,14 @@ async function loadData() {
 
 async function depositCoin(input: { amount: string; coin: BasicCoin }) {
   try {
-    state.send.submitting = true;
+    state.deposit.submitting = true;
     await safeStore.depositCoin(input);
     state.deposit.showModal = false;
     await loadData();
   } catch (e) {
     toast.error(e.message);
   } finally {
-    state.send.submitting = false;
+    state.deposit.submitting = false;
   }
 }
 
