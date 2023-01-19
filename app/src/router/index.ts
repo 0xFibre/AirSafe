@@ -14,6 +14,15 @@ import { useConnectionStore, useSafeStore } from "@/store";
 
 const routes = [
   {
+    path: "/",
+    name: "Dashboard",
+    component: Dashboard,
+    meta: {
+      access: "safe",
+    },
+  },
+
+  {
     path: "/connect",
     name: "Connect",
     component: Connect,
@@ -39,15 +48,6 @@ const routes = [
     meta: {
       access: "auth",
       hideSideBar: true,
-    },
-  },
-
-  {
-    path: "/dashboard",
-    name: "Dashboard",
-    component: Dashboard,
-    meta: {
-      access: "safe",
     },
   },
 

@@ -101,7 +101,7 @@ const iitems = [
   {
     title: "Dashboard",
     icon: "mdi-view-dashboard-outline",
-    path: "/dashboard",
+    path: "/",
   },
   {
     title: "Assets",
