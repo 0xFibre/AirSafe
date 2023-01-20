@@ -3,12 +3,12 @@
     <v-row>
       <v-col cols="12" md="6">
         <h4
-          class="text-h4 font-weight-bold mb-5 animate__animated animate__backInLeft"
+          class="text-h4 font-weight-bold mb-5 animate__animated animate__fadeInLeft"
         >
           Multisig standard for everyone on Sui
         </h4>
 
-        <div class="text-body-1 mb-5 animate__animated animate__backInLeft">
+        <div class="text-body-1 mb-5 animate__animated animate__fadeInLeft">
           <p class="mb-3">
             State-of-the-art multisig standard, designed to provide maximum
             security and flexible access to all your crypto assets.
