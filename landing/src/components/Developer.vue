@@ -10,8 +10,8 @@
             <div class="text-body-1 mb-5">
               <p class="mb-5">
                 <strong>AirSafe</strong> is built with developers in mind. So,
-                our move package is written in a way that makes integrations
-                easy.
+                our move package is written in a way that makes it easy to
+                integrate and extend.
               </p>
 
               <div class="d-flex align-center" style="gap: 5px">
