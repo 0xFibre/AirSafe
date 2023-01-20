@@ -7,7 +7,7 @@
     </v-list>
   </v-navigation-drawer> -->
 
-  <v-app-bar flat>
+  <v-app-bar flat class="mb-16">
     <v-container class="fill-height d-flex align-center">
       <!-- <v-app-bar-nav-icon class="d-block d-md-none" @click="drawer = !drawer" /> -->
 

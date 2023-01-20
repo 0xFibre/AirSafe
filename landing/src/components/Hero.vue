@@ -30,7 +30,7 @@
       </v-col>
 
       <v-col cols="12" md="6">
-        <v-img src="/images/connection.svg" height="350" />
+        <v-img src="/images/vault.svg" height="350" />
       </v-col>
     </v-row>
   </v-container>
