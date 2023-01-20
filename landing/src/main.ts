@@ -3,7 +3,6 @@ import { createApp } from "vue";
 import { registerPlugins } from "@/plugins";
 
 import "./main.css";
-import "animate.css";
 
 const app = createApp(App);
 
