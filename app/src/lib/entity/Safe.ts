@@ -84,7 +84,7 @@ export class Safe implements SafeData {
       }
     }
 
-    return coins;
+    return coins.reverse();
   }
 
   async getNft(id: string): Promise<Nft | undefined> {
