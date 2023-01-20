@@ -1,6 +1,7 @@
 import Hero from './Hero.vue';
 
 <template>
+  <Bar />
   <Hero :appUrl="appUrl" />
   <AfterHero />
   <Why />
@@ -15,6 +16,7 @@ import AfterHero from "./AfterHero.vue";
 import Why from "./Why.vue";
 import Footer from "./Footer.vue";
 import Try from "./Try.vue";
+import Bar from "./Bar.vue";
 import Developer from "./Developer.vue";
 
 const appUrl = "https://app.airsafe.io";
