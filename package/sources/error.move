@@ -45,7 +45,7 @@ module airsafe::error {
         ERROR_PREFIX + 11
     }
 
-    public fun transaction_is_stale(): u64 {
+    public fun stale_transaction(): u64 {
         ERROR_PREFIX + 12
     }
 
