@@ -1,4 +1,4 @@
-// The safe module. This module defines the safe structure and functions
+/// The safe module. This module defines the safe structure and functions
 module airsafe::safe {
     use std::vector;
 
