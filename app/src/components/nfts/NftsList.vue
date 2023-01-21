@@ -1,5 +1,5 @@
 <template>
-  <Empty v-if="nfts.length < 1" msg="No NFTs yet" />
+  <Empty v-if="nfts.length < 1" msg="This safe does not have any NFT" />
 
   <v-row v-else>
     <template v-for="(nft, i) of nfts">
@@ -34,7 +34,6 @@
 <script lang="ts" setup>
 import Empty from "@/components/Empty.vue";
 import { Nft } from "@/lib/types";
-import { utils } from "@/utils";
 
 defineProps<{ nfts: Nft[] }>();
 defineEmits(["send"]);

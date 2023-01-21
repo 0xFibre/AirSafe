@@ -16,7 +16,7 @@
         </v-btn>
       </div>
 
-      <Empty v-if="safes.length < 1" msg="You do not own any Safe" />
+      <Empty v-if="safes.length < 1" msg="You do not own any safe" />
 
       <template v-else>
         <v-list class="py-0" v-for="safe in safes" :key="safe.id" lines="two">
