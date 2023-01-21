@@ -1,3 +1,4 @@
+/// The Asset module. This module handles the deposit and withdrawal of assets from safes
 module airsafe::asset {
     use sui::dynamic_object_field as ofield;
     use sui::transfer;
@@ -9,10 +10,12 @@ module airsafe::asset {
     friend airsafe::main;
     friend airsafe::transaction;
 
+    /// Deposits asset into safe
     public(friend) fun deposit<A: key + store>(safe: &mut Safe, asset: A) {
         make_deposit(safe, asset);
     }
 
+    /// Withdraws asset from safe
     public(friend) fun withdraw<A: key + store>(safe: &mut Safe, asset_id: address, recipient: address) {
         let asset = make_withdrawal<A>(safe, object::id_from_address(asset_id));
         transfer::transfer(asset, recipient);

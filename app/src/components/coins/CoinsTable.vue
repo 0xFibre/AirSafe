@@ -49,7 +49,7 @@
     </tbody>
   </v-table>
 
-  <Empty v-if="coins.length < 1" msg="You do not have any coins yet" />
+  <Empty v-if="coins.length < 1" msg="This safe does not have any coin" />
 </template>
 
 <script lang="ts" setup>
