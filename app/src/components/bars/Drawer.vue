@@ -1,7 +1,7 @@
 <template>
   <v-navigation-drawer
     elevation="0"
-    border="0"
+    border
     v-bind:model-value="show"
     v-if="!$route.meta.hideSideBar"
   >

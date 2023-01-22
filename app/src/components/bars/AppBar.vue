@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar flat v-if="!$route.meta.hideAppBar">
+  <v-app-bar border flat v-if="!$route.meta.hideAppBar">
     <v-container class="fill-height d-flex align-center">
       <v-app-bar-nav-icon
         @click="$emit('toggleDrawer')"
