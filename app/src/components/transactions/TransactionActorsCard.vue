@@ -1,5 +1,5 @@
 <template>
-  <v-card flat class="mb-3">
+  <v-card border flat class="mb-3">
     <v-card-text class="d-flex">
       <h6 class="text-body-1 font-weight-bold">
         {{ action.charAt(0).toUpperCase() + action.slice(1) }}

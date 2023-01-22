@@ -1,5 +1,5 @@
 <template>
-  <v-card flat class="mb-3">
+  <v-card border flat class="mb-3">
     <v-card-text>
       <h6 class="text-body-1 font-weight-bold">Info</h6>
     </v-card-text>
