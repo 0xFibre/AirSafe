@@ -4,7 +4,7 @@
   <v-row v-else>
     <template v-for="(nft, i) of nfts">
       <v-col sm="4" md="3" cols="6">
-        <v-card flat>
+        <v-card flat border>
           <v-card-text>
             <v-img
               style="border-radius: 4px"
