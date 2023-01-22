@@ -6,8 +6,11 @@
   <template v-else>
     <div class="mb-5">
       <v-tabs v-model="state.tab">
-        <v-tab :value="tab" v-for="tab in state.tabs">{{ tab }}</v-tab>
+        <v-tab color="primary" :value="tab" v-for="tab in state.tabs">
+          {{ tab }}
+        </v-tab>
       </v-tabs>
+
       <v-divider />
     </div>
 
