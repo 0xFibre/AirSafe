@@ -13,12 +13,12 @@ module airsafe::owner {
     friend airsafe::main;
     friend airsafe::transaction;
 
-    struct AddOwner has copy, drop {
+    struct OwnerAdded has copy, drop {
         safe_id: ID,
         owner: address,
     }
 
-    struct RemoveOwner has copy, drop {
+    struct OwnerRemoved has copy, drop {
         safe_id: ID,
         owner: address,
     }
@@ -33,7 +33,7 @@ module airsafe::owner {
         // register the safe, making it part of the new owner safes in the registry
         registry::register_safe(registry, object::id(safe), owner);
 
-        emit(AddOwner {
+        emit(OwnerAdded {
             safe_id: object::id(safe),
             owner
         });
@@ -65,7 +65,7 @@ module airsafe::owner {
         // unregister the safe, removing it from part of the new safes in the registry
         registry::unregister_safe(registry, object::id(safe), owner);
 
-        emit(RemoveOwner {
+        emit(OwnerRemoved {
             safe_id: object::id(safe),
             owner
         });
