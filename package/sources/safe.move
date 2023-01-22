@@ -5,6 +5,7 @@ module airsafe::safe {
     use sui::object::{Self, UID, ID};
     use sui::tx_context::{Self, TxContext};
     use sui::vec_set::{Self, VecSet};
+    use sui::event::emit;
 
     use airsafe::error;
 
@@ -24,6 +25,12 @@ module airsafe::safe {
         transactions: vector<ID> // a vector to hold the transaction IDs of the safe
     }
 
+    struct SafeCreated has copy, drop {
+        id: ID,
+        creator: address,
+        threshold: u64
+    }
+
     /// Creates and returns a new safe instance.
     public(friend) fun new(threshold: u64, owners: vector<address>, ctx: &mut TxContext): Safe {
         let owners_count = vector::length(&owners);
@@ -34,7 +41,7 @@ module airsafe::safe {
         // ensure that the threshold is less than or equal to the number of owners of the safe
         assert!(threshold <= owners_count, error::invalid_threshold());
 
-        Safe {
+        let safe = Safe {
             id: object::new(ctx),
             threshold,
             creator: tx_context::sender(ctx),
@@ -42,7 +49,15 @@ module airsafe::safe {
             transactions_count: 0,
             stale_transaction_index: 0,
             transactions: vector::empty()
-        }
+        };
+
+        emit(SafeCreated {
+            id: object::id(&safe),
+            creator: safe.creator,
+            threshold: safe.threshold
+        });
+
+        safe
     }
 
     /// Borrows the owners of a safe
