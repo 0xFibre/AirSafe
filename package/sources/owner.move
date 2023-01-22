@@ -3,7 +3,8 @@ module airsafe::owner {
     use std::vector;
 
     use sui::vec_set;
-    use sui::object;
+    use sui::object::{Self, ID};
+    use sui::event::emit;
 
     use airsafe::safe::{Self, Safe};
     use airsafe::registry::{Self, Registry};
@@ -11,6 +12,16 @@ module airsafe::owner {
     
     friend airsafe::main;
     friend airsafe::transaction;
+
+    struct AddOwner has copy, drop {
+        safe_id: ID,
+        owner: address,
+    }
+
+    struct RemoveOwner has copy, drop {
+        safe_id: ID,
+        owner: address,
+    }
 
     /// Adds owner to safe
     public(friend) fun add(registry: &mut Registry, safe: &mut Safe, owner: address) {
@@ -21,6 +32,11 @@ module airsafe::owner {
 
         // register the safe, making it part of the new owner safes in the registry
         registry::register_safe(registry, object::id(safe), owner);
+
+        emit(AddOwner {
+            safe_id: object::id(safe),
+            owner
+        });
     }
 
     /// Adds multiple owners to a safe 
@@ -48,6 +64,11 @@ module airsafe::owner {
 
         // unregister the safe, removing it from part of the new safes in the registry
         registry::unregister_safe(registry, object::id(safe), owner);
+
+        emit(RemoveOwner {
+            safe_id: object::id(safe),
+            owner
+        });
     }
 
     /// Removes multiple owners to a safe 
