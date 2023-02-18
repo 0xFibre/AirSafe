@@ -10,23 +10,19 @@
           </p>
         </div>
 
-        <v-list class="py-0">
-          <template v-for="(wallet, i) in wallets" :key="i">
-            <v-divider v-if="i != 0" />
+        <template v-for="(wallet, i) in wallets" :key="i">
+          <v-list-item border class="my-2 pa-4" @click="connect(wallet.name)">
+            <template v-slot:append>
+              <v-avatar size="30">
+                <v-img :src="wallet.icon" :alt="wallet.name" />
+              </v-avatar>
+            </template>
 
-            <v-list-item class="pa-4" @click="connect(wallet.name)">
-              <template v-slot:append>
-                <v-avatar size="30">
-                  <v-img :src="wallet.icon" :alt="wallet.name" />
-                </v-avatar>
-              </template>
-
-              <template v-slot:prepend>
-                <v-list-item-title>{{ wallet.name }}</v-list-item-title>
-              </template>
-            </v-list-item>
-          </template>
-        </v-list>
+            <template v-slot:prepend>
+              <v-list-item-title>{{ wallet.name }}</v-list-item-title>
+            </template>
+          </v-list-item>
+        </template>
       </template>
 
       <template v-else>
@@ -38,23 +34,19 @@
           </p>
         </div>
 
-        <v-list class="py-0">
-          <template v-for="(wallet, i) in suggestions" :key="i">
-            <v-divider v-if="i != 0" />
+        <template v-for="(wallet, i) in suggestions" :key="i">
+          <v-list-item class="my-2 pa-4" :href="wallet.url" target="_blank">
+            <template v-slot:append>
+              <v-avatar size="30">
+                <v-img :src="wallet.icon" :alt="wallet.name" />
+              </v-avatar>
+            </template>
 
-            <v-list-item class="pa-4" :href="wallet.url" target="_blank">
-              <template v-slot:append>
-                <v-avatar size="30">
-                  <v-img :src="wallet.icon" :alt="wallet.name" />
-                </v-avatar>
-              </template>
-
-              <template v-slot:prepend>
-                <v-list-item-title>{{ wallet.name }}</v-list-item-title>
-              </template>
-            </v-list-item>
-          </template>
-        </v-list>
+            <template v-slot:prepend>
+              <v-list-item-title>{{ wallet.name }}</v-list-item-title>
+            </template>
+          </v-list-item>
+        </template>
       </template>
     </v-col>
   </v-row>

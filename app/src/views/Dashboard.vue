@@ -3,7 +3,7 @@
 
   <v-row>
     <v-col cols="12" sm="4">
-      <v-card flat height="110">
+      <v-card border flat height="110">
         <v-card-text>
           <div class="d-flex align-center mb-3">
             <div>Total assets value</div>
@@ -16,7 +16,7 @@
     </v-col>
 
     <v-col cols="12" sm="4">
-      <v-card flat height="110">
+      <v-card border flat height="110">
         <v-card-text>
           <div class="d-flex align-center mb-3">
             <div>Total coins</div>
@@ -41,7 +41,7 @@
     </v-col>
 
     <v-col cols="12" sm="4">
-      <v-card flat height="110">
+      <v-card border flat height="110">
         <v-card-text>
           <div class="d-flex align-center mb-3">
             <div>Total NFTs</div>

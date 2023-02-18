@@ -2,8 +2,30 @@
   <PageTextHeader title="Transactions" />
 
   <Loading v-if="state.loading" />
+
   <template v-else>
-    <TransactionsList :transactions="transactions" />
+    <div class="mb-5">
+      <v-tabs v-model="state.tab">
+        <v-tab color="primary" :value="tab" v-for="tab in state.tabs">
+          {{ tab }}
+        </v-tab>
+      </v-tabs>
+
+      <v-divider />
+    </div>
+
+    <v-window v-model="state.tab">
+      <v-window-item :value="tab" v-for="tab in state.tabs">
+        <TransactionsList
+          :transactions="
+            tab == 'All'
+              ? transactions
+              : transactions.filter((tx) => tx.statusValue == tab)
+          "
+        />
+      </v-window-item>
+    </v-window>
+
     <Empty v-if="transactions.length < 1" msg="Ooopss... No transactions yet" />
   </template>
 </template>
@@ -17,12 +39,27 @@ import Loading from "@/components/Loading.vue";
 import PageTextHeader from "@/components/header/PageTextHeader.vue";
 import TransactionsList from "@/components/transactions/TransactionsList.vue";
 import { useToast } from "vue-toastification";
+import { SafeTransactionStatus, safeTransactionStatusValue } from "@/lib/types";
 
 const safeStore = useSafeStore();
 const toast = useToast();
 const { transactions } = storeToRefs(safeStore);
 
-const state: { loading: boolean } = reactive({ loading: false });
+const state: {
+  tab: number | null;
+  tabs: any[];
+  loading: boolean;
+} = reactive({
+  tab: null,
+  tabs: [
+    "All",
+    safeTransactionStatusValue[SafeTransactionStatus.PENDING],
+    safeTransactionStatusValue[SafeTransactionStatus.APPROVED],
+    safeTransactionStatusValue[SafeTransactionStatus.REJECTED],
+    safeTransactionStatusValue[SafeTransactionStatus.EXECUTED],
+  ],
+  loading: false,
+});
 
 onMounted(async () => {
   try {

@@ -4,7 +4,7 @@
     <v-col cols="12" sm="8" md="6" class="mx-auto">
       <PageTextHeader title="New transaction" />
 
-      <v-card flat>
+      <v-card flat border>
         <v-card-text>
           <div class="mb-3">
             <p class="text-body-2 mb-3">Select transaction type</p>

@@ -2,7 +2,7 @@
   <Loading v-if="state.loading" />
   <v-row v-else>
     <v-col cols="12" md="6">
-      <v-card flat class="mb-5">
+      <v-card flat border class="mb-5">
         <v-card-text>
           <h6 class="text-h6 font-weight-bold">Change safe name</h6>
         </v-card-text>
@@ -27,7 +27,7 @@
         </v-card-text>
       </v-card>
 
-      <v-card flat>
+      <v-card flat border>
         <v-card-text>
           <h6 class="text-h6 font-weight-bold">Change Threshold</h6>
         </v-card-text>

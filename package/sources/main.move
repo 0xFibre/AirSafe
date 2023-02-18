@@ -29,18 +29,18 @@ module airsafe::main {
         transfer::share_object(safe);
     }
 
-    /// The entry point for depositing coins into a safe.
+    /// The entry function for depositing coins into a safe.
     /// It allows the deposit of any type of coin into the safe
     public entry fun deposit_coin<T>(safe: &mut Safe, payment: vector<Coin<T>>, amount: u64, ctx: &mut TxContext) {
         coin::deposit<T>(safe, payment, amount, ctx);
     }
 
-    /// The entry point for depositing assets into a safe.
+    /// The entry function for depositing assets into a safe.
     public entry fun deposit_asset<A: key + store>(safe: &mut Safe, asset: A, _ctx: &mut TxContext) {
         asset::deposit<A>(safe, asset);
     }
 
-    /// The entry point for creating transations in a safe.
+    /// The entry function for creating transations in a safe.
     public entry fun create_transaction(safe: &mut Safe, type: u8, data: vector<u8>, ctx: &mut TxContext) {
         // ensure that the transaction sender is an owner of the safe
         assert!(owner::is_owner(safe, tx_context::sender(ctx)), error::not_safe_owner());
@@ -51,7 +51,7 @@ module airsafe::main {
         transfer::share_object(transaction);
     }
 
-    /// The entry point for approving a transation in a safe.
+    /// The entry function for approving a transation in a safe.
     public entry fun approve_transaction(safe: &mut Safe, transaction: &mut Transaction, ctx: &mut TxContext) {
         // ensure that the transaction belongs to the safe
         assert!(object::borrow_id(safe) == &transaction::safe_id(transaction), error::safe_transaction_mismatch());
@@ -62,7 +62,7 @@ module airsafe::main {
         transaction::approve_transaction(safe, transaction, ctx);
     }
 
-    /// The entry point for rejecting a transation in a safe.
+    /// The entry function for rejecting a transation in a safe.
     public entry fun reject_transaction(safe: &mut Safe, transaction: &mut Transaction, ctx: &mut TxContext) {
         // ensure that the transaction belongs to the safe
         assert!(object::borrow_id(safe) == &transaction::safe_id(transaction), error::safe_transaction_mismatch());
@@ -73,7 +73,7 @@ module airsafe::main {
         transaction::reject_transaction(safe, transaction, ctx);
     }
 
-    /// The entry point for executing coin withdrawal transations in a safe.
+    /// The entry function for executing coin withdrawal transations in a safe.
     public entry fun execute_coin_withdrawal_transaction<T>(safe: &mut Safe, transaction: &mut Transaction, ctx: &mut TxContext) {
         // ensure that the transaction belongs to the safe
         assert!(object::borrow_id(safe) == &transaction::safe_id(transaction), error::safe_transaction_mismatch());
@@ -81,7 +81,7 @@ module airsafe::main {
         transaction::execute_coin_withdrawal_transaction<T>(safe, transaction, ctx);
     }
 
-    /// The entry point for executing asset withdrawal transations in a safe.
+    /// The entry function for executing asset withdrawal transations in a safe.
      public entry fun execute_asset_withdrawal_transaction<A: key + store>(safe: &mut Safe, transaction: &mut Transaction, _ctx: &mut TxContext) {
         // ensure that the transaction belongs to the safe
         assert!(object::borrow_id(safe) == &transaction::safe_id(transaction), error::safe_transaction_mismatch());
@@ -89,7 +89,7 @@ module airsafe::main {
         transaction::execute_asset_withdrawal_transaction<A>(safe, transaction);
     }
 
-    /// The entry point for executing policy change transations in a safe.
+    /// The entry function for executing policy change transations in a safe.
     /// Policy changes are: addition or removal of owners and changing of threshold.
     public entry fun execute_policy_change_transaction(registry: &mut Registry, safe: &mut Safe, transaction: &mut Transaction, ctx: &mut TxContext) {
         // ensure that the transaction belongs to the safe

@@ -16,7 +16,7 @@
       </v-btn>
     </div>
 
-    <v-card flat>
+    <v-card flat border>
       <CoinsTable
         @deposit="(coin) => toggleModal('deposit', coin)"
         @send="(coin) => toggleModal('send', coin)"

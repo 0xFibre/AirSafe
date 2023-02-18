@@ -1,7 +1,7 @@
 <template>
   <v-row>
     <v-col cols="12" sm="8" md="8" lg="6" class="mx-auto">
-      <v-card flat>
+      <v-card flat border>
         <v-progress-linear
           color="primary"
           :model-value="(state.window.value / state.window.total) * 100"

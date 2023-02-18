@@ -19,49 +19,49 @@
       <Empty v-if="safes.length < 1" msg="You do not own any safe" />
 
       <template v-else>
-        <v-list class="py-0" v-for="safe in safes" :key="safe.id" lines="two">
-          <v-list-item :prepend-avatar="makeBlockie(safe.id)">
-            <v-list-item-title>
-              {{
-                safeStore.safeName(safe.id)
-                  ? `${safeStore.safeName(safe.id)} (${utils.truncate0x(
-                      safe.id
-                    )})`
-                  : utils.truncate0x(safe.id)
-              }}
-            </v-list-item-title>
+        <v-list-item
+          v-for="safe in safes"
+          :key="safe.id"
+          lines="two"
+          border
+          class="my-2"
+          :prepend-avatar="makeBlockie(safe.id)"
+        >
+          <v-list-item-title>
+            {{
+              safeStore.safeName(safe.id)
+                ? `${safeStore.safeName(safe.id)} (${utils.truncate0x(
+                    safe.id
+                  )})`
+                : utils.truncate0x(safe.id)
+            }}
+          </v-list-item-title>
 
-            <v-list-item-action>
-              <v-btn flat variant="text" icon="mdi-qrcode" size="x-small" />
-              <v-btn
-                flat
-                variant="text"
-                icon="mdi-content-copy"
-                size="x-small"
-              />
-              <v-btn
-                flat
-                target="_blank"
-                :href="`${env.suiExplorerUrl}/object/${safe.id}?network=${env.suiNetwork}`"
-                variant="text"
-                icon="mdi-open-in-new"
-                size="x-small"
-              />
-            </v-list-item-action>
+          <v-list-item-action>
+            <v-btn flat variant="text" icon="mdi-qrcode" size="x-small" />
+            <v-btn flat variant="text" icon="mdi-content-copy" size="x-small" />
+            <v-btn
+              flat
+              target="_blank"
+              :href="`${env.suiExplorerUrl}/object/${safe.id}?network=${env.suiNetwork}`"
+              variant="text"
+              icon="mdi-open-in-new"
+              size="x-small"
+            />
+          </v-list-item-action>
 
-            <template v-slot:append>
-              <v-btn
-                flat
-                variant="text"
-                density="comfortable"
-                append-icon="mdi-arrow-right"
-                @click="setActiveSafe(safe.id)"
-              >
-                open
-              </v-btn>
-            </template>
-          </v-list-item>
-        </v-list>
+          <template v-slot:append>
+            <v-btn
+              flat
+              variant="text"
+              density="comfortable"
+              append-icon="mdi-arrow-right"
+              @click="setActiveSafe(safe.id)"
+            >
+              open
+            </v-btn>
+          </template>
+        </v-list-item>
       </template>
     </v-col>
   </v-row>

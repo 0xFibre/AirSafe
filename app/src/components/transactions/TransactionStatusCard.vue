@@ -1,5 +1,5 @@
 <template>
-  <v-card flat>
+  <v-card border flat>
     <v-card-text>
       <h6 class="text-body-1 font-weight-bold">Status</h6>
     </v-card-text>

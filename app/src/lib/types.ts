@@ -114,7 +114,7 @@ export enum SafeTransactionType {
 }
 
 export enum SafeTransactionStatus {
-  ACTIVE,
+  PENDING,
   APPROVED,
   REJECTED,
   EXECUTED,
@@ -143,7 +143,7 @@ export const safeTransactionTypeValue = {
 };
 
 export const safeTransactionStatusValue = {
-  [SafeTransactionStatus.ACTIVE]: "Active",
+  [SafeTransactionStatus.PENDING]: "Pending",
   [SafeTransactionStatus.APPROVED]: "Approved",
   [SafeTransactionStatus.REJECTED]: "Rejected",
   [SafeTransactionStatus.EXECUTED]: "Executed",
