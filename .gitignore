@@ -3,3 +3,4 @@ node_modules
 .env
 sui.log*
 .resources
+.DS_Store
