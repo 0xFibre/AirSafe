@@ -8,9 +8,10 @@ module airsafe::ownership {
     use ownership::ownership;
     use ownership::tx_authority;
 
-    use airsafe::errors;
-
     struct Witness has drop { }
+
+    const EAlreadyOwner: u64 = 0;
+    const ENotOwner: u64 = 1;
 
     public fun initialize<T: key>(uid: &mut UID, owners: vector<address>, typed_id: TypedID<T>) {
         let auth = tx_authority::begin_with_type(&Witness { });
@@ -24,7 +25,7 @@ module airsafe::ownership {
         let auth = tx_authority::begin(ctx);
 
         if(is_owner(uid, addr)) {
-            abort errors::already_owner()
+            abort EAlreadyOwner
         } else {
             vector::push_back(&mut owners, addr);
             ownership::transfer(uid, owners, &auth);
@@ -38,7 +39,7 @@ module airsafe::ownership {
         let (is_owner, index) = vector::index_of(&owners, &addr);
         
         if(!is_owner) {
-            abort errors::not_owner()
+            abort ENotOwner
         } else {
             vector::remove(&mut owners, index);
             ownership::transfer(uid, owners, &auth);

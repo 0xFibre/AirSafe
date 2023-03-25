@@ -6,7 +6,6 @@ module airsafe::safe {
     use sui::typed_id;
     use sui::transfer;
 
-    use airsafe::errors;
     use airsafe::ownership;
 
     struct Safe has key {
@@ -19,13 +18,15 @@ module airsafe::safe {
         stale_transaction_index: u64
     }
 
+    const EInvalidThreshold: u64 = 0;
+
     public fun create(owners: vector<address>, threshold: u64, ctx: &mut TxContext) {
        let safe = create_(owners, threshold, ctx);
        transfer::share_object(safe);
     }
 
     public fun create_(owners: vector<address>, threshold: u64, ctx: &mut TxContext): Safe {
-        assert!(threshold <= vector::length(&owners), errors::invalid_threshold());
+        assert!(threshold <= vector::length(&owners), EInvalidThreshold);
 
         let safe = Safe {
             id: object::new(ctx),
