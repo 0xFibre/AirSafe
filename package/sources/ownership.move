@@ -6,14 +6,14 @@ module airsafe::ownership {
     use sui::tx_context::TxContext;
 
     use ownership::ownership;
-    use airsafe::witness;
     use ownership::tx_authority;
 
     use airsafe::errors;
 
+    struct Witness has drop { }
+
     public fun initialize<T: key>(uid: &mut UID, owners: vector<address>, typed_id: TypedID<T>) {
-        let witness = witness::new_witness();
-        let auth = tx_authority::begin_with_type(&witness);
+        let auth = tx_authority::begin_with_type(&Witness { });
 
         ownership::initialize_with_module_authority(uid, typed_id, &auth);
         ownership::as_shared_object_(uid, owners, owners, &auth);
