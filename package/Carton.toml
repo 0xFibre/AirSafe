@@ -1,9 +1,9 @@
 
 [provider]
-address = "0000000000000000000000000000000000000000"
+address = "0xaabf35dabd9a05100b6d794558ec75be5899c588"
 env = "devnet"
 config = "~/.sui/sui_config/client.yaml"
 
 [envs]
-devnet = { url = "https://fullnode.devnet.sui.io:443/" }
+devnet = { url = "https://sui-devnet.artifact.systems:443/" }
 testnet = { url = "https://fullnode.testnet.sui.io:443/" }

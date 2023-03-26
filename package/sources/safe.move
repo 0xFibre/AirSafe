@@ -48,7 +48,29 @@ module airsafe::safe {
         self.threshold
     }
 
+    public fun transaction_index(self: &Safe): u64 {
+        self.transaction_index
+    }
+
+    public fun stale_transaction_index(self: &Safe): u64 {
+        self.stale_transaction_index
+    }
+
     public fun extend(self: &mut Safe): &mut UID {
         &mut self.id
+    }
+    
+    public fun uid(self: &Safe): &UID {
+        &self.id
+    }
+
+    // ========== Setter functions ==========
+
+    public fun increment_transaction_index(self: &mut Safe) {
+        self.transaction_index = self.transaction_index + 1
+    }
+
+    public fun set_stale_transaction_index(self: &mut Safe, index: u64) {
+        self.stale_transaction_index = index
     }
 }

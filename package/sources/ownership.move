@@ -55,4 +55,11 @@ module airsafe::ownership {
         let (_, owners, _, _, _) = ownership::get_ownership(uid);
         owners
     }
+
+    // ========== Assertions =========
+
+    public fun assert_ownership(uid: &UID, ctx: &TxContext) {
+        let auth = tx_authority::begin(ctx);
+        assert!(ownership::is_authorized_by_owner(uid, &auth), ENotOwner)
+    }
 }
