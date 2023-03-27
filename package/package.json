@@ -1,0 +1,10 @@
+{
+  "name": "package",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@mysten/sui.js": "^0.0.0-experimental-20230326165705",
+    "sui-carton": "^0.0.2-alpha"
+  }
+}

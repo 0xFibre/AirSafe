@@ -3,8 +3,9 @@ name = "Airsafe"
 version = "0.0.1"
 
 [dependencies]
-Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework", rev = "devnet" }
-Ownership = { git = "https://github.com/capsule-craft/capsules.git", subdir = "packages/ownership", rev = "master" }
+Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "main" }
+Ownership = { git = "https://github.com/capsule-craft/capsules.git", subdir = "packages/ownership", rev = "v0.28-setup" }
+SuiUtils = { git = "https://github.com/capsule-craft/capsules.git", subdir = "packages/sui_utils", rev = "v0.28-setup" }
 
 [addresses]
 airsafe =  "0x0"
