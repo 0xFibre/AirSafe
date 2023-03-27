@@ -2,7 +2,7 @@ module airsafe::ownership {
     use std::vector;
 
     use sui::object::UID;
-    use sui::typed_id::TypedID;
+    use sui_utils::typed_id::TypedID;
     use sui::tx_context::TxContext;
 
     use ownership::ownership;

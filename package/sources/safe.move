@@ -3,7 +3,7 @@ module airsafe::safe {
 
     use sui::object::{Self, UID};
     use sui::tx_context::TxContext;
-    use sui::typed_id;
+    use sui_utils::typed_id;
     use sui::transfer;
 
     use airsafe::ownership;
@@ -20,7 +20,7 @@ module airsafe::safe {
 
     const EInvalidThreshold: u64 = 0;
 
-    public fun create(owners: vector<address>, threshold: u64, ctx: &mut TxContext) {
+    public entry fun create(owners: vector<address>, threshold: u64, ctx: &mut TxContext) {
        let safe = create_(owners, threshold, ctx);
        transfer::share_object(safe);
     }
@@ -36,7 +36,6 @@ module airsafe::safe {
         };
 
         let typed_id = typed_id::new(&safe);
-
         ownership::initialize(&mut safe.id, owners, typed_id);
 
         safe
